@@ -97,6 +97,24 @@ class RemoteFeedLoaderTests: XCTestCase {
         }
     }
     
+    func test_doesNotDeliverResultAfterFeedInstanceHasBeenDeallocated() {
+        let url = URL(string: "abc")!
+        let client = HttpClientSpy()
+        var feed: RemoteFeedLoader? = RemoteFeedLoader(url: url, client: client)
+        
+        var capturedResult = [RemoteFeedLoader.Result]()
+        feed?.getFeeds(completion: { capturedResult.append($0) })
+        
+        feed = nil
+        let clientData = Data("{\"items\": []}".utf8)
+        client.complete(with: 200, data: clientData)
+        
+        /**
+        As the getFeeds method of RemoteFeedLoader is checking for self != nil, capturedResult returns empty
+         */
+        XCTAssertTrue(capturedResult.isEmpty)
+    }
+    
     private func makeData(items: [[String: Any]]) -> Data {
         let itemsJSON = ["items": items]
         return  try! JSONSerialization.data(withJSONObject: itemsJSON)
@@ -115,10 +133,17 @@ class RemoteFeedLoaderTests: XCTestCase {
     
     //MARK: - Helpers
     //SUT: System under test
-    private func makeSUT(url: URL = URL(string: "abc")!) -> (HttpClientSpy, RemoteFeedLoader) {
+    private func makeSUT(url: URL = URL(string: "abc")!,
+                         file: StaticString = #file,
+                         line: UInt = #line) -> (HttpClientSpy, RemoteFeedLoader) {
         let url = URL(string: "abc")!
         let client = HttpClientSpy()
         let feed = RemoteFeedLoader(url: url, client: client)
+        
+        
+        addTeardownBlock {[weak feed] in
+            XCTAssertNil(feed, "instance should be deallocated to avoid potential memory leak", file: file, line: line)
+        }
         return (client, feed)
     }
     
