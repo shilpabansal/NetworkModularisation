@@ -137,7 +137,7 @@ class RemoteFeedLoaderTests: XCTestCase {
     /**
         private class since its only needed for testcases, wont be part of production code
      */
-    class HttpClientSpy : HTTPClient {
+    private class HttpClientSpy : HTTPClient {
         private var error: Error?
         /**
             An array is taken in order to track how many reqquests are made and in what order they are made
