@@ -35,7 +35,7 @@ class RemoteFeedLoaderTests: XCTestCase {
     func test_ConnectivityError_requestUR() {
         let (client, feed) = makeSUT()
         
-        expect(sut: feed, result: .failure(.connectivity)) {
+        expect(sut: feed, expectedResult: failure(.connectivity)) {
             /**
             Instead of mocking the error, we are calling the completion block of network library and checking if viewModel's completion block is called as expected error or not
              */
@@ -52,7 +52,7 @@ class RemoteFeedLoaderTests: XCTestCase {
          */
         let errorCodes = [199, 201, 400, 401, 500, 501]
         errorCodes.enumerated().forEach({(index, item) in
-            expect(sut: feed, result: .failure(.invalidData)) {
+            expect(sut: feed, expectedResult: failure(.invalidData)) {
                 let jsonData = makeData(items: [])
                 client.complete(with: item, data: jsonData, index: index)
             }
@@ -62,7 +62,7 @@ class RemoteFeedLoaderTests: XCTestCase {
     func test_Non200InvalidData_requestUR() {
         let (client, feed) = makeSUT()
         
-        expect(sut: feed, result: .failure(.invalidData)) {
+        expect(sut: feed, expectedResult: failure(.invalidData)) {
             let clientData = Data("invalid data".utf8)
             client.complete(with: 200, data: clientData)
         }
@@ -71,7 +71,7 @@ class RemoteFeedLoaderTests: XCTestCase {
     func test_Non200EmptyList_requestUR() {
         let (client, feed) = makeSUT()
         
-        expect(sut: feed, result: .success([])) {
+        expect(sut: feed, expectedResult: .success([])) {
             let clientData = Data("{\"items\": []}".utf8)
             client.complete(with: 200, data: clientData)
         }
@@ -91,7 +91,7 @@ class RemoteFeedLoaderTests: XCTestCase {
                                 imageURL: URL(string: "https://a-string.com")!)
         let jsonArray = [itemJSON1, itemJSON2]
     
-        expect(sut: feed, result: .success([feedItem1, feedItem2])) {
+        expect(sut: feed, expectedResult: .success([feedItem1, feedItem2])) {
             let clientData = makeData(items: jsonArray)
             client.complete(with: 200, data: clientData)
         }
@@ -148,16 +148,28 @@ class RemoteFeedLoaderTests: XCTestCase {
     }
     
     private func expect(sut: RemoteFeedLoader,
-                        result: RemoteFeedLoader.Result,
+                        expectedResult: RemoteFeedLoader.Result,
                         action:(() -> Void),
                         file: StaticString = #file,
                         line: UInt = #line) {
-        var capturedResult = [RemoteFeedLoader.Result]()
-        sut.getFeeds(completion: { capturedResult.append($0) })
+        _ = [RemoteFeedLoader.Result]()
+        
+        let expect = expectation(description: "wait for feed completion")
+        sut.getFeeds(completion: {receivedResult in
+            switch(receivedResult, expectedResult) {
+            case let (.success(receivedItems), .success(expectedItems)):
+                XCTAssertEqual(receivedItems, expectedItems)
+            case let (.failure(receivedError), .failure(expectedError)):
+                XCTAssertEqual(receivedError as! RemoteFeedLoader.Error, expectedError as! RemoteFeedLoader.Error)
+            default:
+                XCTFail("Test case failure")
+            }
+            expect.fulfill()
+        })
         
         action()
         
-        XCTAssertEqual(capturedResult, [result], file: file, line: line)
+        wait(for: [expect], timeout: 1.0)
     }
     /**
         private class since its only needed for testcases, wont be part of production code
@@ -189,5 +201,9 @@ class RemoteFeedLoaderTests: XCTestCase {
                 messages[index].completion(.success(data, response))
             }
         }
+    }
+    
+    private func failure(_ error: RemoteFeedLoader.Error) -> RemoteFeedLoader.Result {
+        return .failure(error)
     }
 }

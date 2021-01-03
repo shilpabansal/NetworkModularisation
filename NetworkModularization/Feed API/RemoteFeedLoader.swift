@@ -8,25 +8,15 @@
 import Foundation
 import Network
 
-/**
- Instead of creating success and error object, its always better to create an enum to have less maintenance for diff kinds of result, as at a time it will be only one kind of result
- */
-public enum LoadFeedResult {
-    case error(RemoteFeedLoader.Error)
-}
-
 public final class RemoteFeedLoader : FeedLoader {
-    public enum Result: Equatable {
-        case success([FeedItem])
-        case failure(Error)
-    }
+    public typealias Result = LoadFeedResult
     
     public enum Error: Swift.Error {
         case connectivity
         case invalidData
     }
     
-    public func getFeeds(completion: @escaping ((RemoteFeedLoader.Result) -> Void)) {
+    public func getFeeds(completion: @escaping ((Result) -> Void)) {
         /**
             Network library is unaware of common errors and responses, the viewmodel receives the respoonse and convert it into the expected enum responses which can be handled by the views
          */
@@ -40,7 +30,7 @@ public final class RemoteFeedLoader : FeedLoader {
                  */
                 completion(FeedItemMapper.map(data, response))
             case .error(_):
-                completion(.failure(.connectivity))
+                completion(.failure(Error.connectivity))
             }
         }
     }

@@ -6,6 +6,11 @@
 //
 
 import Foundation
+public enum LoadFeedResult {
+    case success([FeedItem])
+    case failure(Error)
+}
+
 public protocol FeedLoader {
-    func getFeeds(completion: @escaping ((RemoteFeedLoader.Result) -> Void))
+    func getFeeds(completion: @escaping ((LoadFeedResult) -> Void))
 }
