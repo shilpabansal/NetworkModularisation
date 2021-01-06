@@ -15,9 +15,7 @@ import XCTest
  */
 class URLSessionHTTPClient: HTTPClient {
     func loadFeeds(url: URL, completion: @escaping ((HTTPClientResult) -> Void)) {
-        session.dataTask(with: url) { (data, response, error) in
-            
-        }
+        session.dataTask(with: url) { (data, response, error) in }.resume()
     }
     
     var session: URLSession
@@ -34,22 +32,41 @@ class URLSessionHTTPClientTests: XCTestCase {
         let url = URL(string: "http://a-url.com")!
         
         let session = URLSessionSpy()
+        let dataTask = URLSessionDataTaskSpy()
+        
+        /**
+          stubbing the datatask for url, to test if expected datatask is returned for url or not
+         */
+        session.stub(url: url, dataTask: dataTask)
         let sut = URLSessionHTTPClient(session: session)
-        sut.loadFeeds(url: url) { (result) in
-            
-        }
-        XCTAssertEqual(session.requestURLS, [url])
+        sut.loadFeeds(url: url) { (result) in }
+        XCTAssertEqual(dataTask.resumeCallCount, 1)
     }
     
     //MARK: - Helpers
     private class URLSessionSpy: URLSession {
-        var requestURLS: [URL] = [URL]()
+        var stub = [URL: URLSessionDataTask]()
+        
+        func stub(url: URL, dataTask: URLSessionDataTask) {
+            stub[url] = dataTask
+        }
+        
         override func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
-            requestURLS.append(url)
-            
-            return FakeURLSessionDataTask()
+            /**
+            If the array doesnt have item for the url, will return fake task
+             */
+            return stub[url] ?? FakeURLSessionDataTask()
         }
     }
     
-    private class FakeURLSessionDataTask: URLSessionDataTask { }
+    private class FakeURLSessionDataTask: URLSessionDataTask {
+        override func resume() {}
+    }
+    
+    class URLSessionDataTaskSpy: URLSessionDataTask {
+        var resumeCallCount = 0
+        override func resume() {
+            resumeCallCount += 1
+        }
+    }
 }
