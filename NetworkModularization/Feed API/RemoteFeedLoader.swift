@@ -29,7 +29,7 @@ public final class RemoteFeedLoader : FeedLoader {
                 The benefit of taking the map method static is, though the self reference is deallocatd, it can still return the completion block
                  */
                 completion(FeedItemMapper.map(data, response))
-            case .error(_):
+            case .failure(_):
                 completion(.failure(Error.connectivity))
             }
         }

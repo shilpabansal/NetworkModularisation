@@ -190,7 +190,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         
         func complete(with error: Error, index: Int = 0) {
     
-            messages[index].completion(.error(error))
+            messages[index].completion(.failure(error))
         }
         
         func complete(with statusCode: Int, data: Data, index: Int = 0) {

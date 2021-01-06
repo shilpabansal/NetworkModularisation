@@ -14,5 +14,5 @@ public protocol HTTPClient {
 
 public enum HTTPClientResult {
     case success(Data, HTTPURLResponse)
-    case error(Error)
+    case failure(Error)
 }
