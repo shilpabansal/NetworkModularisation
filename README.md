@@ -16,3 +16,17 @@ Modularising the network project with TDD
 
 Importing testable module, benefits by taking internal entities also
 
+
+URLProtocol:
+
+Intercepting/mocking network request
+Every time we perform URLRequest, there is URL Loading system to handle those requests.
+As part of URL Loading system, there is an abstract class class URLProtocol which inherits from NSObject. 
+If we create our own class subclassing URLProtocol and register it, we can start intercepting URL requests.
+
+All we have to do is, implement Abstract method of URLProtocol class
+
+For eg. for the test cases, we can intercept the request so we never go to cloud. It doesn’t matter which network library we are using AFNetworking, Maya or something else.
+
+NSURLProtocolClient provides the interface to the URL loading system, the HTTPProtocol abstract class has instance of it.
+
