@@ -48,24 +48,25 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     
     /**
-            when data, response and error are nil
+            Received data, response and error nil in api response
      */
     func test_loadFeedFromURL_AllNilValues() {
-        URLProtolcolStub.stub(data: nil, response: nil, error: nil)
-        
-        let exp = expectation(description: "Test API")
-        makeSUT().loadFeeds(url: anyURL()) {(result) in
-            switch result {
-            case .failure:
-                break
-            default:
-                fatalError("Expected failure, received \(result)")
-            }
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
+        let receivedError = requestErrorFor(data: nil, response: nil, error: nil)
+        XCTAssertNotNil(receivedError)
     }
     
+    func test_loadFeedFromURL_RequestError() {
+        
+        let requestError = NSError(domain: "Test Error", code: 1, userInfo: nil)
+        let receivedError = requestErrorFor(data: nil, response: nil, error: requestError)
+        
+        XCTAssertEqual(receivedError?.code, requestError.code)
+        XCTAssertEqual(receivedError?.domain, requestError.domain)
+    }
+    
+    /**
+        Checks if the request details are same  as intercepted request
+     */
     func test_getFromURL_performGetRequestFromURL() {
         let url = anyURL()
         
@@ -84,25 +85,25 @@ class URLSessionHTTPClientTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func test_loadFeedFromURL_Error() {
-        let error = NSError(domain: "Test Error", code: 1, userInfo: nil)
-        URLProtolcolStub.stub(data: nil, response: nil, error: error)
-        
+    //MARK: - Helpers
+    private func requestErrorFor(data: Data?, response: HTTPURLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> NSError? {
+        URLProtolcolStub.stub(data: data, response: response, error: error)
+       
+        var receivedError: Error?
         let exp = expectation(description: "Test API")
         makeSUT().loadFeeds(url: anyURL()) {(result) in
             switch result {
             case let .failure(expectedError as NSError):
-                XCTAssertEqual(expectedError.code, error.code)
-                XCTAssertEqual(expectedError.domain, error.domain)
+                receivedError = expectedError
             default:
-                fatalError("Expected failure, received \(result)")
+                fatalError("Expected failure, received \(result)", file: file, line: line)
             }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
+        return receivedError as! NSError
     }
     
-    //MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> URLSessionHTTPClient {
         let sut = URLSessionHTTPClient()
         trackMemoryLeak(sut, file: file, line: line)
