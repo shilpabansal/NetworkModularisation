@@ -8,32 +8,6 @@
 import Foundation
 import XCTest
 @testable import NetworkModularization
-/**
- The class which implements HTTPClient protocol,
- as currently we are using URLSession to get the feeds from network, its named accordingly
- */
-class URLSessionHTTPClient: HTTPClient {
-    var session: URLSession
-    init(session: URLSession = .shared) {
-        self.session = session
-    }
-    
-    struct UnexpectedValueRepresentation: Error {}
-    
-    func loadFeeds(url: URL, completion: @escaping ((HTTPClientResult) -> Void)) {
-        session.dataTask(with: url) { (data, response, error) in
-            if let error = error {
-                completion(.failure(error))
-            }
-            else if let data = data, let response = response as? HTTPURLResponse {
-                completion(.success(data, response))
-            }
-            else {
-                completion(.failure(UnexpectedValueRepresentation()))
-            }
-        }.resume()
-    }
-}
 
 /**
  Instead of hitting the real network calls, we have created the spy for URL session and the fake tasks
@@ -121,32 +95,29 @@ class URLSessionHTTPClientTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func receivedValueFor(data: Data?, response: HTTPURLResponse?) -> (data: Data, response: HTTPURLResponse)? {
+    private func receivedValueFor(data: Data?, response: HTTPURLResponse?, file: StaticString = #file, line: UInt = #line) -> (data: Data, response: HTTPURLResponse)? {
         let receivedResult = resultFor(data: data, response: response, error: nil)
-        var receivedValue: (data: Data, response: HTTPURLResponse)?
         
         switch receivedResult {
         case let .success(receivedData, receivedResponse):
-            receivedValue = (receivedData, receivedResponse)
+            return (receivedData, receivedResponse)
         default:
-            XCTFail("Expected success, got \(receivedResult) instead")
+            XCTFail("Expected success, got \(receivedResult) instead", file: file, line: line)
+            return nil
         }
-        return receivedValue
     }
     
     //MARK: - Helpers
     private func requestErrorFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> NSError? {
         let receivedResult = resultFor(data: data, response: response, error: error)
-        URLProtolcolStub.stub(data: data, response: response, error: error)
        
-        var receivedError: Error?
         switch receivedResult {
         case let .failure(expectedError as NSError):
-            receivedError = expectedError
+            return  expectedError
         default:
-            fatalError("Expected failure, received \(receivedResult)", file: file, line: line)
+            XCTFail("Expected failure, received \(receivedResult)", file: file, line: line)
+            return nil
         }
-        return (receivedError as NSError?)
     }
     
     private func resultFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> HTTPClientResult {
@@ -169,7 +140,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         return receivedResult
     }
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> URLSessionHTTPClient {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> HTTPClient {
         let sut = URLSessionHTTPClient()
         trackMemoryLeak(sut, file: file, line: line)
         return sut
