@@ -18,10 +18,15 @@ class URLSessionHTTPClient: HTTPClient {
         self.session = session
     }
     
+    struct UnexpectedValueRepresentation: Error {}
+    
     func loadFeeds(url: URL, completion: @escaping ((HTTPClientResult) -> Void)) {
         session.dataTask(with: url) { (_, _, error) in
             if let error = error {
                 completion(.failure(error))
+            }
+            else {
+                completion(.failure(UnexpectedValueRepresentation()))
             }
         }.resume()
     }
@@ -40,6 +45,25 @@ class URLSessionHTTPClientTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         URLProtolcolStub.stopInterceptingRequest()
+    }
+    
+    /**
+            when data, response and error are nil
+     */
+    func test_loadFeedFromURL_AllNilValues() {
+        URLProtolcolStub.stub(data: nil, response: nil, error: nil)
+        
+        let exp = expectation(description: "Test API")
+        makeSUT().loadFeeds(url: anyURL()) {(result) in
+            switch result {
+            case .failure:
+                break
+            default:
+                fatalError("Expected failure, received \(result)")
+            }
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
     }
     
     func test_getFromURL_performGetRequestFromURL() {
@@ -71,7 +95,7 @@ class URLSessionHTTPClientTests: XCTestCase {
                 XCTAssertEqual(expectedError.code, error.code)
                 XCTAssertEqual(expectedError.domain, error.domain)
             default:
-                fatalError("Expected failure, received something else")
+                fatalError("Expected failure, received \(result)")
             }
             exp.fulfill()
         }
