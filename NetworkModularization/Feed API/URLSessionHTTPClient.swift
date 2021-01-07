@@ -11,15 +11,15 @@ import Foundation
  The class which implements HTTPClient protocol,
  as currently we are using URLSession to get the feeds from network, its named accordingly
  */
-class URLSessionHTTPClient: HTTPClient {
+public class URLSessionHTTPClient: HTTPClient {
     var session: URLSession
-    init(session: URLSession = .shared) {
+    public init(session: URLSession = .shared) {
         self.session = session
     }
     
-    struct UnexpectedValueRepresentation: Error {}
+    private struct UnexpectedValueRepresentation: Error {}
     
-    func loadFeeds(url: URL, completion: @escaping ((HTTPClientResult) -> Void)) {
+    public func loadFeeds(url: URL, completion: @escaping ((HTTPClientResult) -> Void)) {
         session.dataTask(with: url) { (data, response, error) in
             if let error = error {
                 completion(.failure(error))
