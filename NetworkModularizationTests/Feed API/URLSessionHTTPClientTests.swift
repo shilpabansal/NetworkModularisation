@@ -55,9 +55,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertNotNil(requestErrorFor(data: nil, response: nil, error: nil))
         
         XCTAssertNotNil(requestErrorFor(data: nil, response: anyURLResponse(), error: nil))
-        
-        XCTAssertNotNil(requestErrorFor(data: nil, response: anyHTTPURLResponse(), error: nil))
-        
+                
         XCTAssertNotNil(requestErrorFor(data: anyData(), response: nil, error: nil))
         
         XCTAssertNotNil(requestErrorFor(data: anyData(), response: nil, error: anyNSError()))
