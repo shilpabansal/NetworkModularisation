@@ -66,7 +66,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         URLProtolcolStub.stub(data: nil, response: nil, error: error)
         
         let exp = expectation(description: "Test API")
-        makeSUT().loadFeeds(url: url) { (result) in
+        makeSUT().loadFeeds(url: url) {(result) in
             switch result {
             case let .failure(expectedError as NSError):
                 XCTAssertEqual(expectedError.code, error.code)
@@ -80,8 +80,16 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     
     //MARK: - Helpers
-    private func makeSUT() -> URLSessionHTTPClient {
-        return URLSessionHTTPClient()
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> URLSessionHTTPClient {
+        let sut = URLSessionHTTPClient()
+        trackMemoryLeak(sut, file: file, line: line)
+        return sut
+    }
+    
+    private func trackMemoryLeak(_ instance: AnyObject, file: StaticString = #file, line: UInt = #line) {
+        addTeardownBlock {[weak instance] in
+            XCTAssertNil(instance, file: file, line: line)
+        }
     }
     
     private class URLProtolcolStub: URLProtocol {
