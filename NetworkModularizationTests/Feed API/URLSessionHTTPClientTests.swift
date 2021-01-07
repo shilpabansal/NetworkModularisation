@@ -32,8 +32,17 @@ class URLSessionHTTPClient: HTTPClient {
  */
 class URLSessionHTTPClientTests: XCTestCase {
     
-    func test_getFromURL_performGetRequestFromURL() {
+    override func setUp() {
+        super.setUp()
         URLProtolcolStub.startInterceptingRequest()
+    }
+    
+    override func tearDown() {
+        super.tearDown()
+        URLProtolcolStub.stopInterceptingRequest()
+    }
+    
+    func test_getFromURL_performGetRequestFromURL() {
         let url = URL(string: "http://a-url.com")!
         
         let exp = expectation(description: "Wait for API")
@@ -46,21 +55,18 @@ class URLSessionHTTPClientTests: XCTestCase {
            XCTAssertEqual( request.httpMethod, "GET")
            exp.fulfill()
         })
-        URLSessionHTTPClient().loadFeeds(url: url) {_ in }
+        makeSUT().loadFeeds(url: url) {_ in }
         
         wait(for: [exp], timeout: 1.0)
-        URLProtolcolStub.stopInterceptingRequest()
     }
     
     func test_loadFeedFromURL_Error() {
-        URLProtolcolStub.startInterceptingRequest()
         let url = URL(string: "http://a-url.com")!
         let error = NSError(domain: "Test Error", code: 1, userInfo: nil)
         URLProtolcolStub.stub(data: nil, response: nil, error: error)
-        let sut = URLSessionHTTPClient()
         
         let exp = expectation(description: "Test API")
-        sut.loadFeeds(url: url) { (result) in
+        makeSUT().loadFeeds(url: url) { (result) in
             switch result {
             case let .failure(expectedError as NSError):
                 XCTAssertEqual(expectedError.code, error.code)
@@ -71,10 +77,13 @@ class URLSessionHTTPClientTests: XCTestCase {
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
-        URLProtolcolStub.stopInterceptingRequest()
     }
     
     //MARK: - Helpers
+    private func makeSUT() -> URLSessionHTTPClient {
+        return URLSessionHTTPClient()
+    }
+    
     private class URLProtolcolStub: URLProtocol {
         static var stub: Stub?
         static var requestObserver: ((URLRequest) -> Void)?
