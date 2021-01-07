@@ -21,9 +21,12 @@ class URLSessionHTTPClient: HTTPClient {
     struct UnexpectedValueRepresentation: Error {}
     
     func loadFeeds(url: URL, completion: @escaping ((HTTPClientResult) -> Void)) {
-        session.dataTask(with: url) { (_, _, error) in
+        session.dataTask(with: url) { (data, response, error) in
             if let error = error {
                 completion(.failure(error))
+            }
+            else if let data = data, data.count > 0, let response = response as? HTTPURLResponse {
+                completion(.success(data, response))
             }
             else {
                 completion(.failure(UnexpectedValueRepresentation()))
@@ -68,12 +71,32 @@ class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertNotNil(requestErrorFor(data: anyData(), response: anyHTTPURLResponse(), error: anyNSError()))
         
         XCTAssertNotNil(requestErrorFor(data: anyData(), response: anyURLResponse(), error: nil))
-        
-        XCTAssertNotNil(requestErrorFor(data: anyData(), response: anyHTTPURLResponse(), error: nil))
     }
+       
+    
+    func test_loadFeedFromURL_success() {
+        let data = anyData()
+        let response = anyHTTPURLResponse()
         
+        URLProtolcolStub.stub(data: data, response: response, error: nil)
+        
+        let exp = expectation(description: "Wait for api")
+        makeSUT().loadFeeds(url: anyURL()) { (result) in
+            switch result {
+            case let .success(receivedData, receivedResponse):
+                XCTAssertEqual(data, receivedData)
+                XCTAssertEqual(response.url, receivedResponse.url)
+                XCTAssertEqual(response.statusCode, receivedResponse.statusCode)
+            default:
+                XCTFail("Expected success, got \(result) instead")
+            }
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     func test_loadFeedFromURL_RequestError() {
-        let requestError = NSError(domain: "Test Error", code: 1, userInfo: nil)
+        let requestError = anyNSError()
         let receivedError = requestErrorFor(data: nil, response: nil, error: requestError)
         
         XCTAssertEqual(receivedError?.code, requestError.code)
