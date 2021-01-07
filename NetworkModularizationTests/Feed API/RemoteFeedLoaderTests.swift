@@ -140,10 +140,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let client = HttpClientSpy()
         let feed = RemoteFeedLoader(url: url, client: client)
         
-        
-        addTeardownBlock {[weak feed] in
-            XCTAssertNil(feed, "instance should be deallocated to avoid potential memory leak", file: file, line: line)
-        }
+        trackMemoryLeak(feed, file: file, line: line)
         return (client, feed)
     }
     
