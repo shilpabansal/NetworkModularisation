@@ -25,7 +25,7 @@ class URLSessionHTTPClient: HTTPClient {
             if let error = error {
                 completion(.failure(error))
             }
-            else if let data = data, data.count > 0, let response = response as? HTTPURLResponse {
+            else if let data = data, let response = response as? HTTPURLResponse {
                 completion(.success(data, response))
             }
             else {
@@ -84,9 +84,29 @@ class URLSessionHTTPClientTests: XCTestCase {
         makeSUT().loadFeeds(url: anyURL()) { (result) in
             switch result {
             case let .success(receivedData, receivedResponse):
-                XCTAssertEqual(data, receivedData)
-                XCTAssertEqual(response.url, receivedResponse.url)
-                XCTAssertEqual(response.statusCode, receivedResponse.statusCode)
+                XCTAssertEqual(receivedData, data)
+                XCTAssertEqual(receivedResponse.url, response.url)
+                XCTAssertEqual(receivedResponse.statusCode, response.statusCode)
+            default:
+                XCTFail("Expected success, got \(result) instead")
+            }
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_loadFeedFromURL_succeedWithEmptyDataWhenDataIsNil() {
+        let response = anyHTTPURLResponse()
+        
+        URLProtolcolStub.stub(data: nil, response: response, error: nil)
+        
+        let exp = expectation(description: "Wait for api")
+        makeSUT().loadFeeds(url: anyURL()) { (result) in
+            switch result {
+            case let .success(receivedData, receivedResponse):
+                XCTAssertEqual(receivedData, Data())
+                XCTAssertEqual(receivedResponse.url, response.url)
+                XCTAssertEqual(receivedResponse.statusCode, response.statusCode)
             default:
                 XCTFail("Expected success, got \(result) instead")
             }
