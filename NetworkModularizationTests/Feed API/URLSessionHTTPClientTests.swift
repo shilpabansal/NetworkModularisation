@@ -10,7 +10,8 @@ import XCTest
 @testable import NetworkModularization
 
 /**
- Instead of hitting the real network calls, we have created the spy for URL session and the fake tasks
+ Instead of hitting the real network calls, we are intercepting all the network calls by extending URLProtocol class,
+ every test case needs to register the class which is extending URLProtocol and de-register at the end
  */
 class URLSessionHTTPClientTests: XCTestCase {
     
@@ -24,8 +25,12 @@ class URLSessionHTTPClientTests: XCTestCase {
         URLProtolcolStub.stopInterceptingRequest()
     }
     
+    /**
+          All the responses except below are considered invalid
+          1. Only Data and HttpURLResponse
+          2. Only error
+     */
     func test_loadFeedFromURL_AllInvalidRepresentationCases() {
-        //Received data, response and error nil in api response
         XCTAssertNotNil(requestErrorFor(data: nil, response: nil, error: nil))
         
         XCTAssertNotNil(requestErrorFor(data: nil, response: anyURLResponse(), error: nil))

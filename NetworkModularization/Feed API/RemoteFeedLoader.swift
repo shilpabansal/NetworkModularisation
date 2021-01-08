@@ -11,6 +11,14 @@ import Network
 public final class RemoteFeedLoader : FeedLoader {
     public typealias Result = LoadFeedResult
     
+    private var client: HTTPClient
+    private var url : URL
+    
+    public init(url: URL, client: HTTPClient) {
+        self.url = url
+        self.client = client
+    }
+    
     public enum Error: Swift.Error {
         case connectivity
         case invalidData
@@ -33,13 +41,5 @@ public final class RemoteFeedLoader : FeedLoader {
                 completion(.failure(Error.connectivity))
             }
         }
-    }
-    
-    private var client: HTTPClient
-    private var url : URL
-    
-    public init(url: URL, client: HTTPClient) {
-        self.url = url
-        self.client = client
     }
 }

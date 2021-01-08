@@ -8,6 +8,10 @@
 import XCTest
 import NetworkModularization
 
+/**
+ Since we are testing view model only,
+ the HTTPClientSpy is created which implements HTTPClient and mock all the responses
+ */
 class RemoteFeedLoaderTests: XCTestCase {
     func test_init_requestURLNil() {
         let (client, _) = makeSUT()
@@ -185,8 +189,11 @@ class RemoteFeedLoaderTests: XCTestCase {
             messages.append((url, completion))
         }
         
+        /**
+            When test case calls loadFeeds the url and completion block is saved in messageArray,
+            Testcase calls ccomplete with error or statuscode to call the completion block
+         */
         func complete(with error: Error, index: Int = 0) {
-    
             messages[index].completion(.failure(error))
         }
         
