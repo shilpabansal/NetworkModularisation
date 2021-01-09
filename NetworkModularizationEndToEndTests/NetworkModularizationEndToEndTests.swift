@@ -27,10 +27,13 @@ class NetworkModularizationEndToEndTests: XCTestCase {
     }
     
     //MARK: Helper
-    private func getFeedResult() -> LoadFeedResult? {
+    private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> LoadFeedResult? {
         let testURL = URL(string: "http://essentialdeveloper.com/feed-case-study/test-api/feed")!
         let client = URLSessionHTTPClient()
         let feedLoader = RemoteFeedLoader(url: testURL, client: client)
+        
+        trackMemoryLeak(client, file: file, line: line)
+        trackMemoryLeak(feedLoader, file: file, line: line)
         
         var receivedResult: LoadFeedResult?
         let exp = expectation(description: "Wait for API")

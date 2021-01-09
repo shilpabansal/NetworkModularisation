@@ -21,6 +21,7 @@
 		33A724FE2598AA65004D6AAB /* FeedItemMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A724FD2598AA65004D6AAB /* FeedItemMapper.swift */; };
 		33A725052598B5DC004D6AAB /* FeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A725042598B5DC004D6AAB /* FeedLoader.swift */; };
 		33BBB53225A97D3200AA0A7D /* NetworkModularizationEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33BBB53125A97D3200AA0A7D /* NetworkModularizationEndToEndTests.swift */; };
+		33BBB54125A98EC600AA0A7D /* XCTestCaseHelperTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A1A45625A74C8F008D3C2C /* XCTestCaseHelperTracking.swift */; };
 		33DCDAA125A8B6C000AD1495 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DCDA9F25A8B6C000AD1495 /* SceneDelegate.swift */; };
 		33DCDAAD25A8B6EA00AD1495 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DCDAAC25A8B6EA00AD1495 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -387,6 +388,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				33BBB53225A97D3200AA0A7D /* NetworkModularizationEndToEndTests.swift in Sources */,
+				33BBB54125A98EC600AA0A7D /* XCTestCaseHelperTracking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
