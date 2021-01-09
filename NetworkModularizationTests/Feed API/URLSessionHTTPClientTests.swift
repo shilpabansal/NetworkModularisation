@@ -86,6 +86,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         let url = anyURL()
         
         let exp = expectation(description: "Wait for API")
+        exp.expectedFulfillmentCount = 2
         /**
          CanInit method gets all the api requests, which calls the observer block on the request
          Here the observer is set before making the api call, if the intercepted url is not as expected the test case will fail
@@ -95,7 +96,9 @@ class URLSessionHTTPClientTests: XCTestCase {
            XCTAssertEqual( request.httpMethod, "GET")
            exp.fulfill()
         })
-        makeSUT().loadFeeds(url: url) {_ in }
+        makeSUT().loadFeeds(url: url) {result in
+            exp.fulfill()
+        }
         
         wait(for: [exp], timeout: 1.0)
     }
