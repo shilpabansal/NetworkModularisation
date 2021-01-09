@@ -11,19 +11,7 @@ import XCTest
 class NetworkModularizationEndToEndTests: XCTestCase {
 
     func test_EndToEndLoadFeed_UsingTestServer() {
-        let testURL = URL(string: "http://essentialdeveloper.com/feed-case-study/test-api/feed")!
-        let client = URLSessionHTTPClient()
-        let feedLoader = RemoteFeedLoader(url: testURL, client: client)
-        
-        var receivedResult: LoadFeedResult?
-        let exp = expectation(description: "Wait for API")
-        feedLoader.getFeeds() { result in
-            receivedResult = result
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 5.0)
-        
-        switch receivedResult {
+        switch getFeedResult() {
         case let .success(feeds)?:
             XCTAssert(feeds.count == 8, "feeds count has 8 elements as expected")
             
@@ -39,6 +27,21 @@ class NetworkModularizationEndToEndTests: XCTestCase {
     }
     
     //MARK: Helper
+    private func getFeedResult() -> LoadFeedResult? {
+        let testURL = URL(string: "http://essentialdeveloper.com/feed-case-study/test-api/feed")!
+        let client = URLSessionHTTPClient()
+        let feedLoader = RemoteFeedLoader(url: testURL, client: client)
+        
+        var receivedResult: LoadFeedResult?
+        let exp = expectation(description: "Wait for API")
+        feedLoader.getFeeds() { result in
+            receivedResult = result
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 5.0)
+        return receivedResult
+    }
+    
     private func expectationResult(index: Int) -> FeedItem {
         return FeedItem(id: id(at: index),
                         description: description(at: index),
