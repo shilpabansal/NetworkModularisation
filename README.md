@@ -82,3 +82,14 @@ Check below commands using command line to see if command is working fine
 
 whenever there will be any push to git repo, travis job will be started
 
+
+
+________________________________________________________________________________________
+If thread sanitisation is enabled, it detects the data race. 
+A data race occurs when two or more thread access the same memory location concurrently without synchronisation and at least one access is a write.
+
+In  test method test_getFromURL_performGetRequestFromURL
+ As there is no wait for expectation for async call, the tear down method(main thread) is making stub as nil, where as stub call in URLProtolcolStub  class( via loadFeeds(background thread)) is trying to access stub. Therefore data race condition occurs.
+
+To solve this, set expectationFulFillmentCount to 2, which will expect expectation to be called twice.
+________________________________________________________________________________________
