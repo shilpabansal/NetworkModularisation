@@ -30,3 +30,22 @@ For eg. for the test cases, we can intercept the request so we never go to cloud
 
 NSURLProtocolClient provides the interface to the URL loading system, the HTTPProtocol abstract class has instance of it.
 
+App Transport Security
+
+App Transport Security blocks every request that is made over HTTP and enforces a number of rules for requests that are made over HTTPS. Apple added App Transport Security to improve the privacy and security of applications that connect to the web. App Transport Security blocks every request that is made over an insecure connection. With requests made over HTTP as long as you realize that the data is sent as cleartext and that is by definition insecure. With App Transport Security, Apple attempts to convince or encourage developers to make their applications more secure by making secure connections the default.
+More details: https://cocoacasts.com/app-transport-security-has-blocked-my-request
+
+
+
+Command line setup:
+
+To check simulator and sdk details:
+xcodebuild -showsdks
+
+touch .travis.yml
+
+Put below content in  .travis.yml
+os: osx
+osx_image: xcode12.3
+langauge: swift
+script: xcodebuild clean build test -project NetworkModularization.xcodeproj -scheme "CI" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk iphonesimulator14.3 -destination 'platform=iOS Simulator,name=iPhone 12,OS=14.3'

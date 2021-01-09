@@ -679,6 +679,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = MX45P48B86;
 				INFOPLIST_FILE = NetworkModularizationEndToEndTests/Info.plist;
@@ -690,6 +692,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.samsclub.addressModule.NetworkModularizationEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NetworkModularization.app/NetworkModularization";
@@ -700,6 +704,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = MX45P48B86;
 				INFOPLIST_FILE = NetworkModularizationEndToEndTests/Info.plist;
@@ -711,6 +717,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.samsclub.addressModule.NetworkModularizationEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NetworkModularization.app/NetworkModularization";
@@ -727,7 +735,7 @@
 				332E6D1025971C7500770701 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		332E6D1125971C7500770701 /* Build configuration list for PBXNativeTarget "NetworkModularization" */ = {
 			isa = XCConfigurationList;
@@ -736,7 +744,7 @@
 				332E6D1325971C7500770701 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		332E6D1425971C7500770701 /* Build configuration list for PBXNativeTarget "NetworkModularizationTests" */ = {
 			isa = XCConfigurationList;
@@ -745,7 +753,7 @@
 				332E6D1625971C7500770701 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		332E6D1725971C7500770701 /* Build configuration list for PBXNativeTarget "NetworkModularizationUITests" */ = {
 			isa = XCConfigurationList;
@@ -754,7 +762,7 @@
 				332E6D1925971C7500770701 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		33BBB53625A97D3200AA0A7D /* Build configuration list for PBXNativeTarget "NetworkModularizationEndToEndTests" */ = {
 			isa = XCConfigurationList;
@@ -763,7 +771,7 @@
 				33BBB53825A97D3200AA0A7D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
