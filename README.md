@@ -1,5 +1,7 @@
 NetworkModularisation
 
+[![Build Status](https://travis-ci.com/shilpabansal/NetworkModularisation.svg?branch=main)](https://travis-ci.com/shilpabansal/NetworkModularisation)
+
 ________________________________________________________________________________________
 Modularising the network project with TDD
 
