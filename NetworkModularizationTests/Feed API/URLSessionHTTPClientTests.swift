@@ -85,23 +85,23 @@ class URLSessionHTTPClientTests: XCTestCase {
     func test_getFromURL_performGetRequestFromURL() {
         let url = anyURL()
         
-        let exp1 = expectation(description: "Wait for API")
+        var receivedRequest: URLRequest?
         /**
          CanInit method gets all the api requests, which calls the observer block on the request
          Here the observer is set before making the api call, if the intercepted url is not as expected the test case will fail
          */
         URLProtolcolStub.observeRequests(observer: {request in
-           XCTAssertEqual( request.url, url)
-           XCTAssertEqual( request.httpMethod, "GET")
-           exp1.fulfill()
+            receivedRequest = request
         })
         
-        let exp2 = expectation(description: "Wait for Request completion")
+        let exp = expectation(description: "Wait for Request completion")
         makeSUT().loadFeeds(url: url) {result in
-            exp2.fulfill()
+            exp.fulfill()
         }
+        wait(for: [exp], timeout: 1.0)
         
-        wait(for: [exp1, exp2], timeout: 1.0)
+        XCTAssertEqual(receivedRequest?.url, url)
+        XCTAssertEqual(receivedRequest?.httpMethod, "GET")
     }
     
     private func receivedValueFor(data: Data?, response: HTTPURLResponse?, file: StaticString = #file, line: UInt = #line) -> (data: Data, response: HTTPURLResponse)? {
