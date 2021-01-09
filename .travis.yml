@@ -1,4 +1,4 @@
 os: osx
 osx_image: xcode12.3
 langauge: swift
-script: xcodebuild clean build test -project NetworkModularization.xcodeproj -scheme "CI" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk iphonesimulator14.3 -destination 'platform=iOS Simulator,name=iPhone 12,OS=14.3'
+script: xcodebuild clean build test -project NetworkModularization.xcodeproj -scheme "CI" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk iphonesimulator14.3 -destination 'platform=iOS Simulator,name=iPhone 12 Pro Max,OS=14.3'
