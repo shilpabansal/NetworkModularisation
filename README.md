@@ -93,3 +93,92 @@ In  test method test_getFromURL_performGetRequestFromURL
 
 To solve this, set expectationFulFillmentCount to 2, which will expect expectation to be called twice.
 ________________________________________________________________________________________
+
+
+
+
+
+
+________________________________________________________________________________________
+
+URLSession has a singleton shared session (which doesn’t have a configuration object) for basic requests. It’s not as customizable as sessions you create, but it serves as a good starting point if you have very limited requirements. You access this session by calling the shared class method. For other kinds of sessions, you create a URLSession with one of three kinds of configurations:
+
+A default session behaves much like the shared session, but lets you configure it. You can also assign a delegate to the default session to obtain data incrementally.
+
+Ephemeral sessions are similar to shared sessions, but don’t write caches, cookies, or credentials to disk.
+
+Background sessions let you perform uploads and downloads of content in the background while your app isn't running.
+
+
+It’s common to see iOS codebases using SCNetworkReachability, NWPathMonitor, or third-party reachability frameworks to make decisions about whether they should make a network request or not. Unfortunately, such a process is not reliable and can lead to bad customer experience.
+
+As advised by Apple, we can use the reachability status to diagnose the cause of the failure and perform actions after a failed request. For example, you can automatically retry a failed request on a reachability callback. You can also use the current reachability status to display hints to the user, such as "Looks like you're offline." But you shouldn’t stop attempting to make a request based on the current reachability status.
+
+
+waitsForConnectivity
+If you use URLSession to make a data task while the user has no internet connection, your request will fail immediately and report an error. However, if you create your session with the waitsForConnectivity configuration option set to true, then the system will automatically wait some time to see if connectivity becomes available before trying the request.
+For example, this creates a data task that fetches a URL only when internet connectivity is available:
+let config = URLSessionConfiguration.default
+config.waitsForConnectivity = true
+
+URLSession(configuration: config).dataTask(with: yourURL) { data, response, error in
+    if let error = error {
+        print(error.localizedDescription)
+    } ei
+
+    // use your data here
+}.resume()
+By default, the system will wait seven days to see if internet connectivity becomes available, but you can control that with the timeoutIntervalForResource property on your configuration. For example, this will ask the system to wait 60 seconds:
+config.timeoutIntervalForResource = 60
+
+
+This property is ignored by background sessions, which always wait for connectivity.
+________________________________________________________________________________________
+
+
+
+
+
+
+________________________________________________________________________________________
+Low data mode:
+When n/w is expensive, app should be using the data conservatively 
+
+URLSession/URLConfiguration have property  allowsConstrainedNetworkAccess
+iOS lets users enable Low Data Mode for any cellular or WiFi connection, which signals to apps that they should be careful how much data they use. This might mean downloading lower-resolution images, it might mean disabling prefetching, or some other way of cutting down on bandwidth use.
+
+By default your app does not honour the user’s low data mode setting, but you can change that by setting the allowsConstrainedNetworkAccess property to false for a given URLRequest. For example:
+var request = URLRequest(url: someURL)
+request.allowsConstrainedNetworkAccess = false
+When that request executes iOS will immediately return an error if low data mode is enabled, which might be your cue to do another request for less data or lower-resolution images, for example. You can detect this error by typecasting it to a URLError, then checking if the networkUnavailableReason property is set to .constrained:
+
+if let error = error as? URLError, error.networkUnavailableReason == .constrained {
+    // user has activated low data mode so this request could not be satisfied
+}
+_______________________________________________________________________________________
+
+
+
+
+
+
+
+________________________________________________________________________________________
+allowsExpensiveNetworkAccess: 
+There is a similarly named URLSession property called allowsExpensiveNetworkAccess, which determines whether network requests can be made over a personal hotspot. It’s considered expensive because often users on cellular networks have lower data caps.
+
+
+Instead of limiting the network call for cellular its better to check for expensive property, which system gives, currently it checks for cellular or hotspot. 
+________________________________________________________________________________________
+
+
+
+
+
+________________________________________________________________________________________
+multipathServiceType
+A service type that specifies the Multi-path TCP connection policy for transmitting data over Wi-Fi and cellular interfaces.
+
+Multipath TCP, is an extension to TCP that permits multiple interfaces to transmit a single data stream. This capability allows a seamless handover from Wi-Fi to cellular, aimed at making both interfaces more efficient and improving the user experience.
+The multipathServiceType property defines which policy the Multipath TCP stack uses to schedule traffic across Wi-Fi and cellular interfaces. The default value is none, meaning Multipath TCP is disabled. You can also select handover mode, which provides seamless handover between Wi-Fi and cellular.
+________________________________________________________________________________________
