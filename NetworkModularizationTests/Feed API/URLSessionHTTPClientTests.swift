@@ -203,7 +203,6 @@ class URLSessionHTTPClientTests: XCTestCase {
         }
         
         override class func canInit(with request: URLRequest) -> Bool {
-           requestObserver?(request)
            return true
         }
         
@@ -215,6 +214,15 @@ class URLSessionHTTPClientTests: XCTestCase {
          startLoading is the instance method of the URL Protocol class which tells the system startloading the url
          */
         override func startLoading() {
+            /**
+                To avoid calling observer before urlProtocolDidFinishLoading
+             */
+            if let requestObserver = URLProtolcolStub.requestObserver {
+                client?.urlProtocolDidFinishLoading(self)
+                requestObserver(request)
+                return
+            }
+            
             if let data = URLProtolcolStub.stub?.data {
                 client?.urlProtocol(self, didLoad: data)
             }
@@ -229,6 +237,7 @@ class URLSessionHTTPClientTests: XCTestCase {
             if let error = URLProtolcolStub.stub?.error {
                 client?.urlProtocol(self, didFailWithError: error)
             }
+            
             client?.urlProtocolDidFinishLoading(self)
         }
         
