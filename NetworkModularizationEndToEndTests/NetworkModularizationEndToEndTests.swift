@@ -9,8 +9,30 @@ import XCTest
 @testable import NetworkModularization
 
 class NetworkModularizationEndToEndTests: XCTestCase {
-
+    /*
+     The disk and memory size can be increaed for cache.
+     in case we want to increase, it should be done in didFinishLoading to avoid inconsistent caching
+     */
+    func demoMemoryUpdateForCache() -> URLSession{
+        let cache = URLCache(memoryCapacity: 10 * 1024 * 1024, diskCapacity: 100 * 1024 * 1024, diskPath: nil)
+        let configuration = URLSessionConfiguration.default
+        configuration.urlCache = cache
+        
+        let session = URLSession(configuration: configuration)
+        
+        URLCache.shared = cache
+        return session
+    }
+    
     func test_EndToEndLoadFeed_UsingTestServer() {
+        
+        /**
+         To check the default location of the caches
+         let documentsUrl =  fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first! as NSURL
+         let documentsPath = documentsUrl.path
+         print(documentsPath)
+         */
+        
         switch getFeedResult() {
         case let .success(feeds)?:
             XCTAssert(feeds.count == 8, "feeds count has 8 elements as expected")
@@ -29,7 +51,10 @@ class NetworkModularizationEndToEndTests: XCTestCase {
     //MARK: Helper
     private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> LoadFeedResult? {
         let testURL = URL(string: "http://essentialdeveloper.com/feed-case-study/test-api/feed")!
-        let client = URLSessionHTTPClient()
+        /**
+                   By default URLSession's shared object has caching available, if the data shouldn't be cached, ephemeral object can be used
+         */
+        let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         let feedLoader = RemoteFeedLoader(url: testURL, client: client)
         
         trackMemoryLeak(client, file: file, line: line)

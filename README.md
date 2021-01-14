@@ -182,3 +182,49 @@ A service type that specifies the Multi-path TCP connection policy for transmitt
 Multipath TCP, is an extension to TCP that permits multiple interfaces to transmit a single data stream. This capability allows a seamless handover from Wi-Fi to cellular, aimed at making both interfaces more efficient and improving the user experience.
 The multipathServiceType property defines which policy the Multipath TCP stack uses to schedule traffic across Wi-Fi and cellular interfaces. The default value is none, meaning Multipath TCP is disabled. You can also select handover mode, which provides seamless handover between Wi-Fi and cellular.
 ________________________________________________________________________________________
+
+
+
+
+
+
+________________________________________________________________________________________
+By default HTTP and HTTPs requests are cached in memory and disk using URLCache class
+default shared instance has 4MB memory capacity and 20MB disk capacity
+
+ The disk and memory size can be increaed for cache.
+ in case we want to increase, it should be done in didFinishLoading to avoid inconsistent caching
+ 
+ let cache = URLCache(memoryCapacity: 10 * 1024 * 1024, diskCapacity: 100 * 1024 * 1024, diskPath: nil)
+ configuration.urlCache =  URLSessionConfiguration.default 
+ let session = URLSession(configuration: configuration)
+ URLCache.shared = cache
+ ________________________________________________________________________________________
+
+
+
+
+________________________________________________________________________________________
+To check the default location of the caches
+let documentsUrl =  fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first! as NSURL
+let documentsPath = documentsUrl.path
+print(documentsPath)
+
+By default URLSession's shared object has caching available, if the data shouldn't be cached, ephemeral object can be used
+
+the max age for cache policy can be changed.
+________________________________________________________________________________________
+
+
+
+
+________________________________________________________________________________________
+The default caching is only done if below are true:
+1. the request is HTTP/HTTPs or custom n/wing protocol that support caching
+2. The request is successful, status code 200-299 range
+3. Provided response came from server, not the cache
+4. session config allows caching
+5. The provided URLRequest object's cache policy allows caching
+6. Cache header in the server's response allows caching
+7. The response size is small enough to reaonably fit in cache
+________________________________________________________________________________________
