@@ -24,14 +24,14 @@ protocol FeedStore {
     typealias DeletionError = (Error?) -> Void
     typealias InsertionError = (Error?) -> Void
     
-    func saveFeeds(items: [FeedItem], timestamp: Date, completion: @escaping InsertionError)
+    func insert(items: [FeedItem], timestamp: Date, completion: @escaping InsertionError)
     func deleteFeeds(completion: @escaping DeletionError)
 }
     
 /**
  This class will be responsible for deleting the feeds from feedstore and if its successful, saves the feeds
  */
-class LocalFeedStore {
+class LocalFeedLoader {
     var store: FeedStore
     init(store: FeedStore) {
         self.store = store
@@ -43,14 +43,7 @@ class LocalFeedStore {
                 completion(error)
             }
             else {
-                self?.store.saveFeeds(items: items, timestamp: timestamp, completion: {error in
-                    if error != nil {
-                        completion(error)
-                    }
-                    else {
-                        completion(nil)
-                    }
-                })
+                self?.store.insert(items: items, timestamp: timestamp, completion: completion)
             }
         }
     }
@@ -68,7 +61,7 @@ class FeedStoreSpy: FeedStore {
         case insertFeed([FeedItem], Date)
     }
     
-    func saveFeeds(items: [FeedItem], timestamp: Date, completion: @escaping InsertionError) {
+    func insert(items: [FeedItem], timestamp: Date, completion: @escaping InsertionError) {
         receivedMessages.append(.insertFeed(items, timestamp))
         insertionCompletions.append(completion)
     }
@@ -105,65 +98,44 @@ class CacheFeedUseCaseTests: XCTestCase {
     func test_DeleteFeedWithError() {
         let (store, localFeedData) = makeSUT()
         
-        let exp = expectation(description: "Wait to save feed")
         let error = NSError(domain: "Test", code: 0, userInfo: nil)
-        var receivedError: Error?
         
-        localFeedData.saveFeedInCache(items: [], timestamp: Date()) { (error) in
-            receivedError = error
-            exp.fulfill()
-        }
-        
-        store.completeDeletion(with: error)
-        wait(for: [exp], timeout: 1.0)
-        XCTAssertEqual(store.receivedMessages, [.deleteFeed])
-        XCTAssertNotNil(receivedError)
-    }
-    
-    func test_DeletionFeedSuccessSaveSuccess() {
-        let (store, localFeedData) = makeSUT()
-        
-        let exp = expectation(description: "Wait to save feed")
-        var receivedError: Error?
         let timeStamp = Date()
-        let feedItems = [uniqueItem(), uniqueItem()]
-        localFeedData.saveFeedInCache(items: feedItems, timestamp: timeStamp) { (error) in
-            receivedError = error
-            exp.fulfill()
+        expect(localFeedData, feedItems: [], timeStamp: timeStamp, expectedError: error) {
+            store.completeDeletion(with: error)
         }
-        
-        store.completeDeletionSuccessfully()
-        store.completeInsertionSuccessfully()
-        wait(for: [exp], timeout: 1.0)
-        XCTAssertEqual(store.receivedMessages, [.deleteFeed, .insertFeed(feedItems, timeStamp)])
-        XCTAssertNil(receivedError)
+        XCTAssertEqual(store.receivedMessages, [.deleteFeed])
     }
     
     func test_DeletionFeedSuccessSaveError() {
         let (store, localFeedData) = makeSUT()
         
-        let exp = expectation(description: "Wait to save feed")
         let error = NSError(domain: "Test", code: 0, userInfo: nil)
-        var receivedError: Error?
+        let items = [uniqueItem(), uniqueItem()]
         let timeStamp = Date()
-        let feedItems = [uniqueItem(), uniqueItem()]
-        localFeedData.saveFeedInCache(items: feedItems, timestamp: timeStamp) { (error) in
-            receivedError = error
-            exp.fulfill()
+        expect(localFeedData, feedItems: items, timeStamp: timeStamp, expectedError: error) {
+            store.completeDeletionSuccessfully()
+            store.completeInsertion(with: error)
         }
-        
-        store.completeDeletionSuccessfully()
-        store.completeInsertion(with: error)
-        wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertEqual(store.receivedMessages, [.deleteFeed, .insertFeed(feedItems, timeStamp)])
-        XCTAssertNotNil(receivedError)
+        XCTAssertEqual(store.receivedMessages, [.deleteFeed, .insertFeed(items, timeStamp)])
+    }
+    
+    func test_DeletionFeedSuccessSaveSuccess() {
+        let (store, localFeedData) = makeSUT()
+                
+        let items = [uniqueItem(), uniqueItem()]
+        let timeStamp = Date()
+        expect(localFeedData, feedItems: items, timeStamp: timeStamp, expectedError: nil) {
+            store.completeDeletionSuccessfully()
+            store.completeInsertionSuccessfully()
+        }
+        XCTAssertEqual(store.receivedMessages, [.deleteFeed, .insertFeed(items, timeStamp)])
     }
     
     //MARK: - Helpers
-    func makeSUT(file: StaticString = #file, line: UInt = #line) -> (store: FeedStoreSpy, localFeedData: LocalFeedStore){
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> (store: FeedStoreSpy, localFeedData: LocalFeedLoader){
         let store = FeedStoreSpy()
-        let localFeedData = LocalFeedStore(store: store)
+        let localFeedData = LocalFeedLoader(store: store)
         
         trackMemoryLeak(store, file: file, line: line)
         trackMemoryLeak(localFeedData, file: file, line: line)
@@ -173,5 +145,21 @@ class CacheFeedUseCaseTests: XCTestCase {
     
     func uniqueItem() -> FeedItem {
         return FeedItem(id: UUID(), description: nil, location: nil, imageURL: URL(string: "https://a-url.com")!)
+    }
+    
+    func expect(_ sut: LocalFeedLoader, feedItems: [FeedItem], timeStamp: Date, expectedError: NSError?, action: (() -> Void),
+                file: StaticString = #file, line: UInt = #line) {
+        let exp = expectation(description: "Wait to save feed")
+        
+        var receivedError: Error?
+        sut.saveFeedInCache(items: feedItems, timestamp: timeStamp) { (error) in
+            receivedError = error
+            exp.fulfill()
+        }
+        
+        action()
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertEqual(receivedError as NSError?, expectedError)
     }
 }
