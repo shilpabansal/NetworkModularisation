@@ -43,6 +43,7 @@ class LocalFeedStore {
                 completion(error)
             }
             else {
+                completion(nil)
                 self?.store.saveFeeds(items: items, timestamp: timestamp, completion: completion)
             }
         }
@@ -67,7 +68,11 @@ class FeedStoreSpy: FeedStore {
     }
     
     func completeDeletion(with error: Error, index: Int = 0) {
-        deletionCompletions[0](error)
+        deletionCompletions[index](error)
+    }
+    
+    func completeDeletionSuccessfully(index: Int = 0) {
+        deletionCompletions[index](nil)
     }
 }
 
@@ -92,5 +97,22 @@ class CacheFeedUseCaseTests: XCTestCase {
         store.completeDeletion(with: expectedError)
         wait(for: [exp], timeout: 1.0)
         XCTAssertEqual(store.deletionFeedStoreCount, 1)
+    }
+    
+    func test_DeletionSuccess() {
+        let store = FeedStoreSpy()
+        let localFeedData = LocalFeedStore(store: store)
+        
+        let exp = expectation(description: "Wait to save feed")
+        var receivedError: Error?
+        localFeedData.saveFeedInCache(items: [], timestamp: Date()) { (error) in
+            receivedError = error
+            exp.fulfill()
+        }
+        
+        store.completeDeletionSuccessfully()
+        wait(for: [exp], timeout: 1.0)
+        XCTAssertEqual(store.deletionFeedStoreCount, 1)
+        XCTAssertNil(receivedError)
     }
 }
