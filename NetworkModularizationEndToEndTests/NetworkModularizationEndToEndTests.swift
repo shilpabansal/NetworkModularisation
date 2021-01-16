@@ -13,7 +13,7 @@ class NetworkModularizationEndToEndTests: XCTestCase {
      The disk and memory size can be increaed for cache.
      in case we want to increase, it should be done in didFinishLoading to avoid inconsistent caching
      */
-    func demoMemoryUpdateForCache() -> URLSession{
+   /* func demoMemoryUpdateForCache() -> URLSession{
         let cache = URLCache(memoryCapacity: 10 * 1024 * 1024, diskCapacity: 100 * 1024 * 1024, diskPath: nil)
         let configuration = URLSessionConfiguration.default
         configuration.urlCache = cache
@@ -22,7 +22,7 @@ class NetworkModularizationEndToEndTests: XCTestCase {
         
         URLCache.shared = cache
         return session
-    }
+    }*/
     
     func test_EndToEndLoadFeed_UsingTestServer() {
         
@@ -54,7 +54,8 @@ class NetworkModularizationEndToEndTests: XCTestCase {
         /**
                    By default URLSession's shared object has caching available, if the data shouldn't be cached, ephemeral object can be used
          */
-        let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
+        //let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
+        let client = URLSessionHTTPClient()
         let feedLoader = RemoteFeedLoader(url: testURL, client: client)
         
         trackMemoryLeak(client, file: file, line: line)
