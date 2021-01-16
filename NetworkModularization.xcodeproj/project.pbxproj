@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		330F3D0E25B2E7FA00461973 /* CacheFeedUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330F3D0D25B2E7FA00461973 /* CacheFeedUseCaseTests.swift */; };
 		332E6CEF25971C7100770701 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 332E6CEE25971C7100770701 /* ViewController.swift */; };
 		332E6CF225971C7100770701 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 332E6CF025971C7100770701 /* Main.storyboard */; };
 		332E6CF425971C7400770701 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 332E6CF325971C7400770701 /* Assets.xcassets */; };
@@ -51,6 +52,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		330F3D0D25B2E7FA00461973 /* CacheFeedUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheFeedUseCaseTests.swift; sourceTree = "<group>"; };
 		332E6CE725971C7100770701 /* NetworkModularization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetworkModularization.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		332E6CEE25971C7100770701 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		332E6CF125971C7100770701 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -108,6 +110,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		330F3D0C25B2E62200461973 /* Feed Cache */ = {
+			isa = PBXGroup;
+			children = (
+				330F3D0D25B2E7FA00461973 /* CacheFeedUseCaseTests.swift */,
+			);
+			path = "Feed Cache";
+			sourceTree = "<group>";
+		};
 		332E6CDE25971C7100770701 = {
 			isa = PBXGroup;
 			children = (
@@ -148,6 +158,7 @@
 		332E6D0025971C7500770701 /* NetworkModularizationTests */ = {
 			isa = PBXGroup;
 			children = (
+				330F3D0C25B2E62200461973 /* Feed Cache */,
 				33A7250C2598B5F8004D6AAB /* Feed API */,
 				332E6D0325971C7500770701 /* Info.plist */,
 			);
@@ -372,6 +383,7 @@
 			files = (
 				33A1A45725A74C8F008D3C2C /* XCTestCaseHelperTracking.swift in Sources */,
 				332E6D2425971D1800770701 /* RemoteFeedLoaderTests.swift in Sources */,
+				330F3D0E25B2E7FA00461973 /* CacheFeedUseCaseTests.swift in Sources */,
 				3350905625A5EBE1005365DD /* URLSessionHTTPClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
