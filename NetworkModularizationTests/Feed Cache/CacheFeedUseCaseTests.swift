@@ -24,10 +24,10 @@ protocol FeedStore {
     typealias DeletionError = (Error?) -> Void
     typealias InsertionError = (Error?) -> Void
     
-    func saveFeeds(items: [FeedItem], timestamp: Date, completion: InsertionError)
-    func deleteFeeds(completion: DeletionError)
+    func saveFeeds(items: [FeedItem], timestamp: Date, completion: @escaping InsertionError)
+    func deleteFeeds(completion: @escaping DeletionError)
 }
-
+    
 /**
  This class will be responsible for deleting the feeds from feedstore and if its successful, saves the feeds
  */
@@ -37,13 +37,13 @@ class LocalFeedStore {
         self.store = store
     }
     
-    func saveFeedInCache(items: [FeedItem], timestamp: Date, completion: (Error?) -> Void) {
-        store.deleteFeeds { (error) in
+    func saveFeedInCache(items: [FeedItem], timestamp: Date, completion: @escaping (Error?) -> Void) {
+        store.deleteFeeds {[weak self] (error) in
             if error != nil {
                 completion(error)
             }
             else {
-                store.saveFeeds(items: items, timestamp: timestamp, completion: completion)
+                self?.store.saveFeeds(items: items, timestamp: timestamp, completion: completion)
             }
         }
     }
@@ -51,12 +51,23 @@ class LocalFeedStore {
 
 class FeedStoreSpy: FeedStore {
     var deletionFeedStoreCount = 0
-    func saveFeeds(items: [FeedItem], timestamp: Date, completion: (Error?) -> Void) {
+    typealias DeletionCompletion = ((Error?) -> Void)
+    typealias InsertionCompletion = ((Error?) -> Void)
+    
+    var deletionCompletions = [DeletionCompletion]()
+    var insertionCompletions = [DeletionCompletion]()
+    
+    func saveFeeds(items: [FeedItem], timestamp: Date, completion: InsertionCompletion) {
         
     }
     
-    func deleteFeeds(completion: (Error?) -> Void) {
-        
+    func deleteFeeds(completion: @escaping DeletionCompletion) {
+        deletionFeedStoreCount += 1
+        deletionCompletions.append(completion)
+    }
+    
+    func completeDeletion(with error: Error, index: Int = 0) {
+        deletionCompletions[0](error)
     }
 }
 
@@ -66,5 +77,20 @@ class CacheFeedUseCaseTests: XCTestCase {
         _ = LocalFeedStore(store: store)
         
         XCTAssertEqual(store.deletionFeedStoreCount, 0)
+    }
+    
+    func test_DeletionOnFeed() {
+        let store = FeedStoreSpy()
+        let localFeedData = LocalFeedStore(store: store)
+        
+        let exp = expectation(description: "Wait to save feed")
+        let expectedError = NSError(domain: "Test", code: 0, userInfo: nil)
+        localFeedData.saveFeedInCache(items: [], timestamp: Date()) { (error) in
+            exp.fulfill()
+        }
+        
+        store.completeDeletion(with: expectedError)
+        wait(for: [exp], timeout: 1.0)
+        XCTAssertEqual(store.deletionFeedStoreCount, 1)
     }
 }
