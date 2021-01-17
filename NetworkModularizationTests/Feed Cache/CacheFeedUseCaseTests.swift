@@ -6,8 +6,9 @@
 //
 
 import Foundation
-import NetworkModularization
 import XCTest
+
+@testable import NetworkModularization
 /**
  Delete the existing cache
     On successful deletion, save the feed items
@@ -16,85 +17,6 @@ import XCTest
   On successful Save, delivers the success message
   On failure in Save, delivers the error
  */
-
-/**
- Feed store protocol is the interface, which expects the feeds to be stored or return error in completion block passed
- */
-protocol FeedStore {
-    typealias DeletionError = (Error?) -> Void
-    typealias InsertionError = (Error?) -> Void
-    
-    func insert(items: [FeedItem], timestamp: Date, completion: @escaping InsertionError)
-    func deleteFeeds(completion: @escaping DeletionError)
-}
-    
-/**
- This class will be responsible for deleting the feeds from feedstore and if its successful, saves the feeds
- */
-class LocalFeedLoader {
-    var store: FeedStore
-    init(store: FeedStore) {
-        self.store = store
-    }
-    
-    func saveFeedInCache(items: [FeedItem], timestamp: Date, completion: @escaping (Error?) -> Void) {
-        store.deleteFeeds {[weak self] (error) in
-            guard let strongSelf = self else { return }
-            if error != nil {
-                completion(error)
-            }
-            else {
-                strongSelf.cacheInsertion(items: items, timestamp: timestamp, completion: completion)
-            }
-        }
-    }
-    
-    private func cacheInsertion(items: [FeedItem], timestamp: Date, completion: @escaping (Error?) -> Void) {
-        store.insert(items: items, timestamp: timestamp, completion: {[weak self] error in
-            guard self != nil else { return }
-            completion(error)
-        })
-    }
-}
-
-class FeedStoreSpy: FeedStore {
-    typealias FeedSuccess = (([FeedItem], Date) -> Void)
-    var deletionCompletions = [DeletionError]()
-    var insertionCompletions = [InsertionError]()
-    
-    var receivedMessages = [ReceivedMessage]()
-    
-    enum ReceivedMessage: Equatable {
-        case deleteFeed
-        case insertFeed([FeedItem], Date)
-    }
-    
-    func insert(items: [FeedItem], timestamp: Date, completion: @escaping InsertionError) {
-        receivedMessages.append(.insertFeed(items, timestamp))
-        insertionCompletions.append(completion)
-    }
-    
-    func deleteFeeds(completion: @escaping DeletionError) {
-        receivedMessages.append(.deleteFeed)
-        deletionCompletions.append(completion)
-    }
-    
-    func completeDeletion(with error: Error, index: Int = 0) {
-        deletionCompletions[index](error)
-    }
-    
-    func completeDeletionSuccessfully(index: Int = 0) {
-        deletionCompletions[index](nil)
-    }
-    
-    func completeInsertionSuccessfully(index: Int = 0) {
-        insertionCompletions[index](nil)
-    }
-    
-    func completeInsertion(with error: Error, index: Int = 0) {
-        insertionCompletions[index](error)
-    }
-}
 
 class CacheFeedUseCaseTests: XCTestCase {
     func test_NoDeletionOnFeedStoreCreation() {
@@ -175,7 +97,7 @@ class CacheFeedUseCaseTests: XCTestCase {
     }
     
     //MARK: - Helpers
-    func makeSUT(file: StaticString = #file, line: UInt = #line) -> (store: FeedStoreSpy, localFeedData: LocalFeedLoader){
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (store: FeedStoreSpy, localFeedData: LocalFeedLoader){
         let store = FeedStoreSpy()
         let localFeedData = LocalFeedLoader(store: store)
         
@@ -185,11 +107,11 @@ class CacheFeedUseCaseTests: XCTestCase {
         return (store: store, localFeedData: localFeedData)
     }
     
-    func uniqueItem() -> FeedItem {
+    private func uniqueItem() -> FeedItem {
         return FeedItem(id: UUID(), description: nil, location: nil, imageURL: URL(string: "https://a-url.com")!)
     }
     
-    func expect(_ sut: LocalFeedLoader, feedItems: [FeedItem], timeStamp: Date, expectedError: NSError?, action: (() -> Void),
+    private func expect(_ sut: LocalFeedLoader, feedItems: [FeedItem], timeStamp: Date, expectedError: NSError?, action: (() -> Void),
                 file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Wait to save feed")
         
@@ -203,5 +125,45 @@ class CacheFeedUseCaseTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertEqual(receivedError as NSError?, expectedError)
+    }
+    
+    
+    private class FeedStoreSpy: FeedStore {
+        typealias FeedSuccess = (([FeedItem], Date) -> Void)
+        var deletionCompletions = [DeletionError]()
+        var insertionCompletions = [InsertionError]()
+        
+        var receivedMessages = [ReceivedMessage]()
+        
+        enum ReceivedMessage: Equatable {
+            case deleteFeed
+            case insertFeed([FeedItem], Date)
+        }
+        
+        func insert(items: [FeedItem], timestamp: Date, completion: @escaping InsertionError) {
+            receivedMessages.append(.insertFeed(items, timestamp))
+            insertionCompletions.append(completion)
+        }
+        
+        func deleteFeeds(completion: @escaping DeletionError) {
+            receivedMessages.append(.deleteFeed)
+            deletionCompletions.append(completion)
+        }
+        
+        func completeDeletion(with error: Error, index: Int = 0) {
+            deletionCompletions[index](error)
+        }
+        
+        func completeDeletionSuccessfully(index: Int = 0) {
+            deletionCompletions[index](nil)
+        }
+        
+        func completeInsertionSuccessfully(index: Int = 0) {
+            insertionCompletions[index](nil)
+        }
+        
+        func completeInsertion(with error: Error, index: Int = 0) {
+            insertionCompletions[index](error)
+        }
     }
 }
