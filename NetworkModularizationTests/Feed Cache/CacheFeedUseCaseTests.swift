@@ -44,12 +44,16 @@ class LocalFeedLoader {
                 completion(error)
             }
             else {
-                strongSelf.store.insert(items: items, timestamp: timestamp, completion: {[weak self] error in
-                    guard let strongSelf = self else { return }
-                    completion(error)
-                })
+                strongSelf.cacheInsertion(items: items, timestamp: timestamp, completion: completion)
             }
         }
+    }
+    
+    private func cacheInsertion(items: [FeedItem], timestamp: Date, completion: @escaping (Error?) -> Void) {
+        store.insert(items: items, timestamp: timestamp, completion: {[weak self] error in
+            guard self != nil else { return }
+            completion(error)
+        })
     }
 }
 
