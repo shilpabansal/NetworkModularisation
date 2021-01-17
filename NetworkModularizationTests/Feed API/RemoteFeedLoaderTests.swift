@@ -124,15 +124,15 @@ class RemoteFeedLoaderTests: XCTestCase {
         return  try! JSONSerialization.data(withJSONObject: itemsJSON)
     }
     
-    private func makeItems(id: UUID, description: String?, location: String?, imageURL: URL) -> (items: FeedItem, json: [String: Any]) {
-        let feedItem = FeedItem(id: id,
+    private func makeItems(id: UUID, description: String?, location: String?, imageURL: URL) -> (items: FeedImage, json: [String: Any]) {
+        let feedImage = FeedImage(id: id,
                                 description: description,
                                 location: location,
-                                imageURL: imageURL)
-        let itemJSON = ["id": feedItem.id.uuidString,
-                         "image": feedItem.imageURL.absoluteString]
+                                url: imageURL)
+        let itemJSON = ["id": feedImage.id.uuidString,
+                         "image": feedImage.url.absoluteString]
         
-        return (feedItem, itemJSON)
+        return (feedImage, itemJSON)
     }
     
     //MARK: - Helpers

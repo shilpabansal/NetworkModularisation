@@ -71,11 +71,11 @@ class NetworkModularizationEndToEndTests: XCTestCase {
         return receivedResult
     }
     
-    private func expectationResult(index: Int) -> FeedItem {
-        return FeedItem(id: id(at: index),
+    private func expectationResult(index: Int) -> FeedImage {
+        return FeedImage(id: id(at: index),
                         description: description(at: index),
                         location: location(at: index),
-                        imageURL: URL(string: image(at: index))!)
+                        url: URL(string: image(at: index))!)
     }
     
     private func id(at index: Int) -> UUID {

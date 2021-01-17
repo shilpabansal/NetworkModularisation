@@ -15,28 +15,28 @@ final class LocalFeedLoader {
         self.store = store
     }
     
-    func saveFeedInCache(items: [FeedItem], timestamp: Date, completion: @escaping (Error?) -> Void) {
+    func saveFeedInCache(feeds: [FeedImage], timestamp: Date, completion: @escaping (Error?) -> Void) {
         store.deleteFeeds {[weak self] (error) in
             guard let strongSelf = self else { return }
             if error != nil {
                 completion(error)
             }
             else {
-                strongSelf.cacheInsertion(items: items, timestamp: timestamp, completion: completion)
+                strongSelf.cacheInsertion(feeds: feeds, timestamp: timestamp, completion: completion)
             }
         }
     }
     
-    private func cacheInsertion(items: [FeedItem], timestamp: Date, completion: @escaping (Error?) -> Void) {
-        store.insert(items: items.toLocal(), timestamp: timestamp, completion: {[weak self] error in
+    private func cacheInsertion(feeds: [FeedImage], timestamp: Date, completion: @escaping (Error?) -> Void) {
+        store.insert(feeds: feeds.toLocal(), timestamp: timestamp, completion: {[weak self] error in
             guard self != nil else { return }
             completion(error)
         })
     }
 }
 
-private extension Array where Element == FeedItem {
-    func toLocal() -> [LocalFeedItem] {
-        return map({return LocalFeedItem(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.imageURL)})
+private extension Array where Element == FeedImage {
+    func toLocal() -> [LocalFeedImage] {
+        return map({return LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url)})
     }
 }
