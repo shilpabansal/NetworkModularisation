@@ -33,7 +33,7 @@ public final class RemoteFeedLoader : FeedLoader {
         
         switch result {
             case let .success(data, response):
-                completeion(.success(RemoteFeedLoader.map(data, response: response))
+                completion(RemoteFeedLoader.map(data, response: response))
             case .failure(_):
                 completion(.failure(Error.connectivity))
             }
