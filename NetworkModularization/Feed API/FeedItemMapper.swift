@@ -8,17 +8,6 @@
 import Foundation
 import Network
 
-/**
- As the data expected from Api has image as the key name and the the param name is imageURL in FeedItem
- To keep FeedItem generic in RemoteFeedLoader the mapping is done to avoid the changes in the FeedLoader module on API change
- */
-internal struct RemoteFeedItem : Decodable {
-    internal let id: UUID
-    internal let description: String?
-    internal let location: String?
-    internal let image: URL
-}
-
 final class FeedItemMapper {
     private struct Root: Decodable {
         var items: [RemoteFeedItem]
