@@ -228,3 +228,14 @@ The default caching is only done if below are true:
 6. Cache header in the server's response allows caching
 7. The response size is small enough to reaonably fit in cache
 ________________________________________________________________________________________
+
+
+
+
+
+________________________________________________________________________________________
+
+As all the modules are tightly coupled with FeedItem, if there is any change in FeedItem, all modules will need to changes.
+
+To avoid this, we should be trying to decouple the modules as much as possible.
+________________________________________________________________________________________
