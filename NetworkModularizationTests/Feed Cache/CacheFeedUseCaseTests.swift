@@ -71,7 +71,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         let error = NSError(domain: "Test", code: 0, userInfo: nil)
         
         var deletionError: Error?
-        localFeedData?.saveFeedInCache(items: [uniqueItem()], timestamp: Date()) { (error) in
+        localFeedData?.saveFeedInCache(items: uniqueItems().model, timestamp: Date()) { (error) in
             deletionError = error
         }
         localFeedData = nil
@@ -86,7 +86,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         let error = NSError(domain: "Test", code: 0, userInfo: nil)
         
         var insertionError: Error?
-        localFeedData?.saveFeedInCache(items: [uniqueItem()], timestamp: Date()) { (error) in
+        localFeedData?.saveFeedInCache(items: uniqueItems().model, timestamp: Date()) { (error) in
             insertionError = error
         }
         store.completeDeletionSuccessfully()

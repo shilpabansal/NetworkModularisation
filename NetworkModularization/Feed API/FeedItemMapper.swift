@@ -8,39 +8,32 @@
 import Foundation
 import Network
 
+/**
+ As the data expected from Api has image as the key name and the the param name is imageURL in FeedItem
+ To keep FeedItem generic in RemoteFeedLoader the mapping is done to avoid the changes in the FeedLoader module on API change
+ */
+internal struct RemoteFeedItem : Decodable {
+    internal let id: UUID
+    internal let description: String?
+    internal let location: String?
+    internal let image: URL
+}
+
 final class FeedItemMapper {
     private struct Root: Decodable {
-        var items: [Item]
-        
-        var feeds: [FeedItem] {
-            return items.map({$0.item})
-        }
+        var items: [RemoteFeedItem]
     }
     
     internal static var OK_200 : Int { return 200 }
-    /**
-     As the data expected from Api has image as the key name and the the param name is imageURL in FeedItem
-     To keep FeedItem generic in RemoteFeedLoader the mapping is done to avoid the changes in the FeedLoader module on API change
-     */
-    private struct Item : Decodable {
-        public let id: UUID
-        public let description: String?
-        public let location: String?
-        public let image: URL
-        
-        public var item: FeedItem {
-            return FeedItem(id: id, description: description, location: location, imageURL: image)
-        }
-    }
-
-    internal static func map(_ data: Data, _ response: HTTPURLResponse) -> RemoteFeedLoader.Result {
+    
+    internal static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [RemoteFeedItem] {
         /**
          if the status code is not 200 or the json parsing fails, returns invalid data
          */
         guard response.statusCode == OK_200,
-              let items = try? JSONDecoder().decode(Root.self, from: data).feeds else {
-            return .failure(RemoteFeedLoader.Error.invalidData)
+              let root = try? JSONDecoder().decode(Root.self, from: data) else {
+            throw RemoteFeedLoader.Error.invalidData
         }
-        return .success(items)
+        return root.items
     }
 }

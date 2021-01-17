@@ -33,13 +33,28 @@ public final class RemoteFeedLoader : FeedLoader {
         
         switch result {
             case let .success(data, response):
-                /**
-                The benefit of taking the map method static is, though the self reference is deallocatd, it can still return the completion block
-                 */
-                completion(FeedItemMapper.map(data, response))
+                do {
+                    let items = try FeedItemMapper.map(data, response)
+                    /**
+                    The benefit of taking the map method static is, though the self reference is deallocatd, it can still return the completion block
+                     */
+                    completion(.success(items.toModels()))
+                }
+                catch {
+                    completion(.failure(error))
+                }
+               
             case .failure(_):
                 completion(.failure(Error.connectivity))
             }
         }
+    }
+}
+
+private extension Array where Element == RemoteFeedItem {
+    func toModels() -> [FeedItem] {
+        return map({
+            return FeedItem(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.image)
+        })
     }
 }
