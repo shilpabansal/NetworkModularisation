@@ -1,4 +1,6 @@
 NetworkModularisation
+![alt text](https://github.com/shilpabansal/NetworkModularisation/ModalDiagram.png)
+
 
 [![Build Status](https://travis-ci.com/shilpabansal/NetworkModularisation.svg?branch=main)](https://travis-ci.com/shilpabansal/NetworkModularisation)
 
