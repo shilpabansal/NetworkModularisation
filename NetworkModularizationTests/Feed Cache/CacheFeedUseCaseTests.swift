@@ -39,11 +39,15 @@ class LocalFeedLoader {
     
     func saveFeedInCache(items: [FeedItem], timestamp: Date, completion: @escaping (Error?) -> Void) {
         store.deleteFeeds {[weak self] (error) in
+            guard let strongSelf = self else { return }
             if error != nil {
                 completion(error)
             }
             else {
-                self?.store.insert(items: items, timestamp: timestamp, completion: completion)
+                strongSelf.store.insert(items: items, timestamp: timestamp, completion: {[weak self] error in
+                    guard let strongSelf = self else { return }
+                    completion(error)
+                })
             }
         }
     }
@@ -135,18 +139,35 @@ class CacheFeedUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.deleteFeed, .insertFeed(items, timeStamp)])
     }
     
-    func test_doesNotDeliverErrorAfterSUTHasBeenDeallocated() {
+    func test_deleteDoesNotDeliverErrorAfterSUTHasBeenDeallocated() {
         let store = FeedStoreSpy()
         var localFeedData: LocalFeedLoader? = LocalFeedLoader(store: store)
-                
-        var receivedError: Error?
+        let error = NSError(domain: "Test", code: 0, userInfo: nil)
+        
+        var deletionError: Error?
         localFeedData?.saveFeedInCache(items: [uniqueItem()], timestamp: Date()) { (error) in
-            receivedError = error
+            deletionError = error
         }
-        
         localFeedData = nil
+        store.completeDeletion(with: error)
         
-        XCTAssertNil(receivedError)
+        XCTAssertNil(deletionError)
+    }
+    
+    func test_saveDoesNotDeliverErrorAfterSUTHasBeenDeallocated() {
+        let store = FeedStoreSpy()
+        var localFeedData: LocalFeedLoader? = LocalFeedLoader(store: store)
+        let error = NSError(domain: "Test", code: 0, userInfo: nil)
+        
+        var insertionError: Error?
+        localFeedData?.saveFeedInCache(items: [uniqueItem()], timestamp: Date()) { (error) in
+            insertionError = error
+        }
+        store.completeDeletionSuccessfully()
+        localFeedData = nil
+        store.completeInsertion(with: error)
+        
+        XCTAssertNil(insertionError)
     }
     
     //MARK: - Helpers
