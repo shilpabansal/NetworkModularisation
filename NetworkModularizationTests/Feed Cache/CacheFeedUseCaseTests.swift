@@ -117,6 +117,9 @@ class CacheFeedUseCaseTests: XCTestCase {
             store.completeDeletionSuccessfully()
             store.completeInsertion(with: error)
         }
+        /**
+                To check the order in which the functions are called and with correct data
+         */
         XCTAssertEqual(store.receivedMessages, [.deleteFeed, .insertFeed(items, timeStamp)])
     }
     
@@ -130,6 +133,20 @@ class CacheFeedUseCaseTests: XCTestCase {
             store.completeInsertionSuccessfully()
         }
         XCTAssertEqual(store.receivedMessages, [.deleteFeed, .insertFeed(items, timeStamp)])
+    }
+    
+    func test_doesNotDeliverErrorAfterSUTHasBeenDeallocated() {
+        let store = FeedStoreSpy()
+        var localFeedData: LocalFeedLoader? = LocalFeedLoader(store: store)
+                
+        var receivedError: Error?
+        localFeedData?.saveFeedInCache(items: [uniqueItem()], timestamp: Date()) { (error) in
+            receivedError = error
+        }
+        
+        localFeedData = nil
+        
+        XCTAssertNil(receivedError)
     }
     
     //MARK: - Helpers
