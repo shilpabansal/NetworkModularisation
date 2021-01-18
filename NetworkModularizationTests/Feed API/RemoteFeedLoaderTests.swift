@@ -20,26 +20,26 @@ class RemoteFeedLoaderTests: XCTestCase {
     
     func test_load_requestURL() {
         let url = URL(string: "abc")!
-        let (client, feed) = makeSUT(url: url)
-        feed.getFeeds(completion: {_ in })
+        let (client, feedLoader) = makeSUT(url: url)
+        feedLoader.getFeeds(completion: {_ in })
         
         XCTAssertEqual(client.requestedURLs, [url])
     }
     
     func test_loadTwice_requestUR() {
         let url = URL(string: "abc")!
-        let (client, feed) = makeSUT(url: url)
+        let (client, feedLoader) = makeSUT(url: url)
         
-        feed.getFeeds(completion: {_ in })
-        feed.getFeeds(completion: {_ in })
+        feedLoader.getFeeds(completion: {_ in })
+        feedLoader.getFeeds(completion: {_ in })
         
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
     
     func test_ConnectivityError_requestUR() {
-        let (client, feed) = makeSUT()
+        let (client, feedLoader) = makeSUT()
         
-        expect(sut: feed, expectedResult: failure(.connectivity)) {
+        expect(sut: feedLoader, expectedResult: failure(.connectivity)) {
             /**
             Instead of mocking the error, we are calling the completion block of network library and checking if viewModel's completion block is called as expected error or not
              */
@@ -49,14 +49,14 @@ class RemoteFeedLoaderTests: XCTestCase {
     }
     
     func test_Non200Error_requestUR() {
-        let (client, feed) = makeSUT()
+        let (client, feedLoader) = makeSUT()
         
         /**
             Different possibilities of error codes are considered, the error is complared to see if on the completion index expected error is there or not
          */
         let errorCodes = [199, 201, 400, 401, 500, 501]
         errorCodes.enumerated().forEach({(index, item) in
-            expect(sut: feed, expectedResult: failure(.invalidData)) {
+            expect(sut: feedLoader, expectedResult: failure(.invalidData)) {
                 let jsonData = makeData(items: [])
                 client.complete(with: item, data: jsonData, index: index)
             }
@@ -64,38 +64,38 @@ class RemoteFeedLoaderTests: XCTestCase {
     }
     
     func test_Non200InvalidData_requestUR() {
-        let (client, feed) = makeSUT()
+        let (client, feedLoader) = makeSUT()
         
-        expect(sut: feed, expectedResult: failure(.invalidData)) {
+        expect(sut: feedLoader, expectedResult: failure(.invalidData)) {
             let clientData = Data("invalid data".utf8)
             client.complete(with: 200, data: clientData)
         }
     }
     
     func test_Non200EmptyList_requestUR() {
-        let (client, feed) = makeSUT()
+        let (client, feedLoader) = makeSUT()
         
-        expect(sut: feed, expectedResult: .success([])) {
+        expect(sut: feedLoader, expectedResult: .success([])) {
             let clientData = Data("{\"items\": []}".utf8)
             client.complete(with: 200, data: clientData)
         }
     }
     
     func test_Non200ValidResponse_requestUR() {
-        let (client, feed) = makeSUT()
+        let (client, feedLoader) = makeSUT()
         
-        let (feedItem1, itemJSON1) = makeItems(id: UUID(),
+        let (feedImage1, itemJSON1) = makeFeedImage(id: UUID(),
                                 description: nil,
                                 location: nil,
                                 imageURL: URL(string: "https://a-string.com")!)
        
-        let (feedItem2, itemJSON2) = makeItems(id: UUID(),
+        let (feedImage2, itemJSON2) = makeFeedImage(id: UUID(),
                                 description: nil,
                                 location: nil,
                                 imageURL: URL(string: "https://a-string.com")!)
         let jsonArray = [itemJSON1, itemJSON2]
     
-        expect(sut: feed, expectedResult: .success([feedItem1, feedItem2])) {
+        expect(sut: feedLoader, expectedResult: .success([feedImage1, feedImage2])) {
             let clientData = makeData(items: jsonArray)
             client.complete(with: 200, data: clientData)
         }
@@ -104,12 +104,12 @@ class RemoteFeedLoaderTests: XCTestCase {
     func test_doesNotDeliverResultAfterFeedInstanceHasBeenDeallocated() {
         let url = URL(string: "abc")!
         let client = HttpClientSpy()
-        var feed: RemoteFeedLoader? = RemoteFeedLoader(url: url, client: client)
+        var feedLoader: RemoteFeedLoader? = RemoteFeedLoader(url: url, client: client)
         
         var capturedResult = [RemoteFeedLoader.Result]()
-        feed?.getFeeds(completion: { capturedResult.append($0) })
+        feedLoader?.getFeeds(completion: { capturedResult.append($0) })
         
-        feed = nil
+        feedLoader = nil
         let clientData = Data("{\"items\": []}".utf8)
         client.complete(with: 200, data: clientData)
         
@@ -124,7 +124,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         return  try! JSONSerialization.data(withJSONObject: itemsJSON)
     }
     
-    private func makeItems(id: UUID, description: String?, location: String?, imageURL: URL) -> (items: FeedImage, json: [String: Any]) {
+    private func makeFeedImage(id: UUID, description: String?, location: String?, imageURL: URL) -> (items: FeedImage, json: [String: Any]) {
         let feedImage = FeedImage(id: id,
                                 description: description,
                                 location: location,
@@ -142,10 +142,10 @@ class RemoteFeedLoaderTests: XCTestCase {
                          line: UInt = #line) -> (HttpClientSpy, RemoteFeedLoader) {
         let url = URL(string: "abc")!
         let client = HttpClientSpy()
-        let feed = RemoteFeedLoader(url: url, client: client)
+        let feedLoader = RemoteFeedLoader(url: url, client: client)
         
-        trackMemoryLeak(feed, file: file, line: line)
-        return (client, feed)
+        trackMemoryLeak(feedLoader, file: file, line: line)
+        return (client, feedLoader)
     }
     
     private func expect(sut: RemoteFeedLoader,
