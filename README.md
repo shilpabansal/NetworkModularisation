@@ -1,6 +1,6 @@
 NetworkModularisation
 ![ModelDigram](https://github.com/shilpabansal/NetworkModularisation/blob/main/ModalDiagram.png)
-
+![FlowChart](https://github.com/shilpabansal/NetworkModularisation/blob/main/FlowChart.png)
 
 [![Build Status](https://travis-ci.com/shilpabansal/NetworkModularisation.svg?branch=main)](https://travis-ci.com/shilpabansal/NetworkModularisation)
 
