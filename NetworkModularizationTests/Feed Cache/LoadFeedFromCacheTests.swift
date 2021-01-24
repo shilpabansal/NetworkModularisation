@@ -35,14 +35,40 @@ class LoadFeedFromCacheTests: XCTestCase {
         var receivedError: Error?
         
         let exp = expectation(description: "Wait for api")
-        feedLoader.loadFeeds({error in
-            receivedError = error
+        feedLoader.loadFeeds({result in
+            switch result {
+            case .failure(let error):
+                receivedError = error
+            default:
+                XCTFail("Expected failure, received \(result)")
+            }
             exp.fulfill()
         })
         
         store.completeRetrieval(with: retrievalError)
         wait(for: [exp], timeout: 1.0)
         XCTAssertEqual(receivedError as NSError?, retrievalError)
+    }
+    
+    func test_load_deliversNoImagesOnEmptyCache() {
+        let (store, feedLoader) = makeSUT()
+        var receivedImages: [FeedImage]?
+        
+        let exp = expectation(description: "Wait for api")
+        feedLoader.loadFeeds({result in
+            switch result {
+            case .success(let images):
+                receivedImages = images
+            default:
+                XCTFail("Expected success, received \(result)")
+            }
+            
+            exp.fulfill()
+        })
+        
+        store.completeRetrievalSuccessfully()
+        wait(for: [exp], timeout: 1.0)
+        XCTAssertEqual(receivedImages, [])
     }
     
     //MARK: - Helpers

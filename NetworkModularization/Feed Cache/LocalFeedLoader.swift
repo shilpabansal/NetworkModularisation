@@ -11,6 +11,8 @@ import Foundation
  */
 final class LocalFeedLoader {
     var store: FeedStore
+    typealias LoadResult = LoadFeedResult
+    
     init(store: FeedStore) {
         self.store = store
     }
@@ -27,10 +29,13 @@ final class LocalFeedLoader {
         }
     }
     
-    func loadFeeds(_ completion: @escaping (Error?) -> Void) {
+    func loadFeeds(_ completion: @escaping (LoadResult) -> Void) {
         store.retrieve(completion: {error in
-            if error != nil {
-                completion(error)
+            if let error = error {
+                completion(.failure(error))
+            }
+            else {
+                completion(.success([]))
             }
         })
     }
