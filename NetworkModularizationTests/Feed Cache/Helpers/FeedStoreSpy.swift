@@ -8,7 +8,7 @@
 import Foundation
 @testable import NetworkModularization
 
-class FeedStoreSpy: FeedStore {
+public class FeedStoreSpy: FeedStore {
     typealias FeedSuccess = (([LocalFeedImage], Date) -> Void)
     var deletionCompletions = [DeletionError]()
     var insertionCompletions = [InsertionError]()
@@ -20,12 +20,12 @@ class FeedStoreSpy: FeedStore {
         case insertFeed([LocalFeedImage], Date)
     }
     
-    func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionError) {
+    public func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionError) {
         receivedMessages.append(.insertFeed(feeds, timestamp))
         insertionCompletions.append(completion)
     }
     
-    func deleteFeeds(completion: @escaping DeletionError) {
+    public func deleteFeeds(completion: @escaping DeletionError) {
         receivedMessages.append(.deleteFeed)
         deletionCompletions.append(completion)
     }

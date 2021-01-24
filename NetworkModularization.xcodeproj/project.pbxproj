@@ -125,9 +125,9 @@
 		330F3D0C25B2E62200461973 /* Feed Cache */ = {
 			isa = PBXGroup;
 			children = (
+				33AF649D25BDA3AD00D82894 /* Helpers */,
 				330F3D0D25B2E7FA00461973 /* CacheFeedUseCaseTests.swift */,
 				33AF649125BDA26D00D82894 /* LoadFeedFromCacheTests.swift */,
-				33AF649725BDA2B900D82894 /* FeedStoreSpy.swift */,
 			);
 			path = "Feed Cache";
 			sourceTree = "<group>";
@@ -219,6 +219,14 @@
 				3350905525A5EBE1005365DD /* URLSessionHTTPClientTests.swift */,
 			);
 			path = "Feed API";
+			sourceTree = "<group>";
+		};
+		33AF649D25BDA3AD00D82894 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				33AF649725BDA2B900D82894 /* FeedStoreSpy.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		33BBB53025A97D3200AA0A7D /* NetworkModularizationEndToEndTests */ = {
