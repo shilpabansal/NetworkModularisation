@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import EventKit
 /**
  This class will be responsible for deleting the feeds from feedstore and if its successful, saves the feeds
  */
@@ -30,18 +31,27 @@ final class LocalFeedLoader {
     }
     
     func loadFeeds(_ completion: @escaping (LoadResult) -> Void) {
-        store.retrieve(completion: {result in
+        store.retrieve(completion: {[weak self] result in
+            guard let strongSelf = self else { return }
             switch result {
-            case .empty:
-                completion(.success([]))
             case .failure(let error):
                 completion(.failure(error))
-            case let .found(images, _):
+            case let .found(images, timestamp) where strongSelf.validate(timestamp):
                 completion(.success(images.toModels()))
+            case .empty, .found:
+                completion(.success([]))
             default:
                 break
             }
         })
+    }
+    
+    private func validate(_ timeStamp: Date) -> Bool {
+        let currentDate = Date()
+        guard let maxCacheAge = Calendar(identifier: .gregorian).date(byAdding: .day, value: 7, to: timeStamp) else {
+            return false
+        }
+        return currentDate < maxCacheAge
     }
     
     private func cacheInsertion(feeds: [FeedImage], timestamp: Date, completion: @escaping (Error?) -> Void) {
