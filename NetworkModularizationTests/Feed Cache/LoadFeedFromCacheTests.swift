@@ -22,6 +22,29 @@ class LoadFeedFromCacheTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [])
     }
     
+    func test_load_feedRequest() {
+        let (store, feedLoader) = makeSUT()
+        feedLoader.loadFeeds({_ in})
+        XCTAssertEqual(store.receivedMessages, [.retrieval])
+    }
+    
+    func test_load_feedRequestError() {
+        let (store, feedLoader) = makeSUT()
+        let retrievalError = anyNSError()
+        
+        var receivedError: Error?
+        
+        let exp = expectation(description: "Wait for api")
+        feedLoader.loadFeeds({error in
+            receivedError = error
+            exp.fulfill()
+        })
+        
+        store.completeRetrieval(with: retrievalError)
+        wait(for: [exp], timeout: 1.0)
+        XCTAssertEqual(receivedError as NSError?, retrievalError)
+    }
+    
     //MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (store: FeedStoreSpy, localFeedData: LocalFeedLoader){
         let store = FeedStoreSpy()
@@ -31,5 +54,9 @@ class LoadFeedFromCacheTests: XCTestCase {
         trackMemoryLeak(localFeedData, file: file, line: line)
         
         return (store: store, localFeedData: localFeedData)
+    }
+    
+    private func anyNSError() -> NSError {
+        return NSError(domain: "Test Error", code: 1)
     }
 }

@@ -27,12 +27,10 @@ class CacheFeedUseCaseTests: XCTestCase {
     
     func test_DeleteFeedWithError() {
         let (store, localFeedData) = makeSUT()
-        
-        let error = NSError(domain: "Test", code: 0, userInfo: nil)
-        
+                
         let timeStamp = Date()
-        expect(localFeedData, feeds: [], timeStamp: timeStamp, expectedError: error) {
-            store.completeDeletion(with: error)
+        expect(localFeedData, feeds: [], timeStamp: timeStamp, expectedError: anyNSError()) {
+            store.completeDeletion(with: anyNSError())
         }
         XCTAssertEqual(store.receivedMessages, [.deleteFeed])
     }
@@ -40,12 +38,11 @@ class CacheFeedUseCaseTests: XCTestCase {
     func test_DeletionFeedSuccessSaveError() {
         let (store, localFeedData) = makeSUT()
         
-        let error = NSError(domain: "Test", code: 0, userInfo: nil)
         let feeds = uniqueImageFeeds()
         let timeStamp = Date()
-        expect(localFeedData, feeds: feeds.model, timeStamp: timeStamp, expectedError: error) {
+        expect(localFeedData, feeds: feeds.model, timeStamp: timeStamp, expectedError: anyNSError()) {
             store.completeDeletionSuccessfully()
-            store.completeInsertion(with: error)
+            store.completeInsertion(with: anyNSError())
         }
         /**
                 To check the order in which the functions are called and with correct data
@@ -68,14 +65,13 @@ class CacheFeedUseCaseTests: XCTestCase {
     func test_deleteDoesNotDeliverErrorAfterSUTHasBeenDeallocated() {
         let store = FeedStoreSpy()
         var localFeedData: LocalFeedLoader? = LocalFeedLoader(store: store)
-        let error = NSError(domain: "Test", code: 0, userInfo: nil)
         
         var deletionError: Error?
         localFeedData?.saveFeedInCache(feeds: uniqueImageFeeds().model, timestamp: Date()) { (error) in
             deletionError = error
         }
         localFeedData = nil
-        store.completeDeletion(with: error)
+        store.completeDeletion(with: anyNSError())
         
         XCTAssertNil(deletionError)
     }
@@ -83,7 +79,6 @@ class CacheFeedUseCaseTests: XCTestCase {
     func test_saveDoesNotDeliverErrorAfterSUTHasBeenDeallocated() {
         let store = FeedStoreSpy()
         var localFeedData: LocalFeedLoader? = LocalFeedLoader(store: store)
-        let error = NSError(domain: "Test", code: 0, userInfo: nil)
         
         var insertionError: Error?
         localFeedData?.saveFeedInCache(feeds: uniqueImageFeeds().model, timestamp: Date()) { (error) in
@@ -91,7 +86,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         }
         store.completeDeletionSuccessfully()
         localFeedData = nil
-        store.completeInsertion(with: error)
+        store.completeInsertion(with: anyNSError())
         
         XCTAssertNil(insertionError)
     }
@@ -134,5 +129,9 @@ class CacheFeedUseCaseTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertEqual(receivedError as NSError?, expectedError)
+    }
+    
+    private func anyNSError() -> NSError {
+        return NSError(domain: "Test Error", code: 1)
     }
 }

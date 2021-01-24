@@ -12,12 +12,14 @@ public class FeedStoreSpy: FeedStore {
     typealias FeedSuccess = (([LocalFeedImage], Date) -> Void)
     var deletionCompletions = [DeletionError]()
     var insertionCompletions = [InsertionError]()
+    var retrieveCompletions = [LoadError]()
     
     var receivedMessages = [ReceivedMessage]()
     
     enum ReceivedMessage: Equatable {
         case deleteFeed
         case insertFeed([LocalFeedImage], Date)
+        case retrieval
     }
     
     public func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionError) {
@@ -28,6 +30,11 @@ public class FeedStoreSpy: FeedStore {
     public func deleteFeeds(completion: @escaping DeletionError) {
         receivedMessages.append(.deleteFeed)
         deletionCompletions.append(completion)
+    }
+    
+    public func retrieve(completion: @escaping LoadError) {
+        receivedMessages.append(.retrieval)
+        retrieveCompletions.append(completion)
     }
     
     func completeDeletion(with error: Error, index: Int = 0) {
@@ -44,5 +51,13 @@ public class FeedStoreSpy: FeedStore {
     
     func completeInsertion(with error: Error, index: Int = 0) {
         insertionCompletions[index](error)
+    }
+    
+    func completeRetrieval(with error: Error, index: Int = 0) {
+        retrieveCompletions[index](error)
+    }
+    
+    func completeRetrievalSuccessfully(index: Int = 0) {
+        retrieveCompletions[index](nil)
     }
 }
