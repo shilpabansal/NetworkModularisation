@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import EventKit
 @testable import NetworkModularization
 
 /**
@@ -39,7 +40,17 @@ class LoadFeedFromCacheTests: XCTestCase {
     func test_load_deliversNoImagesOnEmptyCache() {
         let (store, feedLoader) = makeSUT()
         expect(feedLoader, toCompleteWith: .success([]), when: {
-            store.completeRetrievalSuccessfully()
+            store.completionRetrievalWithEmptyCache()
+        })
+    }
+    
+    func test_load_deliversCachedImagesOnLessThanSevenDaysOldCache() {
+        let (store, feedLoader) = makeSUT()
+        let feeds = uniqueImageFeeds()
+        let fixedCurrentDate = Date()
+        let lessThanSevenDays = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
+        expect(feedLoader, toCompleteWith: .success(feeds.model), when: {
+            store.completeRetrievalSuccessfully(with: feeds.local, timeStamp: lessThanSevenDays)
         })
     }
     
@@ -77,5 +88,41 @@ class LoadFeedFromCacheTests: XCTestCase {
         action()
         wait(for: [exp], timeout: 1.0)
     }
+    
+    private func uniqueFeed() -> FeedImage {
+        return FeedImage(id: UUID(), description: nil, location: nil, url: URL(string: "https://a-url.com")!)
+    }
+    
+    private func uniqueImageFeeds() -> (model: [FeedImage], local: [LocalFeedImage]) {
+        let feeds = [uniqueFeed(), uniqueFeed()]
+        let localFeeds = feeds.map({feed in
+            LocalFeedImage(id: feed.id, description: feed.description, location: feed.location, url: feed.url)
+        })
+        
+        return (model: feeds, local: localFeeds)
+    }
 }
 
+private extension Date {
+    func adding(days: Int) -> Date {
+        return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+    }
+    
+    func adding(seconds: TimeInterval) -> Date {
+        return self + seconds
+    }
+}
+
+private extension Array where Element == FeedImage {
+    func toModels() -> [FeedImage] {
+        return map({return FeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url)})
+    }
+}
+
+private extension Array where Element == RemoteFeedItem {
+    func toModels() -> [FeedImage] {
+        return map({
+            return FeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.image)
+        })
+    }
+}

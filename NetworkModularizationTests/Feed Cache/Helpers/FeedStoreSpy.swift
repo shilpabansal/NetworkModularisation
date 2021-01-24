@@ -12,7 +12,7 @@ public class FeedStoreSpy: FeedStore {
     typealias FeedSuccess = (([LocalFeedImage], Date) -> Void)
     var deletionCompletions = [DeletionError]()
     var insertionCompletions = [InsertionError]()
-    var retrieveCompletions = [LoadError]()
+    var retrieveCompletions = [RetriveResult]()
     
     var receivedMessages = [ReceivedMessage]()
     
@@ -32,11 +32,6 @@ public class FeedStoreSpy: FeedStore {
         deletionCompletions.append(completion)
     }
     
-    public func retrieve(completion: @escaping LoadError) {
-        receivedMessages.append(.retrieval)
-        retrieveCompletions.append(completion)
-    }
-    
     func completeDeletion(with error: Error, index: Int = 0) {
         deletionCompletions[index](error)
     }
@@ -54,10 +49,19 @@ public class FeedStoreSpy: FeedStore {
     }
     
     func completeRetrieval(with error: Error, index: Int = 0) {
-        retrieveCompletions[index](error)
+        retrieveCompletions[index](.failure(error))
     }
     
-    func completeRetrievalSuccessfully(index: Int = 0) {
-        retrieveCompletions[index](nil)
+    public func retrieve(completion: @escaping RetriveResult) {
+        receivedMessages.append(.retrieval)
+        retrieveCompletions.append(completion)
+    }
+    
+    func completeRetrievalSuccessfully(with images: [LocalFeedImage], timeStamp: Date, index: Int = 0) {
+        retrieveCompletions[index](.found(images, timeStamp))
+    }
+    
+    func completionRetrievalWithEmptyCache(index: Int = 0) {
+        retrieveCompletions[index](.empty)
     }
 }
