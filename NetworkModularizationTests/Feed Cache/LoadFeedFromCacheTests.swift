@@ -27,7 +27,7 @@ class LoadFeedFromCacheTests: XCTestCase {
     
     func test_load_feedRequest() {
         let (store, feedLoader) = makeSUT()
-        feedLoader.loadFeeds({_ in})
+        feedLoader.getFeeds(completion: {_ in})
         XCTAssertEqual(store.receivedMessages, [.retrieval])
     }
     
@@ -104,7 +104,7 @@ class LoadFeedFromCacheTests: XCTestCase {
         let (store, feedLoader) = makeSUT()
         let retrievalError = anyNSError()
         
-        feedLoader.loadFeeds {_ in}
+        feedLoader.getFeeds(completion:{_ in})
         store.completeRetrieval(with: retrievalError)
         
         XCTAssertEqual(store.receivedMessages, [.retrieval])
@@ -114,7 +114,7 @@ class LoadFeedFromCacheTests: XCTestCase {
     func test_dontDeleteCacheFeedOnEmpty() {
         let (store, feedLoader) = makeSUT()
         
-        feedLoader.loadFeeds {_ in}
+        feedLoader.getFeeds(completion: {_ in})
         store.completionRetrievalWithEmptyCache()
         
         XCTAssertEqual(store.receivedMessages, [.retrieval])
@@ -127,7 +127,7 @@ class LoadFeedFromCacheTests: XCTestCase {
         let fixedCurrentDate = Date()
         let sevenDays = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
         
-        feedLoader.loadFeeds {_ in}
+        feedLoader.getFeeds(completion: {_ in})
         store.completeRetrievalSuccessfully(with: feeds.local, timeStamp: sevenDays)
         XCTAssertEqual(store.receivedMessages, [.retrieval])
     }
@@ -137,9 +137,9 @@ class LoadFeedFromCacheTests: XCTestCase {
         var localFeedData: LocalFeedLoader? = LocalFeedLoader(store: store)
         
         var receivedResult = [LocalFeedLoader.LoadResult]()
-        localFeedData?.loadFeeds{result in
+        localFeedData?.getFeeds(completion: {result in
             receivedResult.append(result)
-        }
+        })
         
         localFeedData = nil
         
@@ -163,7 +163,7 @@ class LoadFeedFromCacheTests: XCTestCase {
                         when action: (() -> Void),
                         file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Wait for api")
-        sut.loadFeeds({receivedResult in
+        sut.getFeeds(completion: {receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedImages), .success(expectedImages)):
                XCTAssertEqual(receivedImages, expectedImages)
