@@ -11,24 +11,6 @@ import EventKit
  This class will be responsible for deleting the feeds from feedstore and if its successful, saves the feeds
  */
 
-private final class FeedCachePolicy {
-    private init() { }
-    private static let calendar = Calendar(identifier: .gregorian)
-    private static var maxCacheAgeInDays: Int {
-        return 7
-    }
-    
-    static func validate(_ timeStamp: Date, against date: Date) -> Bool {
-        /**
-            Checking the difference between the date sent and current is less than 7
-         */
-        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timeStamp) else {
-            return false
-        }
-        return date < maxCacheAge
-    }
-}
-
 final class LocalFeedLoader {
     var store: FeedStore
     private let calendar = Calendar(identifier: .gregorian)
