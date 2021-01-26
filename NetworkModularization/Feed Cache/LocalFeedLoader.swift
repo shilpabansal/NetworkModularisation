@@ -11,13 +11,14 @@ import EventKit
  This class will be responsible for deleting the feeds from feedstore and if its successful, saves the feeds
  */
 
-final class FeedCachePolicy {
-    private let calendar = Calendar(identifier: .gregorian)
-    private var maxCacheAgeInDays: Int {
+private final class FeedCachePolicy {
+    private init() { }
+    private static let calendar = Calendar(identifier: .gregorian)
+    private static var maxCacheAgeInDays: Int {
         return 7
     }
     
-    func validate(_ timeStamp: Date, against date: Date) -> Bool {
+    static func validate(_ timeStamp: Date, against date: Date) -> Bool {
         /**
             Checking the difference between the date sent and current is less than 7
          */
@@ -29,7 +30,6 @@ final class FeedCachePolicy {
 }
 
 final class LocalFeedLoader {
-    private let cachePolicy = FeedCachePolicy()
     var store: FeedStore
     private let calendar = Calendar(identifier: .gregorian)
     let currentDate: () -> Date
@@ -72,7 +72,7 @@ extension LocalFeedLoader: FeedLoader {
             case .failure(let error):
                 completion(.failure(error))
                 
-            case let .found(images, timestamp) where strongSelf.cachePolicy.validate(timestamp, against: strongSelf.currentDate()):
+            case let .found(images, timestamp) where FeedCachePolicy.validate(timestamp, against: strongSelf.currentDate()):
                 completion(.success(images.toModels()))
                 
             case .empty, .found:
@@ -92,7 +92,7 @@ extension LocalFeedLoader {
             switch result {
             case .failure(_):
                 strongSelf.store.deleteFeeds{_ in}
-            case let .found(_, timestamp) where !strongSelf.cachePolicy.validate(timestamp, against: strongSelf.currentDate()):
+            case let .found(_, timestamp) where !FeedCachePolicy.validate(timestamp, against: strongSelf.currentDate()):
                 strongSelf.store.deleteFeeds{_ in}
             default:
             break
