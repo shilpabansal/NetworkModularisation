@@ -76,21 +76,7 @@ class LoadFeedFromCacheTests: XCTestCase {
         })
     }
     
-    func test_load_DeleteFailureCacheImagesForSevenOrMoreDaysOldCache() {
-        let (store, feedLoader) = makeSUT()
-        let feeds = uniqueImageFeeds()
-        let fixedCurrentDate = Date()
-        let sevenDays = fixedCurrentDate.adding(days: -8)
-        let nsError = anyNSError()
-        
-        expect(feedLoader, toCompleteWith: .success([]), when: {
-            store.completeRetrievalSuccessfully(with: feeds.local, timeStamp: sevenDays)
-            store.completeDeletion(with: nsError)
-            XCTAssertEqual(store.receivedMessages, [.retrieval, .deleteFeed])
-        })
-    }
-    
-    func test_load_DeleteSuccessCacheImagesForSevenOrMoreDaysOldCache() {
+    func test_load_doesnotDeleteCacheImagesForSevenOrMoreDaysOldCache() {
         let (store, feedLoader) = makeSUT()
         let feeds = uniqueImageFeeds()
         let fixedCurrentDate = Date()
@@ -98,19 +84,30 @@ class LoadFeedFromCacheTests: XCTestCase {
         
         expect(feedLoader, toCompleteWith: .success([]), when: {
             store.completeRetrievalSuccessfully(with: feeds.local, timeStamp: sevenDays)
-            store.completeDeletionSuccessfully()
-            XCTAssertEqual(store.receivedMessages, [.retrieval, .deleteFeed])
+            XCTAssertEqual(store.receivedMessages, [.retrieval])
         })
     }
     
-    func test_deleteCacheFeedOnRetrievalError() {
+    func test_load_doesntDeleteForSevenOrMoreDaysOldCache() {
+        let (store, feedLoader) = makeSUT()
+        let feeds = uniqueImageFeeds()
+        let fixedCurrentDate = Date()
+        let sevenDays = fixedCurrentDate.adding(days: -8)
+        
+        expect(feedLoader, toCompleteWith: .success([]), when: {
+            store.completeRetrievalSuccessfully(with: feeds.local, timeStamp: sevenDays)
+            XCTAssertEqual(store.receivedMessages, [.retrieval])
+        })
+    }
+    
+    func test_doesNotHaveAnySideEffectOnRetrievalError() {
         let (store, feedLoader) = makeSUT()
         let retrievalError = anyNSError()
         
         feedLoader.loadFeeds {_ in}
         store.completeRetrieval(with: retrievalError)
         
-        XCTAssertEqual(store.receivedMessages, [.retrieval, .deleteFeed])
+        XCTAssertEqual(store.receivedMessages, [.retrieval])
         
     }
     

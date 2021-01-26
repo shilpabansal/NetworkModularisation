@@ -38,18 +38,14 @@ final class LocalFeedLoader {
             switch result {
             
             case .failure(let error):
-                strongSelf.store.deleteFeeds { _ in }
                 completion(.failure(error))
                 
             case let .found(images, timestamp) where strongSelf.validate(timestamp):
                 completion(.success(images.toModels()))
                 
-            case .empty:
+            case .empty, .found:
                 completion(.success([]))
                 
-            case .found:
-                strongSelf.store.deleteFeeds {_ in }
-                completion(.success([]))
             default:
                 break
             }
