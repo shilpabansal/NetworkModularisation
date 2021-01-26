@@ -10,26 +10,39 @@ import EventKit
 /**
  This class will be responsible for deleting the feeds from feedstore and if its successful, saves the feeds
  */
-final class LocalFeedLoader {
-    var store: FeedStore
+
+final class FeedCachePolicy {
     private let calendar = Calendar(identifier: .gregorian)
+    let currentDate: () -> Date
     private var maxCacheAgeInDays: Int {
         return 7
     }
     
-    init(store: FeedStore) {
-        self.store = store
+    init(currentDate: @escaping () -> Date) {
+        self.currentDate = currentDate
     }
     
-    private func validate(_ timeStamp: Date) -> Bool {
-        let currentDate = Date()
+    func validate(_ timeStamp: Date) -> Bool {
         /**
             Checking the difference between the date sent and current is less than 7
          */
         guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timeStamp) else {
             return false
         }
-        return currentDate < maxCacheAge
+        return currentDate() < maxCacheAge
+    }
+}
+
+final class LocalFeedLoader {
+    private let cachePolicy: FeedCachePolicy
+    var store: FeedStore
+    private let calendar = Calendar(identifier: .gregorian)
+    let currentDate: () -> Date
+    
+    init(store: FeedStore, currentDate: @escaping () -> Date) {
+        self.store = store
+        self.currentDate = currentDate
+        cachePolicy = FeedCachePolicy(currentDate: currentDate)
     }
 }
 
@@ -65,7 +78,7 @@ extension LocalFeedLoader: FeedLoader {
             case .failure(let error):
                 completion(.failure(error))
                 
-            case let .found(images, timestamp) where strongSelf.validate(timestamp):
+            case let .found(images, timestamp) where strongSelf.cachePolicy.validate(timestamp):
                 completion(.success(images.toModels()))
                 
             case .empty, .found:
@@ -85,7 +98,7 @@ extension LocalFeedLoader {
             switch result {
             case .failure(_):
                 strongSelf.store.deleteFeeds{_ in}
-            case let .found(_, timestamp) where !strongSelf.validate(timestamp):
+            case let .found(_, timestamp) where !strongSelf.cachePolicy.validate(timestamp):
                 strongSelf.store.deleteFeeds{_ in}
             default:
             break

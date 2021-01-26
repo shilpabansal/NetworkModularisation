@@ -134,7 +134,7 @@ class LoadFeedFromCacheTests: XCTestCase {
     
     func test_load_doesnotDeliverResultIfSUTIsDeallocated() {
         let store = FeedStoreSpy()
-        var localFeedData: LocalFeedLoader? = LocalFeedLoader(store: store)
+        var localFeedData: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
         
         var receivedResult = [LocalFeedLoader.LoadResult]()
         localFeedData?.getFeeds(completion: {result in
@@ -150,7 +150,7 @@ class LoadFeedFromCacheTests: XCTestCase {
     //MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (store: FeedStoreSpy, localFeedData: LocalFeedLoader){
         let store = FeedStoreSpy()
-        let localFeedData = LocalFeedLoader(store: store)
+        let localFeedData = LocalFeedLoader(store: store, currentDate: Date.init)
         
         trackMemoryLeak(store, file: file, line: line)
         trackMemoryLeak(localFeedData, file: file, line: line)
