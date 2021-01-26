@@ -83,7 +83,7 @@ class LoadFeedFromCacheTests: XCTestCase {
         let sevenDays = fixedCurrentDate.adding(days: -8)
         let nsError = anyNSError()
         
-        expect(feedLoader, toCompleteWith: .failure(nsError), when: {
+        expect(feedLoader, toCompleteWith: .success([]), when: {
             store.completeRetrievalSuccessfully(with: feeds.local, timeStamp: sevenDays)
             store.completeDeletion(with: nsError)
             XCTAssertEqual(store.receivedMessages, [.retrieval, .deleteFeed])
@@ -122,6 +122,17 @@ class LoadFeedFromCacheTests: XCTestCase {
         
         XCTAssertEqual(store.receivedMessages, [.retrieval])
         
+    }
+    
+    func test_load_DoesntDeleteIfCachedIsLessThanSevenDaysOldCache() {
+        let (store, feedLoader) = makeSUT()
+        let feeds = uniqueImageFeeds()
+        let fixedCurrentDate = Date()
+        let sevenDays = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
+        
+        feedLoader.loadFeeds {_ in}
+        store.completeRetrievalSuccessfully(with: feeds.local, timeStamp: sevenDays)
+        XCTAssertEqual(store.receivedMessages, [.retrieval])
     }
     
     //MARK: - Helpers

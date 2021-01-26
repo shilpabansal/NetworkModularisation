@@ -45,14 +45,8 @@ final class LocalFeedLoader {
             case .empty:
                 completion(.success([]))
             case .found:
-                strongSelf.store.deleteFeeds { (deletionError) in
-                    if let deletionError = deletionError {
-                        completion(.failure(deletionError))
-                    }
-                    else {
-                        completion(.success([]))
-                    }
-                }
+                strongSelf.store.deleteFeeds {_ in }
+                completion(.success([]))
             default:
                 break
             }
