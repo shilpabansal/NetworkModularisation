@@ -135,6 +135,21 @@ class LoadFeedFromCacheTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieval])
     }
     
+    func test_load_doesnotDeliverResultIfSUTIsDeinitialised() {
+        let store = FeedStoreSpy()
+        var localFeedData: LocalFeedLoader? = LocalFeedLoader(store: store)
+        
+        var receivedResult = [LocalFeedLoader.LoadResult]()
+        localFeedData?.loadFeeds{result in
+            receivedResult.append(result)
+        }
+        
+        localFeedData = nil
+        
+        store.completionRetrievalWithEmptyCache()
+        XCTAssert(receivedResult.isEmpty)
+    }
+    
     //MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (store: FeedStoreSpy, localFeedData: LocalFeedLoader){
         let store = FeedStoreSpy()
