@@ -8,16 +8,8 @@
 import Foundation
 @testable import NetworkModularization
 
-func anyNSError() -> NSError {
-    return NSError(domain: "Test Error", code: 1)
-}
-
 func uniqueFeed() -> FeedImage {
     return FeedImage(id: UUID(), description: nil, location: nil, url: URL(string: "https://a-url.com")!)
-}
-
-func anyURL() -> URL {
-    return URL(string: "http://a-url.com")!
 }
 
 func uniqueImageFeeds() -> (model: [FeedImage], local: [LocalFeedImage]) {
