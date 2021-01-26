@@ -32,7 +32,7 @@ final class LocalFeedLoader {
         }
     }
     
-    func loadFeeds(_ completion: @escaping (LoadResult) -> Void) {
+   func loadFeeds(_ completion: @escaping (LoadResult) -> Void) {
         store.retrieve(completion: {[weak self] result in
             guard let strongSelf = self else { return }
             switch result {

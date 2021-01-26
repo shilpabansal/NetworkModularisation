@@ -31,6 +31,7 @@
 		33BFFB7325B47E0E00704A5D /* LocalFeedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33BFFB7225B47E0E00704A5D /* LocalFeedImage.swift */; };
 		33DCDAA125A8B6C000AD1495 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DCDA9F25A8B6C000AD1495 /* SceneDelegate.swift */; };
 		33DCDAAD25A8B6EA00AD1495 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DCDAAC25A8B6EA00AD1495 /* AppDelegate.swift */; };
+		33DE125825C02DFB00B381DA /* ValidateFeedCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DE125725C02DFB00B381DA /* ValidateFeedCacheUseCaseTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +89,7 @@
 		33BFFB7225B47E0E00704A5D /* LocalFeedImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalFeedImage.swift; sourceTree = "<group>"; };
 		33DCDA9F25A8B6C000AD1495 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		33DCDAAC25A8B6EA00AD1495 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		33DE125725C02DFB00B381DA /* ValidateFeedCacheUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateFeedCacheUseCaseTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +130,7 @@
 				33AF649D25BDA3AD00D82894 /* Helpers */,
 				330F3D0D25B2E7FA00461973 /* CacheFeedUseCaseTests.swift */,
 				33AF649125BDA26D00D82894 /* LoadFeedFromCacheTests.swift */,
+				33DE125725C02DFB00B381DA /* ValidateFeedCacheUseCaseTests.swift */,
 			);
 			path = "Feed Cache";
 			sourceTree = "<group>";
@@ -419,6 +422,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33DE125825C02DFB00B381DA /* ValidateFeedCacheUseCaseTests.swift in Sources */,
 				33A1A45725A74C8F008D3C2C /* XCTestCaseHelperTracking.swift in Sources */,
 				332E6D2425971D1800770701 /* RemoteFeedLoaderTests.swift in Sources */,
 				33AF649825BDA2B900D82894 /* FeedStoreSpy.swift in Sources */,

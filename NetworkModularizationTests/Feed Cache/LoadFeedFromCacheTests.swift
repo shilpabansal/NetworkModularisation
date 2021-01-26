@@ -135,7 +135,7 @@ class LoadFeedFromCacheTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieval])
     }
     
-    func test_load_doesnotDeliverResultIfSUTIsDeinitialised() {
+    func test_load_doesnotDeliverResultIfSUTIsDeallocated() {
         let store = FeedStoreSpy()
         var localFeedData: LocalFeedLoader? = LocalFeedLoader(store: store)
         
