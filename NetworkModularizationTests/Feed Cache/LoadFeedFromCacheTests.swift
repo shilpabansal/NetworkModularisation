@@ -196,7 +196,7 @@ class LoadFeedFromCacheTests: XCTestCase {
     }
 }
 
-private extension Date {
+extension Date {
     func adding(days: Int) -> Date {
         return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
     }

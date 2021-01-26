@@ -52,6 +52,23 @@ final class LocalFeedLoader {
         })
     }
     
+    func validateCache() {
+        store.retrieve {[unowned self] (result) in
+            switch result {
+            case .failure(_):
+                self.store.deleteFeeds{_ in}
+            case .empty:
+                break
+            case let .found(_, timestamp) where validate(timestamp):
+                break
+            case .found:
+                self.store.deleteFeeds{_ in}
+            default:
+            break
+            }
+        }
+    }
+    
     private func validate(_ timeStamp: Date) -> Bool {
         let currentDate = Date()
         /**
