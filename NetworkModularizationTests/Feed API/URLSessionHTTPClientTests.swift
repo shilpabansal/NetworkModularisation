@@ -155,10 +155,6 @@ class URLSessionHTTPClientTests: XCTestCase {
         return sut
     }
     
-    private func anyNSError() -> NSError {
-        return NSError(domain: "Test Error", code: 1)
-    }
-    
     private func anyData() -> Data {
         return Data("Any data".utf8)
     }
@@ -171,9 +167,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         return HTTPURLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
     }
     
-    private func anyURL() -> URL {
-        return URL(string: "http://a-url.com")!
-    }
+   
     
     private class URLProtolcolStub: URLProtocol {
         static var stub: Stub?

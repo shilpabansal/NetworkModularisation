@@ -32,6 +32,7 @@
 		33DCDAA125A8B6C000AD1495 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DCDA9F25A8B6C000AD1495 /* SceneDelegate.swift */; };
 		33DCDAAD25A8B6EA00AD1495 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DCDAAC25A8B6EA00AD1495 /* AppDelegate.swift */; };
 		33DE125825C02DFB00B381DA /* ValidateFeedCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DE125725C02DFB00B381DA /* ValidateFeedCacheUseCaseTests.swift */; };
+		33DE125E25C0350800B381DA /* FeedHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DE125D25C0350800B381DA /* FeedHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +91,7 @@
 		33DCDA9F25A8B6C000AD1495 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		33DCDAAC25A8B6EA00AD1495 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		33DE125725C02DFB00B381DA /* ValidateFeedCacheUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateFeedCacheUseCaseTests.swift; sourceTree = "<group>"; };
+		33DE125D25C0350800B381DA /* FeedHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,6 +192,7 @@
 				330F3D0C25B2E62200461973 /* Feed Cache */,
 				33A7250C2598B5F8004D6AAB /* Feed API */,
 				332E6D0325971C7500770701 /* Info.plist */,
+				33DE125D25C0350800B381DA /* FeedHelper.swift */,
 			);
 			path = NetworkModularizationTests;
 			sourceTree = "<group>";
@@ -429,6 +432,7 @@
 				330F3D0E25B2E7FA00461973 /* CacheFeedUseCaseTests.swift in Sources */,
 				3350905625A5EBE1005365DD /* URLSessionHTTPClientTests.swift in Sources */,
 				33AF649225BDA26D00D82894 /* LoadFeedFromCacheTests.swift in Sources */,
+				33DE125E25C0350800B381DA /* FeedHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

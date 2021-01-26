@@ -158,10 +158,6 @@ class LoadFeedFromCacheTests: XCTestCase {
         return (store: store, localFeedData: localFeedData)
     }
     
-    private func anyNSError() -> NSError {
-        return NSError(domain: "Test Error", code: 1)
-    }
-    
     private func expect(_ sut: LocalFeedLoader,
                         toCompleteWith expectedResult: LocalFeedLoader.LoadResult,
                         when action: (() -> Void),
@@ -180,42 +176,5 @@ class LoadFeedFromCacheTests: XCTestCase {
         })
         action()
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    private func uniqueFeed() -> FeedImage {
-        return FeedImage(id: UUID(), description: nil, location: nil, url: URL(string: "https://a-url.com")!)
-    }
-    
-    private func uniqueImageFeeds() -> (model: [FeedImage], local: [LocalFeedImage]) {
-        let feeds = [uniqueFeed(), uniqueFeed()]
-        let localFeeds = feeds.map({feed in
-            LocalFeedImage(id: feed.id, description: feed.description, location: feed.location, url: feed.url)
-        })
-        
-        return (model: feeds, local: localFeeds)
-    }
-}
-
-extension Date {
-    func adding(days: Int) -> Date {
-        return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
-    }
-    
-    func adding(seconds: TimeInterval) -> Date {
-        return self + seconds
-    }
-}
-
-private extension Array where Element == FeedImage {
-    func toModels() -> [FeedImage] {
-        return map({return FeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url)})
-    }
-}
-
-private extension Array where Element == RemoteFeedItem {
-    func toModels() -> [FeedImage] {
-        return map({
-            return FeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.image)
-        })
     }
 }
