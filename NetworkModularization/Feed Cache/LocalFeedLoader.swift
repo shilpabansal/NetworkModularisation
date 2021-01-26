@@ -12,9 +12,10 @@ import EventKit
  */
 final class LocalFeedLoader {
     var store: FeedStore
-    typealias LoadResult = LoadFeedResult
     private let calendar = Calendar(identifier: .gregorian)
-    private let maxCacheAgeInDays = 7
+    private var maxCacheAgeInDays: Int {
+        return 7
+    }
     
     init(store: FeedStore) {
         self.store = store
@@ -23,7 +24,7 @@ final class LocalFeedLoader {
     private func validate(_ timeStamp: Date) -> Bool {
         let currentDate = Date()
         /**
-                Checking the difference between the date sent and current is less than 7
+            Checking the difference between the date sent and current is less than 7
          */
         guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timeStamp) else {
             return false
@@ -33,7 +34,8 @@ final class LocalFeedLoader {
 }
 
 extension LocalFeedLoader {
-    func saveFeedInCache(feeds: [FeedImage], timestamp: Date, completion: @escaping (Error?) -> Void) {
+    public typealias SaveResult = Error?
+    func saveFeedInCache(feeds: [FeedImage], timestamp: Date, completion: @escaping (SaveResult) -> Void) {
         store.deleteFeeds {[weak self] (error) in
             guard let strongSelf = self else { return }
             if error != nil {
@@ -54,6 +56,7 @@ extension LocalFeedLoader {
 }
 
 extension LocalFeedLoader: FeedLoader {
+    typealias LoadResult = LoadFeedResult
     func getFeeds(completion: @escaping (LoadResult) -> Void) {
         store.retrieve(completion: {[weak self] result in
             guard let strongSelf = self else { return }
