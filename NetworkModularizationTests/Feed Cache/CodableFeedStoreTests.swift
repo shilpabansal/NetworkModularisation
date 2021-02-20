@@ -99,32 +99,21 @@ class CodableFeedStoreTests: XCTestCase {
         let sut = makeSUT()
         let timeStamp = Date()
         let feeds = uniqueImageFeeds().local
-        let exp = expectation(description: "Wait for API")
         
-        sut.insert(feeds: feeds, timestamp: timeStamp, completion: { (insertionError) in
-            XCTAssertNil(insertionError, "Expected insertion to be successful")
-            
-            exp.fulfill()
-        })
+        let insertionError = insert(sut: sut, feeds: feeds, timeStamp: timeStamp)
         
+        XCTAssertNil(insertionError)
         expect(sut: sut, expectedResult: .found(feeds, timeStamp))
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
     func test_retrieve_noSideEffectOnReceivingNonEmptyDataTwice() {
         let sut = makeSUT()
         let timeStamp = Date()
         let feeds = uniqueImageFeeds().local
-        let exp = expectation(description: "Wait for API")
         
-        sut.insert(feeds: feeds, timestamp: timeStamp, completion: { (insertionError) in
-            XCTAssertNil(insertionError, "Expected insertion to be successful")
-            exp.fulfill()
-        })
+        let insertionError = insert(sut: sut, feeds: feeds, timeStamp: timeStamp)
         
-        wait(for: [exp], timeout: 1.0)
-        
+        XCTAssertNil(insertionError)
         expect(sut: sut, toRetrieveTwice: .found(feeds, timeStamp))
     }
     
@@ -144,7 +133,33 @@ class CodableFeedStoreTests: XCTestCase {
         expect(sut: sut, toRetrieveTwice: .failure(anyNSError()))
     }
     
+    func test_insert_overridePreviouslyInsertedCacheValues() {
+        let sut = makeSUT()
+        
+        let firstFeeds = uniqueImageFeeds().local
+        let firstInsertionError = insert(sut: sut, feeds: firstFeeds, timeStamp: Date())
+        XCTAssertNil(firstInsertionError)
+        
+        let secondFeeds = uniqueImageFeeds().local
+        let secondTimeStamp = Date()
+        let secondInsertionError = insert(sut: sut, feeds: secondFeeds, timeStamp: secondTimeStamp)
+        
+        XCTAssertNil(secondInsertionError)
+        expect(sut: sut, expectedResult: .found(secondFeeds, secondTimeStamp))
+    }
+    
     //MARK:- HELPERS
+    private func insert(sut: CodableFeedStore, feeds: [LocalFeedImage], timeStamp: Date) -> Error? {
+        var insertionError: Error?
+        let exp = expectation(description: "Wait for API")
+        sut.insert(feeds: feeds, timestamp: timeStamp) { (error) in
+            insertionError = error
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+        return insertionError
+    }
+    
     private func expect(sut: CodableFeedStore, expectedResult: RetrieveCachedFeedResult, file: StaticString = #file,
                         line: UInt = #line) {
         sut.retrieve(completion: { retrievalResult in
