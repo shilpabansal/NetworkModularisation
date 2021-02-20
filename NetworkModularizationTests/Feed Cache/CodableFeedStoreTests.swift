@@ -97,7 +97,7 @@ class CodableFeedStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func test_retrieve_hasNoSideEffectOnEmptyCache() {
+    func test_retrieve_hasNoSideEffectOnReceivingEmptyCacheTwice() {
         let sut = makeSUT()
         
         let exp = expectation(description: "Wait for API")
@@ -145,6 +145,42 @@ class CodableFeedStoreTests: XCTestCase {
         
         wait(for: [exp], timeout: 1.0)
     }
+    
+    func test_retrieve_noSideEffectOnReceivingNonEmptyDataTwice() {
+        let sut = makeSUT()
+        let timeStamp = Date()
+        let feeds = uniqueImageFeeds().local
+        let exp = expectation(description: "Wait for API")
+        
+        sut.insert(feeds: feeds, timestamp: timeStamp, completion: { (insertionError) in
+            XCTAssertNil(insertionError, "Expected insertion to be successful")
+            
+            sut.retrieve(completion: { firstResult in
+                sut.retrieve(completion: { secondResult in
+                guard let firstResult = firstResult,
+                      let secondResult = secondResult else { return }
+                switch (firstResult, secondResult) {
+                case let (.found(firstFeeds, firstTimeStamp),
+                          .found(secondFeeds, secondTimeStamp)):
+                    XCTAssertEqual(firstFeeds, feeds)
+                    XCTAssertEqual(firstTimeStamp, timeStamp)
+                    
+                    XCTAssertEqual(secondFeeds, feeds)
+                    XCTAssertEqual(secondTimeStamp, timeStamp)
+                    
+                break
+                
+                default:
+                    XCTFail("Expected found result \(feeds) and \(timeStamp), found \(firstResult) and \(secondResult) instead")
+                }
+            })
+            exp.fulfill()
+        })
+        })
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     
     //MARK:- HELPERS
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
