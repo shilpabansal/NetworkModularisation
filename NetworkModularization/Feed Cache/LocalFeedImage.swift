@@ -9,7 +9,7 @@ import Foundation
 /**
  LocalFeedItem is the replica of FeedItem, to avoid tight coupling with FeedItem
  */
-struct LocalFeedImage: Equatable, Codable {
+struct LocalFeedImage: Equatable {
     public let id: UUID
     public let description: String?
     public let location: String?
