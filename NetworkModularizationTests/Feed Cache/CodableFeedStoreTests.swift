@@ -49,10 +49,15 @@ class CodableFeedStore {
             completion(.empty)
             return
         }
-        let decoder = JSONDecoder()
-        let decoded = try! decoder.decode(Cache.self, from: data)
-        
-        completion(.found(decoded.localFeeds, decoded.timeStamp))
+        do {
+            let decoder = JSONDecoder()
+            let decoded = try decoder.decode(Cache.self, from: data)
+            
+            completion(.found(decoded.localFeeds, decoded.timeStamp))
+        }
+        catch {
+            completion(.failure(error))
+        }
     }
     
     func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionError) {
@@ -87,10 +92,10 @@ class CodableFeedStoreTests: XCTestCase {
     func test_retrieve_hasNoSideEffectOnReceivingEmptyCacheTwice() {
         let sut = makeSUT()
         
-        expect(sut: sut, expectedResultTwice: .empty)
+        expect(sut: sut, toRetrieveTwice: .empty)
     }
     
-    func test_retrieveAfterInsertingToEmptyCache_deliversInsertedValue() {
+    func test_retrieve_foundValuesOnNonEmptyCache() {
         let sut = makeSUT()
         let timeStamp = Date()
         let feeds = uniqueImageFeeds().local
@@ -120,9 +125,15 @@ class CodableFeedStoreTests: XCTestCase {
         
         wait(for: [exp], timeout: 1.0)
         
-        expect(sut: sut, expectedResultTwice: .found(feeds, timeStamp))
+        expect(sut: sut, toRetrieveTwice: .found(feeds, timeStamp))
     }
     
+    func test_retrieve_deliversErrorOnInvalidData() {
+        let sut = makeSUT()
+        
+        try! "invalid Data".write(to: testSpecificStoreURL(), atomically: false, encoding: .utf8)
+        expect(sut: sut, expectedResult: .failure(anyNSError()))
+    }
     
     //MARK:- HELPERS
     private func expect(sut: CodableFeedStore, expectedResult: RetrieveCachedFeedResult, file: StaticString = #file,
@@ -130,7 +141,8 @@ class CodableFeedStoreTests: XCTestCase {
         sut.retrieve(completion: { retrievalResult in
             guard let retrievalResult = retrievalResult else { return }
             switch (expectedResult, retrievalResult) {
-            case (.empty, .empty):
+            case (.empty, .empty),
+                 (.failure, .failure):
                 break
             case  (let .found(expectedFeed, expectedTimeStamp), let .found(retrievedFeed, retrievedTimeStamp)):
                 XCTAssertEqual(expectedFeed, retrievedFeed, file: file, line: line)
@@ -141,10 +153,10 @@ class CodableFeedStoreTests: XCTestCase {
         })
     }
     
-    private func expect(sut: CodableFeedStore, expectedResultTwice: RetrieveCachedFeedResult, file: StaticString = #file,
+    private func expect(sut: CodableFeedStore, toRetrieveTwice expectedResult: RetrieveCachedFeedResult, file: StaticString = #file,
                         line: UInt = #line) {
-        expect(sut: sut, expectedResult: expectedResultTwice)
-        expect(sut: sut, expectedResult: expectedResultTwice)
+        expect(sut: sut, expectedResult: expectedResult)
+        expect(sut: sut, expectedResult: expectedResult)
     }
     
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
