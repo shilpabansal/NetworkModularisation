@@ -19,11 +19,11 @@ enum RetrieveCachedFeedResult {
 protocol FeedStore {
     typealias DeletionError = (Error?) -> Void
     typealias InsertionError = (Error?) -> Void
-    typealias RetriveResult = (RetrieveCachedFeedResult?) -> Void
+    typealias RetrieveResult = (RetrieveCachedFeedResult?) -> Void
     
     func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionError)
     func deleteFeeds(completion: @escaping DeletionError)
-    func retrieve(completion: @escaping RetriveResult)
+    func retrieve(completion: @escaping RetrieveResult)
 }
 
 

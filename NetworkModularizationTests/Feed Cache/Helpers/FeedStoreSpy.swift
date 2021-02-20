@@ -12,7 +12,7 @@ public class FeedStoreSpy: FeedStore {
     typealias FeedSuccess = (([LocalFeedImage], Date) -> Void)
     var deletionCompletions = [DeletionError]()
     var insertionCompletions = [InsertionError]()
-    var retrieveCompletions = [RetriveResult]()
+    var retrieveCompletions = [RetrieveResult]()
     
     var receivedMessages = [ReceivedMessage]()
     
@@ -52,7 +52,7 @@ public class FeedStoreSpy: FeedStore {
         retrieveCompletions[index](.failure(error))
     }
     
-    public func retrieve(completion: @escaping RetriveResult) {
+    public func retrieve(completion: @escaping RetrieveResult) {
         receivedMessages.append(.retrieval)
         retrieveCompletions.append(completion)
     }
