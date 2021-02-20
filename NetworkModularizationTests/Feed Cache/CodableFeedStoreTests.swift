@@ -36,8 +36,8 @@ class CodableFeedStore {
 }
 
 class CodableFeedStoreTests: XCTestCase {
-    override func tearDown() {
-        super.tearDown()
+    override func setUp() {
+        super.setUp()
         
         let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("image-feed.store")
         try? FileManager.default.removeItem(at: storeURL)
