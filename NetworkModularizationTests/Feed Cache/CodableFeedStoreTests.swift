@@ -45,48 +45,57 @@ class CodableFeedStore {
     
     
     func retrieve(completion: @escaping FeedStore.RetrieveResult) {
-        guard let data = try? Data(contentsOf: storeURL) else {
-            completion(.empty)
-            return
-        }
-        do {
-            let decoder = JSONDecoder()
-            let decoded = try decoder.decode(Cache.self, from: data)
-            
-            completion(.found(decoded.localFeeds, decoded.timeStamp))
-        }
-        catch {
-            completion(.failure(error))
+        DispatchQueue.global().async {
+            let storeURL = self.storeURL
+            do {
+                guard let data = try? Data(contentsOf: storeURL) else {
+                    completion(.empty)
+                    return
+                }
+                let decoder = JSONDecoder()
+                let decoded = try decoder.decode(Cache.self, from: data)
+                
+                completion(.found(decoded.localFeeds, decoded.timeStamp))
+            }
+            catch {
+                completion(.failure(error))
+            }
         }
     }
     
     func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionError) {
-        do {
-            let encoder = JSONEncoder()
-            
-            let codableFeedImages = feeds.map({ return CodableFeedImage($0)})
-            let encoded = try encoder.encode(Cache(feeds: codableFeedImages, timeStamp: timestamp))
-            try encoded.write(to: storeURL)
-            completion(nil)
-        }
-        catch {
-            completion(error)
+        DispatchQueue.global().async {
+            let storeURL = self.storeURL
+            do {
+                let encoder = JSONEncoder()
+                
+                let codableFeedImages = feeds.map({ return CodableFeedImage($0)})
+                let encoded = try encoder.encode(Cache(feeds: codableFeedImages, timeStamp: timestamp))
+                try encoded.write(to: storeURL)
+                completion(nil)
+            }
+            catch {
+                completion(error)
+            }
         }
     }
     
     func deleteFeeds(completion: @escaping FeedStore.DeletionError) {
-        do {
-            let data = try Data(contentsOf: storeURL)
-            if data.isEmpty {
+        DispatchQueue.global().async {
+            let storeURL = self.storeURL
+            do {
+                let data = try Data(contentsOf: storeURL)
+                if data.isEmpty {
+                    completion(nil)
+                    return
+                }
+                
+                try FileManager.default.removeItem(at: storeURL)
                 completion(nil)
-                return
             }
-            
-            try FileManager.default.removeItem(at: storeURL)
-            completion(nil)
-        }
-        catch {
-            completion(error)
+            catch {
+                completion(error)
+            }
         }
     }
 }
