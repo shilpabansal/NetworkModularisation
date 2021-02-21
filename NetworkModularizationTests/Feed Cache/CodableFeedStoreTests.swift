@@ -213,6 +213,37 @@ class CodableFeedStoreTests: XCTestCase {
        XCTAssertNotNil(deletionError, "Expected error if deletion permission is restricted")
     }
     
+    func test_storeSideEffectsSerially() {
+        let sut = makeSUT()
+        
+        var completedOperationInOrder = [XCTestExpectation]()
+        let firstFeeds = uniqueImageFeeds().local
+        let firstTimeStamp = Date()
+        let op1 = expectation(description: "Operarion 1")
+        sut.insert(feeds: firstFeeds, timestamp: firstTimeStamp) { (_) in
+            completedOperationInOrder.append(op1)
+            op1.fulfill()
+        }
+        
+        let op2 = expectation(description: "Operarion 1")
+        sut.deleteFeeds { (_) in
+            completedOperationInOrder.append(op2)
+            op2.fulfill()
+        }
+        
+        let secondFeeds = uniqueImageFeeds().local
+        let secondTimeStamp = Date()
+        let op3 = expectation(description: "Operarion 2")
+        sut.insert(feeds: secondFeeds, timestamp: secondTimeStamp) { (_) in
+            completedOperationInOrder.append(op3)
+            op3.fulfill()
+        }
+        
+        waitForExpectations(timeout: 0.5)
+        XCTAssertEqual(completedOperationInOrder, [op1, op2, op3],
+                       "Expected side-effects to run serially, but operation finished in wrong order")
+    }
+    
     //MARK:- HELPERS
     @discardableResult
     private func insert(sut: CodableFeedStore, feeds: [LocalFeedImage], timeStamp: Date) -> Error? {
