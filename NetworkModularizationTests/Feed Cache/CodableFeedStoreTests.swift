@@ -75,6 +75,10 @@ class CodableFeedStore {
     }
     
     func deleteFeeds(completion: @escaping FeedStore.DeletionError) {
+        guard let _ = try? Data(contentsOf: storeURL) else {
+            completion(nil)
+            return
+        }
         do {
             try FileManager.default.removeItem(at: storeURL)
             completion(nil)
@@ -176,7 +180,7 @@ class CodableFeedStoreTests: XCTestCase {
     }
     
     func test_delete_hasNoSideEffectOnEmptyCache() {
-        let sut = makeSUT()
+       let sut = makeSUT()
         
        let deletionError = delete(sut: sut)
        XCTAssertNil(deletionError)
