@@ -25,6 +25,7 @@ class CodableFeedStore {
         }
     }
     
+    let queue = DispatchQueue(label: "\(CodableFeedStore.self)Queue", qos: .userInitiated)
     private struct CodableFeedImage: Codable {
         private let id: UUID
         private let description: String?
@@ -45,13 +46,13 @@ class CodableFeedStore {
     
     
     func retrieve(completion: @escaping FeedStore.RetrieveResult) {
-        DispatchQueue.global().async {
-            let storeURL = self.storeURL
+        guard let data = try? Data(contentsOf: storeURL) else {
+            completion(.empty)
+            return
+        }
+        
+        queue.async {
             do {
-                guard let data = try? Data(contentsOf: storeURL) else {
-                    completion(.empty)
-                    return
-                }
                 let decoder = JSONDecoder()
                 let decoded = try decoder.decode(Cache.self, from: data)
                 
@@ -64,8 +65,8 @@ class CodableFeedStore {
     }
     
     func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionError) {
-        DispatchQueue.global().async {
-            let storeURL = self.storeURL
+        let storeURL = self.storeURL
+        queue.async {
             do {
                 let encoder = JSONEncoder()
                 
@@ -81,8 +82,8 @@ class CodableFeedStore {
     }
     
     func deleteFeeds(completion: @escaping FeedStore.DeletionError) {
-        DispatchQueue.global().async {
-            let storeURL = self.storeURL
+        let storeURL = self.storeURL
+        queue.async {
             do {
                 let data = try Data(contentsOf: storeURL)
                 if data.isEmpty {
