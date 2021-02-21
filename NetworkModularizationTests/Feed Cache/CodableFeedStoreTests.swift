@@ -75,11 +75,13 @@ class CodableFeedStore {
     }
     
     func deleteFeeds(completion: @escaping FeedStore.DeletionError) {
-        guard let _ = try? Data(contentsOf: storeURL) else {
-            completion(nil)
-            return
-        }
         do {
+            let data = try Data(contentsOf: storeURL)
+            if data.isEmpty {
+                completion(nil)
+                return
+            }
+            
             try FileManager.default.removeItem(at: storeURL)
             completion(nil)
         }
@@ -182,13 +184,37 @@ class CodableFeedStoreTests: XCTestCase {
     func test_delete_hasNoSideEffectOnEmptyCache() {
        let sut = makeSUT()
         
-       let deletionError = delete(sut: sut)
-       XCTAssertNil(deletionError)
+       insert(sut: sut, feeds: [], timeStamp: Date())
         
-        expect(sut: sut, expectedResult: .empty)
+       let deletionError = delete(sut: sut)
+       XCTAssertNil(deletionError, "Expected no deletion error if store doesn't exist")
+        
+       expect(sut: sut, expectedResult: .empty)
+    }
+    
+    func test_delete_emptyPreviouslyInsertedCache() {
+       let sut = makeSUT()
+        
+       let feeds = uniqueImageFeeds().local
+       let timeStamp = Date()
+       insert(sut: sut, feeds: feeds, timeStamp: timeStamp)
+        
+       let deletionError = delete(sut: sut)
+       XCTAssertNil(deletionError, "Expected succesful deletion")
+        
+       expect(sut: sut, expectedResult: .empty)
+    }
+    
+    func test_delete_deliversErrorOnNoPermission() {
+       let noPermissionURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+       let sut = makeSUT(storeURL: noPermissionURL)
+        
+       let deletionError = delete(sut: sut)
+       XCTAssertNotNil(deletionError, "Expected error if deletion permission is restricted")
     }
     
     //MARK:- HELPERS
+    @discardableResult
     private func insert(sut: CodableFeedStore, feeds: [LocalFeedImage], timeStamp: Date) -> Error? {
         var insertionError: Error?
         let exp = expectation(description: "Wait for API")
@@ -202,7 +228,6 @@ class CodableFeedStoreTests: XCTestCase {
     
     private func delete(sut: CodableFeedStore) -> Error? {
         var deletionError: Error?
-        let sut = makeSUT()
         
         let exp = expectation(description: "Wait for API")
         sut.deleteFeeds { (error) in
