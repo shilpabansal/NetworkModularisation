@@ -25,7 +25,7 @@ class CodableFeedStore {
         }
     }
     
-    let queue = DispatchQueue(label: "\(CodableFeedStore.self)Queue", qos: .userInitiated)
+    let queue = DispatchQueue(label: "\(CodableFeedStore.self)Queue", qos: .userInitiated, attributes: .concurrent)
     private struct CodableFeedImage: Codable {
         private let id: UUID
         private let description: String?
@@ -66,7 +66,7 @@ class CodableFeedStore {
     
     func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionError) {
         let storeURL = self.storeURL
-        queue.async {
+        queue.async(flags: .barrier) {
             do {
                 let encoder = JSONEncoder()
                 
@@ -83,7 +83,7 @@ class CodableFeedStore {
     
     func deleteFeeds(completion: @escaping FeedStore.DeletionError) {
         let storeURL = self.storeURL
-        queue.async {
+        queue.async(flags: .barrier) {
             do {
                 let data = try Data(contentsOf: storeURL)
                 if data.isEmpty {
