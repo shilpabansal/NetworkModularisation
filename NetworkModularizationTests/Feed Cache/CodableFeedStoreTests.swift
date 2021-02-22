@@ -9,6 +9,32 @@ import Foundation
 import XCTest
 @testable import NetworkModularization
 
+protocol FeedStoreSpecs {
+     func test_retrieve_deliversEmptyOnEmptyCache()
+     func test_retrieve_hasNoSideEffectOnReceivingEmptyCacheTwice()
+     func test_retrieve_foundValuesOnNonEmptyCache()
+     func test_retrieve_noSideEffectOnRetrievingError()
+     func test_insert_overridePreviouslyInsertedCacheValues()
+     func test_delete_deliversNoErrorOnEmptyCache()
+     func test_delete_deliversErrorOnNoPermission()
+     func test_storeSideEffectsSerially()
+}
+
+protocol FailableRetrieveFeedStoreSpecs {
+    func test_retrieve_noSideEffectOnReceivingNonEmptyDataTwice()
+    func test_retrieve_deliversErrorOnInvalidData()
+}
+
+protocol FailableInsertFeedStoreSpecs {
+    func test_insert_deliversErrorOnInsertionError()
+    func test_insert_noSideEffectOnInsertionError()
+}
+
+protocol FailableDeleteFeedStoreSpecs {
+    func test_delete_hasNoSideEffectOnEmptyCache()
+    func test_delete_emptyPreviouslyInsertedCache()
+}
+
 class CodableFeedStore {
     let storeURL: URL
     
