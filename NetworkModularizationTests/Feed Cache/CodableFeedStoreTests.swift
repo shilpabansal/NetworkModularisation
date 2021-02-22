@@ -179,7 +179,7 @@ class CodableFeedStoreTests: XCTestCase {
         expect(sut: sut, expectedResult: .found(secondFeeds, secondTimeStamp))
     }
     
-    func test_insertion_deliversErrorOnInvalidFile() {
+    func test_insert_deliversErrorOnInsertionError() {
         let invalidURLString = URL(string: "invalid://store-url")
         let storeURL = invalidURLString
         let sut = makeSUT(storeURL: storeURL)
@@ -191,13 +191,33 @@ class CodableFeedStoreTests: XCTestCase {
         XCTAssertNotNil(insertionError, "Expected cache insertion to fail with error")
     }
     
-    func test_delete_hasNoSideEffectOnEmptyCache() {
+    func test_insert_noSideEffectOnInsertionError() {
+        let invalidURLString = URL(string: "invalid://store-url")
+        let storeURL = invalidURLString
+        let sut = makeSUT(storeURL: storeURL)
+        
+        let feeds = uniqueImageFeeds().local
+        let timeStamp = Date()
+        insert(sut: sut, feeds: feeds, timeStamp: timeStamp)
+        
+        expect(sut: sut, expectedResult: .empty)
+    }
+    
+    func test_delete_deliversNoErrorOnEmptyCache() {
        let sut = makeSUT()
         
        insert(sut: sut, feeds: [], timeStamp: Date())
         
        let deletionError = delete(sut: sut)
        XCTAssertNil(deletionError, "Expected no deletion error if store doesn't exist")
+    }
+    
+    func test_delete_hasNoSideEffectOnEmptyCache() {
+       let sut = makeSUT()
+        
+       insert(sut: sut, feeds: [], timeStamp: Date())
+        
+       delete(sut: sut)
         
        expect(sut: sut, expectedResult: .empty)
     }
@@ -267,6 +287,7 @@ class CodableFeedStoreTests: XCTestCase {
         return insertionError
     }
     
+    @discardableResult
     private func delete(sut: CodableFeedStore) -> Error? {
         var deletionError: Error?
         
