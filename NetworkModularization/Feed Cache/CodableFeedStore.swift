@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CodableFeedStore {
+class CodableFeedStore: FeedStore {
     let storeURL: URL
     
     init(_ storeURL: URL) {
