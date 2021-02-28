@@ -241,3 +241,67 @@ As all the modules are tightly coupled with FeedItem, if there is any change in 
 
 To avoid this, we should be trying to decouple the modules as much as possible.
 ________________________________________________________________________________________
+
+
+
+
+
+
+
+________________________________________________________________________________________
+Core Data
+
+As the requirement is to store Feeds with timestamp, created  two entities  Feed and Cache in the FeedStoreDataModel
+
+Steps:
+
+    Feed has properties id, imageDescription, url and location. The values can be made optional and non-optional based on the need
+    Cache has property timestamp
+    As there will be only one cache with multiple feed entries. created one-to-many relationship from cache to Feed.
+    Made the relationship as ordered, as the feeds should be stored in the sequential manner
+
+    Select the entity -> Editor -> Create NSManagedObject Subclass, properties and relationship files will be created automatically
+    By-default the one to many relationship property is stored in NSSet but as its ordered, NSOrderedSet is created
+    Updated the one-to-many relationship's delete rule as "Cascasde", so that on deletion of cache, feeds are deleted
+
+    To load the persistent container, it needs the production bundle name with the datamodel filename
+
+![FlowChart](https://github.com/shilpabansal/NetworkModularisation/blob/main/FetchRequest.png)
+
+When performing operations on an NSManagedObjectContext instance make sure to execute the operations on the queue specified for the context by enclosing in them in a perform(_:) closure block. NSManagedObjectContext.perform executes the block on its own thread, which is imperative for not causing possible multi-thread concurrency issues.
+
+NSManagedObjectContext.perform returns immediately, executing the closure asynchronously. The synchronous variation of the perform method comes with the NSManagedObjectContext.performAndWait method. In this case, the context still executes the closure block on its own thread, but the method doesn’t return until the block is executed.
+
+NSFetchRequest has a property “returnsObjectsAsFaults” which return faulty objects.
+
+Faulting is one of the techniques that core data uses to keep its memory low without sacrificing performance and also decreases the fetch objects response time. The idea is simple, only load data when it’s needed.
+Let’s suppose we have Entity A contains 100 attributes / properties . In persistent store we have 1000 records of Entity A was saved . When we fetched all data normally it will load all 1000 data in a cache(NSManagedObjectContext) each having 100 properties which takes time and also consumes memory.
+If we do lazy loading or ask Managed Object Context to fetch data in faults What it will do it will return 1000 records metadata information (contains information for tracking) only which will be very fast and will not take much memory.
+Note: When loading data using fault no property will instantiated or loaded into memory only meta data will load that can track object in a persistent store
+Now when client tries to access property on first record of faulty Entity A object.It will load complete instance of that record with all the properties of particular record that was accessed which means 999 records still in faulty state only the record that was accessed will be loaded and we term that is used fault is fired.
+
+You can set returnsObjectsAsFaults to false to gain a performance benefit if you know you will need to access the property values from the returned objects immediately. In short if you want to fetch objects and immediately populate fields there is no purpose of lazy loading at that time. Since firing a fault relative to normal could be expensive.
+
+![FlowChart](https://github.com/shilpabansal/NetworkModularisation/blob/main/ObjectAsFault.png)
+
+let fetchRequest = NSFetchRequest<ManagedFeed>(entityName: "ManagedFeed")
+
+Predicate
+    fetchRequest.predicate = NSPredicate(format: "location == %@", "test")
+    
+Sort:
+    let sortDescriptor = NSSortDescriptor.init(key: "id", ascending: true)
+    fetchRequest.sortDescriptors = [sortDescriptor]
+    
+Using propertiesToFetch array type property in NSFetchRequest we tell Managed Object Context to bring only these properties.
+    fetchRequest.propertiesToFetch = ["location"]
+
+Limit the Fetch Results
+    The fetch limit specifies the maximum number of objects that a request should return when executed.
+    fetchRequest.fetchLimit = 1
+    
+Batching Core Data
+    Suppose we are executing a fetch request that returns about 2000 entities. which, is taking about 20 seconds on a device. We can set a fetch limit of 100, and then when the user scrolls to the end of the table view, fetch the next 20 entities. This can be accomplished using NSFetchRequest's setFetchLimit and setFetchOffset
+    fetchRequest.fetchOffset += 20
+    fetchRequest.fetchLimit = 100
+
