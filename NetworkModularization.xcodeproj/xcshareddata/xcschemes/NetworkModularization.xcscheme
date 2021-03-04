@@ -80,6 +80,26 @@
                ReferencedContainer = "container:NetworkModularization.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "33E833BF25F10513008189C4"
+               BuildableName = "NetworkModularizationIntegrationTests.xctest"
+               BlueprintName = "NetworkModularizationIntegrationTests"
+               ReferencedContainer = "container:NetworkModularization.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "33E833D625F10566008189C4"
+               BuildableName = "NetworkModularizationCacheIntegrationTests.xctest"
+               BlueprintName = "NetworkModularizationCacheIntegrationTests"
+               ReferencedContainer = "container:NetworkModularization.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

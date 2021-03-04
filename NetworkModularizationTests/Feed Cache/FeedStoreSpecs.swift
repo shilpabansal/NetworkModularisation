@@ -9,14 +9,14 @@ import Foundation
 @testable import NetworkModularization
 
 protocol FeedStoreSpecs {
-     func test_retrieve_deliversEmptyOnEmptyCache()
-     func test_retrieve_hasNoSideEffectOnReceivingEmptyCacheTwice()
-     func test_retrieve_foundValuesOnNonEmptyCache()
-     func test_retrieve_noSideEffectOnRetrievingError()
-     func test_insert_overridePreviouslyInsertedCacheValues()
-     func test_delete_deliversNoErrorOnEmptyCache()
-     func test_delete_deliversErrorOnNoPermission()
-     func test_storeSideEffectsSerially()
+     func test_retrieve_deliversEmptyOnEmptyCache() throws
+     func test_retrieve_hasNoSideEffectOnReceivingEmptyCacheTwice() throws
+     func test_retrieve_foundValuesOnNonEmptyCache() throws
+     func test_retrieve_noSideEffectOnRetrievingError() throws
+     func test_insert_overridePreviouslyInsertedCacheValues() throws
+     func test_delete_deliversNoErrorOnEmptyCache() throws
+     func test_delete_deliversErrorOnNoPermission() throws
+     func test_storeSideEffectsSerially() throws
 }
 
 protocol FailableRetrieveFeedStoreSpecs: FeedStoreSpecs {

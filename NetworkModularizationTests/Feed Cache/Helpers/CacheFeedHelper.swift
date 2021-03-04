@@ -8,11 +8,11 @@
 import Foundation
 @testable import NetworkModularization
 
-func uniqueFeed() -> FeedImage {
+public func uniqueFeed() -> FeedImage {
     return FeedImage(id: UUID(), description: nil, location: nil, url: URL(string: "https://a-url.com")!)
 }
 
-func uniqueImageFeeds() -> (model: [FeedImage], local: [LocalFeedImage]) {
+public func uniqueImageFeeds() -> (model: [FeedImage], local: [LocalFeedImage]) {
     let feeds = [uniqueFeed(), uniqueFeed()]
     let localFeeds = feeds.map({feed in
         LocalFeedImage(id: feed.id, description: feed.description, location: feed.location, url: feed.url)
