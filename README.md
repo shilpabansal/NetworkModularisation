@@ -305,3 +305,24 @@ Batching Core Data
     fetchRequest.fetchOffset += 20
     fetchRequest.fetchLimit = 100
 
+Pointing the store at /dev/null
+The null device discards all data directed to it while reporting that write operations succeeded.
+
+By using a file URL of /dev/null for the persistent store, the Core Data stack will not save SQLite artifacts to disk, doing the work in memory. This means that this option is faster when running tests, as opposed to performing I/O and actually writing/reading from disk. Moreover, when operating in-memory, you prevent cross test side-effects since this process doesn’t create any artifacts.
+
+Persistent Store Types
+ NSSQLiteStoreType:  The SQLite database store type.
+ NSXMLStoreType :   The XML store type.
+NSBinaryStoreType: The binary store type.
+NSInMemoryStoreType: The in-memory store type.
+
+________________________________________________________________________________________
+
+
+
+
+
+
+
+________________________________________________________________________________________
+
