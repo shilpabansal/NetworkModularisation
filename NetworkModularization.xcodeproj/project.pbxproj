@@ -340,7 +340,6 @@
 		33E833B125F101A9008189C4 /* Core Data */ = {
 			isa = PBXGroup;
 			children = (
-				33E833D925F10566008189C4 /* NetworkModularizationCacheIntegrationTests.swift */,
 				33E833B225F101C3008189C4 /* CoreDataFeedStoreTests.swift */,
 			);
 			path = "Core Data";
@@ -349,6 +348,7 @@
 		33E833D825F10566008189C4 /* NetworkModularizationCacheIntegrationTests */ = {
 			isa = PBXGroup;
 			children = (
+				33E833D925F10566008189C4 /* NetworkModularizationCacheIntegrationTests.swift */,
 				33E833DB25F10566008189C4 /* Info.plist */,
 			);
 			path = NetworkModularizationCacheIntegrationTests;
