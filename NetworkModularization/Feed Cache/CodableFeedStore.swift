@@ -43,9 +43,9 @@ class CodableFeedStore: FeedStore {
     }
     
     
-    func retrieve(completion: @escaping FeedStore.RetrieveResult) {
+    func retrieve(completion: @escaping FeedStore.RetrieveCompletion) {
         guard let data = try? Data(contentsOf: storeURL) else {
-            completion(.empty)
+            completion(.success(.empty))
             return
         }
         
@@ -54,7 +54,7 @@ class CodableFeedStore: FeedStore {
                 let decoder = JSONDecoder()
                 let decoded = try decoder.decode(Cache.self, from: data)
                 
-                completion(.found(decoded.localFeeds, decoded.timeStamp))
+                completion(.success(.found(decoded.localFeeds, decoded.timeStamp)))
             }
             catch {
                 completion(.failure(error))
@@ -62,7 +62,7 @@ class CodableFeedStore: FeedStore {
         }
     }
     
-    func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionError) {
+    func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionCompletion) {
         let storeURL = self.storeURL
         queue.async(flags: .barrier) {
             do {
@@ -79,7 +79,7 @@ class CodableFeedStore: FeedStore {
         }
     }
     
-    func deleteFeeds(completion: @escaping FeedStore.DeletionError) {
+    func deleteFeeds(completion: @escaping FeedStore.DeletionCompletion) {
         let storeURL = self.storeURL
         queue.async(flags: .barrier) {
             do {

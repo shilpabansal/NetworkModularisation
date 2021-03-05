@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 public class CoreDataFeedStore: FeedStore {
-    func deleteFeeds(completion: @escaping DeletionError) {
+    func deleteFeeds(completion: @escaping DeletionCompletion) {
         perform { context in
             do {
                 try ManagedCache.find(in: context).map(context.delete).map(context.save)
@@ -43,7 +43,7 @@ public class CoreDataFeedStore: FeedStore {
         managedContext.perform { action(managedContext) }
     }
     
-    func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionError) {
+    func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
         perform { context in
             do {
                 let managedCache = try ManagedCache.uniqueNewInstance(context: context, timestamp: timestamp)
@@ -57,15 +57,15 @@ public class CoreDataFeedStore: FeedStore {
         }
     }
     
-    func retrieve(completion: @escaping RetrieveResult) {
+    func retrieve(completion: @escaping RetrieveCompletion) {
         perform { context in
             do {
                 if let cache = try ManagedCache.find(in: context) {
                     let feedArray = cache.feeds.compactMap { ($0 as? ManagedFeed)?.feedImage }
-                    completion(.found(feedArray, cache.timestamp))
+                    completion(.success(.found(feedArray, cache.timestamp)))
                 }
                 else {
-                    completion(.empty)
+                    completion(.success(.empty))
                 }
                 
             } catch {

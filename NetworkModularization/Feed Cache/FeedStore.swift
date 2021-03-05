@@ -9,21 +9,21 @@ import Foundation
 /**
  Feed store protocol is the interface, which expects the feeds to be stored or return error in completion block passed
  */
-
-enum RetrieveCachedFeedResult {
+enum CacheFeed {
     case empty
-    case failure(Error)
     case found([LocalFeedImage], Date)
 }
 
 protocol FeedStore {
-    typealias DeletionError = (Error?) -> Void
-    typealias InsertionError = (Error?) -> Void
-    typealias RetrieveResult = (RetrieveCachedFeedResult?) -> Void
+    typealias RetrievalResult = Swift.Result<CacheFeed, Error>
+
+    typealias DeletionCompletion = (Error?) -> Void
+    typealias InsertionCompletion = (Error?) -> Void
+    typealias RetrieveCompletion = (RetrievalResult?) -> Void
     
-    func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionError)
-    func deleteFeeds(completion: @escaping DeletionError)
-    func retrieve(completion: @escaping RetrieveResult)
+    func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion)
+    func deleteFeeds(completion: @escaping DeletionCompletion)
+    func retrieve(completion: @escaping RetrieveCompletion)
 }
 
 

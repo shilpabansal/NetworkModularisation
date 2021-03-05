@@ -10,9 +10,9 @@ import Foundation
 
 public class FeedStoreSpy: FeedStore {
     typealias FeedSuccess = (([LocalFeedImage], Date) -> Void)
-    var deletionCompletions = [DeletionError]()
-    var insertionCompletions = [InsertionError]()
-    var retrieveCompletions = [RetrieveResult]()
+    var deletionCompletions = [DeletionCompletion]()
+    var insertionCompletions = [InsertionCompletion]()
+    var retrieveCompletions = [RetrieveCompletion]()
     
     var receivedMessages = [ReceivedMessage]()
     
@@ -22,12 +22,12 @@ public class FeedStoreSpy: FeedStore {
         case retrieval
     }
     
-    public func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionError) {
+    public func insert(feeds: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
         receivedMessages.append(.insertFeed(feeds, timestamp))
         insertionCompletions.append(completion)
     }
     
-    public func deleteFeeds(completion: @escaping DeletionError) {
+    public func deleteFeeds(completion: @escaping DeletionCompletion) {
         receivedMessages.append(.deleteFeed)
         deletionCompletions.append(completion)
     }
@@ -52,16 +52,16 @@ public class FeedStoreSpy: FeedStore {
         retrieveCompletions[index](.failure(error))
     }
     
-    public func retrieve(completion: @escaping RetrieveResult) {
+    public func retrieve(completion: @escaping RetrieveCompletion) {
         receivedMessages.append(.retrieval)
         retrieveCompletions.append(completion)
     }
     
     func completeRetrievalSuccessfully(with images: [LocalFeedImage], timeStamp: Date, index: Int = 0) {
-        retrieveCompletions[index](.found(images, timeStamp))
+        retrieveCompletions[index](.success(.found(images, timeStamp)))
     }
     
     func completionRetrievalWithEmptyCache(index: Int = 0) {
-        retrieveCompletions[index](.empty)
+        retrieveCompletions[index](.success(.empty))
     }
 }
