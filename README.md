@@ -326,3 +326,10 @@ ________________________________________________________________________________
 
 ________________________________________________________________________________________
 
+An insightful indicator for measuring the codebase exposure to mutability is the number of assignable variable declarations (var).
+
+Assignable var statements imply mutable state.
+
+Mutable state is tough to maintain as the complexity to manage mutable state tends to grow out of control as you add more features to your applications. That’s why we recommend you to avoid creating a design where mutable state is present at every layer. Use immutable state as much as you can!
+
+Of course, at some point, you need to mutate state. However, as explained in the Functional Core/Imperative Shell lecture, we strive to limit mutation to the boundaries of the system (where we recommend you to keep frameworks like Core Data, Realm, Firebase). Doing so makes testing and state management much simpler, safer, and easier.

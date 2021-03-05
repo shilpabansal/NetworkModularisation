@@ -65,13 +65,6 @@
 			remoteGlobalIDString = 332E6CE625971C7100770701;
 			remoteInfo = NetworkModularization;
 		};
-		332E6D0925971C7500770701 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 332E6CDF25971C7100770701 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 332E6CE625971C7100770701;
-			remoteInfo = NetworkModularization;
-		};
 		33BBB53425A97D3200AA0A7D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 332E6CDF25971C7100770701 /* Project object */;
@@ -101,7 +94,6 @@
 		332E6CF825971C7400770701 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		332E6CFD25971C7500770701 /* NetworkModularizationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NetworkModularizationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		332E6D0325971C7500770701 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		332E6D0825971C7500770701 /* .xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		332E6D2325971D1800770701 /* RemoteFeedLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoaderTests.swift; sourceTree = "<group>"; };
 		332E6D2E2597338100770701 /* RemoteFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoader.swift; sourceTree = "<group>"; };
 		3350905525A5EBE1005365DD /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
@@ -149,13 +141,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		332E6CFA25971C7500770701 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		332E6D0525971C7500770701 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -222,7 +207,6 @@
 			children = (
 				332E6CE725971C7100770701 /* NetworkModularization.app */,
 				332E6CFD25971C7500770701 /* NetworkModularizationTests.xctest */,
-				332E6D0825971C7500770701 /* .xctest */,
 				33BBB52F25A97D3200AA0A7D /* NetworkModularizationEndToEndTests.xctest */,
 				33E833D725F10566008189C4 /* NetworkModularizationCacheIntegrationTests.xctest */,
 			);
@@ -392,24 +376,6 @@
 			productReference = 332E6CFD25971C7500770701 /* NetworkModularizationTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		332E6D0725971C7500770701 /* NetworkModularizationUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 332E6D1725971C7500770701 /* Build configuration list for PBXNativeTarget "NetworkModularizationUITests" */;
-			buildPhases = (
-				332E6D0425971C7500770701 /* Sources */,
-				332E6D0525971C7500770701 /* Frameworks */,
-				332E6D0625971C7500770701 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				332E6D0A25971C7500770701 /* PBXTargetDependency */,
-			);
-			name = NetworkModularizationUITests;
-			productName = NetworkModularizationUITests;
-			productReference = 332E6D0825971C7500770701 /* .xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		33BBB52E25A97D3200AA0A7D /* NetworkModularizationEndToEndTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 33BBB53625A97D3200AA0A7D /* Build configuration list for PBXNativeTarget "NetworkModularizationEndToEndTests" */;
@@ -463,10 +429,6 @@
 						LastSwiftMigration = 1230;
 						TestTargetID = 332E6CE625971C7100770701;
 					};
-					332E6D0725971C7500770701 = {
-						CreatedOnToolsVersion = 12.0.1;
-						TestTargetID = 332E6CE625971C7100770701;
-					};
 					33BBB52E25A97D3200AA0A7D = {
 						CreatedOnToolsVersion = 12.3;
 						TestTargetID = 332E6CE625971C7100770701;
@@ -492,7 +454,6 @@
 			targets = (
 				332E6CE625971C7100770701 /* NetworkModularization */,
 				332E6CFC25971C7500770701 /* NetworkModularizationTests */,
-				332E6D0725971C7500770701 /* NetworkModularizationUITests */,
 				33BBB52E25A97D3200AA0A7D /* NetworkModularizationEndToEndTests */,
 				33E833D625F10566008189C4 /* NetworkModularizationCacheIntegrationTests */,
 			);
@@ -511,13 +472,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		332E6CFB25971C7500770701 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		332E6D0625971C7500770701 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -590,13 +544,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		332E6D0425971C7500770701 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		33BBB52B25A97D3200AA0A7D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -628,11 +575,6 @@
 			isa = PBXTargetDependency;
 			target = 332E6CE625971C7100770701 /* NetworkModularization */;
 			targetProxy = 332E6CFE25971C7500770701 /* PBXContainerItemProxy */;
-		};
-		332E6D0A25971C7500770701 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 332E6CE625971C7100770701 /* NetworkModularization */;
-			targetProxy = 332E6D0925971C7500770701 /* PBXContainerItemProxy */;
 		};
 		33BBB53525A97D3200AA0A7D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -867,48 +809,6 @@
 			};
 			name = Release;
 		};
-		332E6D1825971C7500770701 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = MX45P48B86;
-				INFOPLIST_FILE = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "";
-				PRODUCT_MODULE_NAME = "";
-				PRODUCT_NAME = "";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = NetworkModularization;
-			};
-			name = Debug;
-		};
-		332E6D1925971C7500770701 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = MX45P48B86;
-				INFOPLIST_FILE = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "";
-				PRODUCT_MODULE_NAME = "";
-				PRODUCT_NAME = "";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = NetworkModularization;
-			};
-			name = Release;
-		};
 		33BBB53725A97D3200AA0A7D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1027,15 +927,6 @@
 			buildConfigurations = (
 				332E6D1525971C7500770701 /* Debug */,
 				332E6D1625971C7500770701 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		332E6D1725971C7500770701 /* Build configuration list for PBXNativeTarget "NetworkModularizationUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				332E6D1825971C7500770701 /* Debug */,
-				332E6D1925971C7500770701 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
