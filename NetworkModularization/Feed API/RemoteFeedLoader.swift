@@ -9,7 +9,7 @@ import Foundation
 import Network
 
 public final class RemoteFeedLoader : FeedLoader {
-    public typealias Result = LoadFeedResult
+    public typealias Result = FeedLoader.Result
     
     private var client: HTTPClient
     private var url : URL

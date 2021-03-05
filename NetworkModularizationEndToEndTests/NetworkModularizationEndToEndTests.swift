@@ -49,7 +49,7 @@ class NetworkModularizationEndToEndTests: XCTestCase {
     }
     
     //MARK: Helper
-    private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> LoadFeedResult? {
+    private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> FeedLoader.Result? {
         let testURL = URL(string: "http://essentialdeveloper.com/feed-case-study/test-api/feed")!
         /**
                    By default URLSession's shared object has caching available, if the data shouldn't be cached, ephemeral object can be used
@@ -61,7 +61,7 @@ class NetworkModularizationEndToEndTests: XCTestCase {
         trackMemoryLeak(client, file: file, line: line)
         trackMemoryLeak(feedLoader, file: file, line: line)
         
-        var receivedResult: LoadFeedResult?
+        var receivedResult: FeedLoader.Result?
         let exp = expectation(description: "Wait for API")
         feedLoader.getFeeds() { result in
             receivedResult = result
