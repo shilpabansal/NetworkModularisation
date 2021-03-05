@@ -108,7 +108,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         let receivedResult = resultFor(data: data, response: response, error: nil)
         
         switch receivedResult {
-        case let .success(receivedData, receivedResponse):
+        case let .success((receivedData, receivedResponse)):
             return (receivedData, receivedResponse)
         default:
             XCTFail("Expected success, got \(receivedResult) instead", file: file, line: line)
@@ -129,17 +129,17 @@ class URLSessionHTTPClientTests: XCTestCase {
         }
     }
     
-    private func resultFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> HTTPClientResult {
+    private func resultFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> HTTPClient.Result {
         URLProtolcolStub.stub(data: data, response: response, error: error)
        
-        var receivedResult: HTTPClientResult!
+        var receivedResult: HTTPClient.Result!
         let exp = expectation(description: "Test API")
         makeSUT().loadFeeds(url: anyURL()) {(result) in
             switch result {
             case let .failure(expectedError as NSError):
                 receivedResult = .failure(expectedError)
-            case let .success(receivedData, receivedResponse):
-                receivedResult = .success(receivedData, receivedResponse)
+            case let .success((receivedData, receivedResponse)):
+                receivedResult = .success((receivedData, receivedResponse))
             default:
                 fatalError("Expected failure, received \(result)", file: file, line: line)
             }

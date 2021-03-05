@@ -9,10 +9,6 @@ import Foundation
 import Network
 
 public protocol HTTPClient {
-    func loadFeeds(url: URL, completion: @escaping ((HTTPClientResult) -> Void))
-}
-
-public enum HTTPClientResult {
-    case success(Data, HTTPURLResponse)
-    case failure(Error)
+    typealias Result = Swift.Result<(Data, HTTPURLResponse), Error>
+    func loadFeeds(url: URL, completion: @escaping ((Result) -> Void))
 }
