@@ -24,7 +24,7 @@ class NetworkModularizationIntegrationTests: XCTestCase {
     func test_retrieve_deliversEmptyOnEmptyCache() throws {
         let sut = try makeSUT()
 
-        expect(sut: sut, expectedResult: .success(.empty))
+        expect(sut: sut, expectedResult: .success(.none))
     }
 
     func test_retrieve_deliversFeedInsertedOnAnotherInstance() throws {
@@ -35,7 +35,7 @@ class NetworkModularizationIntegrationTests: XCTestCase {
 
         insert(sut: storeToInsert, feeds: feeds.local, timeStamp: timestamp)
 
-        expect(sut: storeToLoad, expectedResult: .success(.found(feeds.local, timestamp)))
+        expect(sut: storeToLoad, expectedResult: .success(FeedStore.CachedFeed(feed: feeds.local, timestamp: timestamp)))
     }
 
     func test_insert_overridesFeedInsertedOnAnotherInstance() throws {
@@ -49,7 +49,7 @@ class NetworkModularizationIntegrationTests: XCTestCase {
         let latestTimestamp = Date()
         insert(sut: storeToOverride, feeds: latestFeed.local, timeStamp: latestTimestamp)
 
-        expect(sut: storeToLoad, expectedResult: .success(.found(latestFeed.local, latestTimestamp)))
+        expect(sut: storeToLoad, expectedResult: .success(FeedStore.CachedFeed(feed: latestFeed.local, timestamp: latestTimestamp)))
     }
 
     func test_delete_deletesFeedInsertedOnAnotherInstance() throws {
@@ -61,7 +61,7 @@ class NetworkModularizationIntegrationTests: XCTestCase {
 
         delete(sut: storeToDelete)
 
-        expect(sut: storeToLoad, expectedResult: .success(.empty))
+        expect(sut: storeToLoad, expectedResult: .success(.none))
     }
         
     // - MARK: Helpers

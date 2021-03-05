@@ -9,13 +9,11 @@ import Foundation
 /**
  Feed store protocol is the interface, which expects the feeds to be stored or return error in completion block passed
  */
-enum CacheFeed {
-    case empty
-    case found([LocalFeedImage], Date)
-}
+
 
 protocol FeedStore {
-    typealias RetrievalResult = Swift.Result<CacheFeed, Error>
+    typealias CachedFeed = (feed: [LocalFeedImage], timestamp: Date)
+    typealias RetrievalResult = Swift.Result<CachedFeed?, Error>
 
     typealias DeletionCompletion = (Error?) -> Void
     typealias InsertionCompletion = (Error?) -> Void

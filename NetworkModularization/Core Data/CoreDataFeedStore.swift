@@ -62,10 +62,10 @@ public class CoreDataFeedStore: FeedStore {
             do {
                 if let cache = try ManagedCache.find(in: context) {
                     let feedArray = cache.feeds.compactMap { ($0 as? ManagedFeed)?.feedImage }
-                    completion(.success(.found(feedArray, cache.timestamp)))
+                    completion(.success(.some(CachedFeed(feed: feedArray, timestamp: cache.timestamp))))
                 }
                 else {
-                    completion(.success(.empty))
+                    completion(.success(.none))
                 }
                 
             } catch {

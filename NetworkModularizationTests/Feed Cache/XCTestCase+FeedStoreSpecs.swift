@@ -11,11 +11,11 @@ import XCTest
 
 extension FeedStoreSpecs where Self: XCTestCase {
     func assertThatRetrieveDeliversEmptyOnEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
-        expect(sut: sut, expectedResult: .success(.empty), file: file, line: line)
+        expect(sut: sut, expectedResult: .success(.none), file: file, line: line)
     }
     
     func assertThatRetrieveHasNoSideEffectsOnEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
-        expect(sut: sut, toRetrieveTwice: .success(.empty), file: file, line: line)
+        expect(sut: sut, toRetrieveTwice: .success(.none), file: file, line: line)
     }
     
     func assertThatRetrieveFoundValuesOnNonEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
@@ -25,7 +25,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
         let insertionError = insert(sut: sut, feeds: feeds, timeStamp: timeStamp)
         
         XCTAssertNil(insertionError)
-        expect(sut: sut, expectedResult: .success(.found(feeds, timeStamp)))
+        expect(sut: sut, expectedResult: .success(FeedStore.CachedFeed(feed: feeds, timestamp: timeStamp)))
     }
     
     func assertThatRetrieveHasNoSideEffectOnNonEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
@@ -35,7 +35,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
         let insertionError = insert(sut: sut, feeds: feeds, timeStamp: timeStamp)
         
         XCTAssertNil(insertionError)
-        expect(sut: sut, toRetrieveTwice: .success(.found(feeds, timeStamp)))
+        expect(sut: sut, toRetrieveTwice: .success(FeedStore.CachedFeed(feed: feeds, timestamp: timeStamp)))
     }
     
     func assertThatRetrieveDeliversErrorOnInvalidData(on sut: FeedStore, storeURL: URL, file: StaticString = #file, line: UInt = #line) {
@@ -58,7 +58,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
         let secondInsertionError = insert(sut: sut, feeds: secondFeeds, timeStamp: secondTimeStamp)
         
         XCTAssertNil(secondInsertionError)
-        expect(sut: sut, expectedResult: .success(.found(secondFeeds, secondTimeStamp)))
+        expect(sut: sut, expectedResult: .success(FeedStore.CachedFeed(feed: secondFeeds, timestamp: secondTimeStamp)))
     }
     
     func assertThatInsertDeliversErrorOnInsertionError(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
@@ -74,7 +74,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
         let timeStamp = Date()
         insert(sut: sut, feeds: feeds, timeStamp: timeStamp)
         
-        expect(sut: sut, expectedResult: .success(.empty))
+        expect(sut: sut, expectedResult: .success(.none))
     }
     
     func assertThatDeleteDeliversNoErrorOnEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
@@ -89,7 +89,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
          
         delete(sut: sut)
          
-        expect(sut: sut, expectedResult: .success(.empty))
+        expect(sut: sut, expectedResult: .success(.none))
     }
     
     func assertThatDeleteEmptiesPreviouslyInsertedCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
@@ -100,7 +100,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
         let deletionError = delete(sut: sut)
         XCTAssertNil(deletionError, "Expected succesful deletion")
          
-        expect(sut: sut, expectedResult: .success(.empty))
+        expect(sut: sut, expectedResult: .success(.none))
     }
     
     func assertThatDeleteErrorOnFilePersmissionRestriction(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
@@ -170,12 +170,12 @@ extension XCTestCase {
         sut.retrieve(completion: { retrievalResult in
             guard let retrievalResult = retrievalResult else { return }
             switch (expectedResult, retrievalResult) {
-            case (.success(.empty), .success(.empty)),
+            case (.success(.none), .success(.none)),
                  (.failure, .failure):
                 break
-            case  (let .success(.found(expectedFeed, expectedTimeStamp)), let .success(.found(retrievedFeed, retrievedTimeStamp))):
-                XCTAssertEqual(expectedFeed, retrievedFeed, file: file, line: line)
-                XCTAssertEqual(expectedTimeStamp,retrievedTimeStamp, file: file, line: line)
+            case  (let .success(.some(expectedcache)), let .success(.some(retrievedCache))):
+                XCTAssertEqual(expectedcache.feed, retrievedCache.feed, file: file, line: line)
+                XCTAssertEqual(expectedcache.timestamp, retrievedCache.timestamp, file: file, line: line)
             default:
                 XCTFail("Expected found result \(expectedResult), found \(retrievalResult) instead")
             }
