@@ -67,8 +67,13 @@ class CacheFeedUseCaseTests: XCTestCase {
         var localFeedData: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
         
         var deletionError: Error?
-        localFeedData?.saveFeedInCache(feeds: uniqueImageFeeds().model, timestamp: Date()) { (error) in
-            deletionError = error
+        localFeedData?.saveFeedInCache(feeds: uniqueImageFeeds().model, timestamp: Date()) { (result) in
+            switch result {
+            case .failure(let error):
+                deletionError = error
+            default:
+                deletionError = nil
+            }
         }
         localFeedData = nil
         store.completeDeletion(with: anyNSError())
@@ -81,8 +86,13 @@ class CacheFeedUseCaseTests: XCTestCase {
         var localFeedData: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
         
         var insertionError: Error?
-        localFeedData?.saveFeedInCache(feeds: uniqueImageFeeds().model, timestamp: Date()) { (error) in
-            insertionError = error
+        localFeedData?.saveFeedInCache(feeds: uniqueImageFeeds().model, timestamp: Date()) { (result) in
+            switch result {
+            case .failure(let error):
+                insertionError = error
+            default:
+                insertionError = nil
+            }
         }
         store.completeDeletionSuccessfully()
         localFeedData = nil
@@ -107,8 +117,13 @@ class CacheFeedUseCaseTests: XCTestCase {
         let exp = expectation(description: "Wait to save feed")
         
         var receivedError: Error?
-        sut.saveFeedInCache(feeds: feeds, timestamp: timeStamp) { (error) in
-            receivedError = error
+        sut.saveFeedInCache(feeds: feeds, timestamp: timeStamp) { (result) in
+            switch result {
+            case .failure(let error):
+                receivedError = error
+            default:
+                receivedError = nil
+            }
             exp.fulfill()
         }
         

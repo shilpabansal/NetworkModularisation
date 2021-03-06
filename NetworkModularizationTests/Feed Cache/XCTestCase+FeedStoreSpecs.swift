@@ -144,8 +144,13 @@ extension XCTestCase {
     func insert(sut: FeedStore, feeds: [LocalFeedImage], timeStamp: Date) -> Error? {
         var insertionError: Error?
         let exp = expectation(description: "Wait for API")
-        sut.insert(feeds: feeds, timestamp: timeStamp) { (error) in
-            insertionError = error
+        sut.insert(feeds: feeds, timestamp: timeStamp) { (result) in
+            switch result {
+            case .failure(let error):
+                insertionError = error
+            default:
+                insertionError = nil
+            }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
@@ -157,8 +162,13 @@ extension XCTestCase {
         var deletionError: Error?
         
         let exp = expectation(description: "Wait for API")
-        sut.deleteFeeds { (error) in
-            deletionError = error
+        sut.deleteFeeds { (result) in
+            switch result {
+            case .failure(let error):
+                deletionError = error
+            default:
+                deletionError = nil
+            }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)

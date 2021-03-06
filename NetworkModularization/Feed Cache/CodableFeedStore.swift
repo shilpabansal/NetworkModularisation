@@ -71,10 +71,10 @@ class CodableFeedStore: FeedStore {
                 let codableFeedImages = feeds.map({ return CodableFeedImage($0)})
                 let encoded = try encoder.encode(Cache(feeds: codableFeedImages, timeStamp: timestamp))
                 try encoded.write(to: storeURL)
-                completion(nil)
+                completion(.success(()))
             }
             catch {
-                completion(error)
+                completion(.failure(error))
             }
         }
     }
@@ -85,15 +85,15 @@ class CodableFeedStore: FeedStore {
             do {
                 let data = try Data(contentsOf: storeURL)
                 if data.isEmpty {
-                    completion(nil)
+                    completion(.success(()))
                     return
                 }
                 
                 try FileManager.default.removeItem(at: storeURL)
-                completion(nil)
+                completion(.success(()))
             }
             catch {
-                completion(error)
+                completion(.failure(error))
             }
         }
     }

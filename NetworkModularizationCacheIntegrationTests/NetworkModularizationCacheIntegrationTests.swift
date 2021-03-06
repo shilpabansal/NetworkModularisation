@@ -98,8 +98,13 @@ class NetworkModularizationIntegrationTests: XCTestCase {
         let exp = expectation(description: "Wait to save feed")
         
         var receivedError: Error?
-        sut.saveFeedInCache(feeds: feeds, timestamp: timeStamp) { (error) in
-            receivedError = error
+        sut.saveFeedInCache(feeds: feeds, timestamp: timeStamp) { (result) in
+            switch result {
+            case .failure(let error):
+                receivedError = error
+            default:
+                receivedError = nil
+            }
             exp.fulfill()
         }
         

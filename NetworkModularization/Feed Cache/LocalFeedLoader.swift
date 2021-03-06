@@ -23,23 +23,24 @@ final class LocalFeedLoader {
 }
 
 extension LocalFeedLoader {
-    public typealias SaveResult = Error?
+    public typealias SaveResult = Swift.Result<Void, Error>
+    
     func saveFeedInCache(feeds: [FeedImage], timestamp: Date, completion: @escaping (SaveResult) -> Void) {
-        store.deleteFeeds {[weak self] (error) in
+        store.deleteFeeds {[weak self] (deleteResult) in
             guard let strongSelf = self else { return }
-            if error != nil {
-                completion(error)
-            }
-            else {
+            switch deleteResult {
+            case .success:
                 strongSelf.cacheInsertion(feeds: feeds, timestamp: timestamp, completion: completion)
+            case let .failure(error):
+                completion(.failure(error))
             }
         }
     }
     
-    private func cacheInsertion(feeds: [FeedImage], timestamp: Date, completion: @escaping (Error?) -> Void) {
-        store.insert(feeds: feeds.toLocal(), timestamp: timestamp, completion: {[weak self] error in
+    private func cacheInsertion(feeds: [FeedImage], timestamp: Date, completion: @escaping (SaveResult) -> Void) {
+        store.insert(feeds: feeds.toLocal(), timestamp: timestamp, completion: {[weak self] insertionResult in
             guard self != nil else { return }
-            completion(error)
+            completion(insertionResult)
         })
     }
 }

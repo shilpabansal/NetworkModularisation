@@ -70,4 +70,8 @@ extension ManagedCache : Identifiable {
         cache.timestamp = timestamp
         return cache
     }
+    
+    var localFeed: [LocalFeedImage] {
+        return feeds.compactMap { ($0 as? ManagedFeed)?.feedImage }
+    }
 }
