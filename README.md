@@ -333,3 +333,42 @@ Assignable var statements imply mutable state.
 Mutable state is tough to maintain as the complexity to manage mutable state tends to grow out of control as you add more features to your applications. That’s why we recommend you to avoid creating a design where mutable state is present at every layer. Use immutable state as much as you can!
 
 Of course, at some point, you need to mutate state. However, as explained in the Functional Core/Imperative Shell lecture, we strive to limit mutation to the boundaries of the system (where we recommend you to keep frameworks like Core Data, Realm, Firebase). Doing so makes testing and state management much simpler, safer, and easier.
+________________________________________________________________________________________
+
+
+
+
+
+
+
+________________________________________________________________________________________
+Result in Swift 5
+
+1. Result has a get() method that either returns the successful value if it exists, or throws its error otherwise. This allows you to convert Result into a regular throwing call, like this:
+
+fetchUnreadCount1(from: "https://www.hackingwithswift.com") { result in
+    if let count = try? result.get() {
+        print("\(count) unread messages.")
+    }
+}
+
+2. you can use regular if statements to read the cases of an enum if you prefer. For example:
+
+fetchUnreadCount1(from: "https://www.hackingwithswift.com") { result in
+    if case .success(let count) = result {
+        print("\(count) unread messages.")
+    }
+}
+
+3.  Result has an initializer that accepts a throwing closure: if the closure returns a value successfully that gets used for the success case, otherwise the thrown error is placed into the failure case.
+
+For example:
+
+let result = Result { try String(contentsOfFile: someFile) }
+Fourth, rather than using a specific error enum that you’ve created, you can also use the general Error protocol. In fact, the Swift Evolution proposal says “it's expected that most uses of Result will use Swift.Error as the Error type argument.”
+
+So, rather than using Result<Int, NetworkError> you could use Result<Int, Error>. Although this means you lose the safety of typed throws, you gain the ability to throw a variety of different error enums – which you use really depends on your preferred coding style.
+
+Finally, if you already have a custom Result type in your project – anything you have defined yourself or imported from one of the custom Result types on GitHub – then they will automatically be used in place of Swift’s own Result type. This will allow you to upgrade to Swift 5.0 without breaking your code, but ideally you’ll move to Swift’s own Result type over time to avoid incompatibilities with other projects.
+
+
