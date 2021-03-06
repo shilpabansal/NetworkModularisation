@@ -57,6 +57,21 @@ public class CoreDataFeedStore: FeedStore {
                     return CachedFeed(feed: $0.localFeed, timestamp: $0.timestamp)
                 }
             })
+            
+            /**
+             Result has an initializer that accepts a throwing closure: if the closure returns a value successfully that gets used for the success case, otherwise the thrown error is placed into the failure case.
+             
+             replacement of below code
+             do {
+                 let feeds = try ManagedCache.find(in: context).map {
+                     return CachedFeed(feed: $0.localFeed, timestamp: $0.timestamp)
+                 }
+                 completion(.success(feeds))
+             }
+             catch {
+                 completion(.failure(error))
+             }
+             */
         }
     }
 }
