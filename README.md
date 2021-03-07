@@ -371,4 +371,15 @@ So, rather than using Result<Int, NetworkError> you could use Result<Int, Error>
 
 Finally, if you already have a custom Result type in your project – anything you have defined yourself or imported from one of the custom Result types on GitHub – then they will automatically be used in place of Swift’s own Result type. This will allow you to upgrade to Swift 5.0 without breaking your code, but ideally you’ll move to Swift’s own Result type over time to avoid incompatibilities with other projects.
 
+________________________________________________________________________________________
 
+
+
+
+
+
+
+________________________________________________________________________________________
+
+prepareForReuse
+If a UITableViewCell object is reusable—that is, it has a reuse identifier—this method is invoked just before the object is returned from the UITableView method dequeueReusableCell(withIdentifier:). For performance reasons, you should only reset attributes of the cell that are not related to content, for example, alpha, editing, and selection state. The table view's delegate in tableView(_:cellForRowAt:) should always reset all content when reusing a cell. If the cell object does not have an associated reuse identifier, this method is not called. If you override this method, you must be sure to invoke the superclass implementation.
