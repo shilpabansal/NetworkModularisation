@@ -44,6 +44,16 @@
                ReferencedContainer = "container:NetworkModularization.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "3324969925F7C2B00027FA39"
+               BuildableName = "NetworkModularizationUITests.xctest"
+               BlueprintName = "NetworkModularizationUITests"
+               ReferencedContainer = "container:NetworkModularization.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

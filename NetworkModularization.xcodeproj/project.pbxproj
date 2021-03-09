@@ -11,9 +11,10 @@
 		3324503B25B4543D004D2ACE /* FeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3324503A25B4543D004D2ACE /* FeedStore.swift */; };
 		3324504525B45451004D2ACE /* LocalFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3324504425B45451004D2ACE /* LocalFeedLoader.swift */; };
 		3324504F25B476D1004D2ACE /* RemoteFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3324504E25B476D1004D2ACE /* RemoteFeedItem.swift */; };
-		3324963525F7BFCC0027FA39 /* NetworkModularizationUIiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3324962C25F7BFCC0027FA39 /* NetworkModularizationUIiOS.framework */; };
-		3324964125F7BFCC0027FA39 /* NetworkModularizationUIiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3324962C25F7BFCC0027FA39 /* NetworkModularizationUIiOS.framework */; };
-		3324964225F7BFCC0027FA39 /* NetworkModularizationUIiOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3324962C25F7BFCC0027FA39 /* NetworkModularizationUIiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3324969B25F7C2B00027FA39 /* NetworkModularizationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3324969225F7C2B00027FA39 /* NetworkModularizationUI.framework */; };
+		332496A725F7C2B00027FA39 /* NetworkModularizationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3324969225F7C2B00027FA39 /* NetworkModularizationUI.framework */; };
+		332496A825F7C2B00027FA39 /* NetworkModularizationUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3324969225F7C2B00027FA39 /* NetworkModularizationUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		332496BB25F7C2DE0027FA39 /* FeedViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 332496BA25F7C2DE0027FA39 /* FeedViewControllerTests.swift */; };
 		332E6CEF25971C7100770701 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 332E6CEE25971C7100770701 /* ViewController.swift */; };
 		332E6CF225971C7100770701 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 332E6CF025971C7100770701 /* Main.storyboard */; };
 		332E6CF425971C7400770701 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 332E6CF325971C7400770701 /* Assets.xcassets */; };
@@ -61,26 +62,26 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3324963625F7BFCC0027FA39 /* PBXContainerItemProxy */ = {
+		3324969C25F7C2B00027FA39 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 332E6CDF25971C7100770701 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 3324962B25F7BFCC0027FA39;
-			remoteInfo = NetworkModularizationUIiOS;
+			remoteGlobalIDString = 3324969125F7C2B00027FA39;
+			remoteInfo = NetworkModularizationUI;
 		};
-		3324963825F7BFCC0027FA39 /* PBXContainerItemProxy */ = {
+		3324969E25F7C2B00027FA39 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 332E6CDF25971C7100770701 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 332E6CE625971C7100770701;
 			remoteInfo = NetworkModularization;
 		};
-		3324963F25F7BFCC0027FA39 /* PBXContainerItemProxy */ = {
+		332496A525F7C2B00027FA39 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 332E6CDF25971C7100770701 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 3324962B25F7BFCC0027FA39;
-			remoteInfo = NetworkModularizationUIiOS;
+			remoteGlobalIDString = 3324969125F7C2B00027FA39;
+			remoteInfo = NetworkModularizationUI;
 		};
 		332E6CFE25971C7500770701 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -112,7 +113,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3324964225F7BFCC0027FA39 /* NetworkModularizationUIiOS.framework in Embed Frameworks */,
+				332496A825F7C2B00027FA39 /* NetworkModularizationUI.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -124,10 +125,12 @@
 		3324503A25B4543D004D2ACE /* FeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStore.swift; sourceTree = "<group>"; };
 		3324504425B45451004D2ACE /* LocalFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedLoader.swift; sourceTree = "<group>"; };
 		3324504E25B476D1004D2ACE /* RemoteFeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedItem.swift; sourceTree = "<group>"; };
-		3324962C25F7BFCC0027FA39 /* NetworkModularizationUIiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NetworkModularizationUIiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3324962F25F7BFCC0027FA39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3324963425F7BFCC0027FA39 /* NetworkModularizationUIiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NetworkModularizationUIiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3324963D25F7BFCC0027FA39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3324969225F7C2B00027FA39 /* NetworkModularizationUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NetworkModularizationUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3324969525F7C2B00027FA39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3324969A25F7C2B00027FA39 /* NetworkModularizationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NetworkModularizationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		332496A325F7C2B00027FA39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		332496BA25F7C2DE0027FA39 /* FeedViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewControllerTests.swift; sourceTree = "<group>"; };
+		332496CB25F7C5C00027FA39 /* NetworkModularizationUITests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NetworkModularizationUITests-Bridging-Header.h"; sourceTree = "<group>"; };
 		332E6CE725971C7100770701 /* NetworkModularization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetworkModularization.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		332E6CEE25971C7100770701 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		332E6CF125971C7100770701 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -175,18 +178,18 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		3324962925F7BFCC0027FA39 /* Frameworks */ = {
+		3324968F25F7C2B00027FA39 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3324963125F7BFCC0027FA39 /* Frameworks */ = {
+		3324969725F7C2B00027FA39 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3324963525F7BFCC0027FA39 /* NetworkModularizationUIiOS.framework in Frameworks */,
+				3324969B25F7C2B00027FA39 /* NetworkModularizationUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,7 +197,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3324964125F7BFCC0027FA39 /* NetworkModularizationUIiOS.framework in Frameworks */,
+				332496A725F7C2B00027FA39 /* NetworkModularizationUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,20 +251,22 @@
 			path = "Feed Cache";
 			sourceTree = "<group>";
 		};
-		3324962D25F7BFCC0027FA39 /* NetworkModularizationUIiOS */ = {
+		3324969325F7C2B00027FA39 /* NetworkModularizationUI */ = {
 			isa = PBXGroup;
 			children = (
-				3324962F25F7BFCC0027FA39 /* Info.plist */,
+				3324969525F7C2B00027FA39 /* Info.plist */,
 			);
-			path = NetworkModularizationUIiOS;
+			path = NetworkModularizationUI;
 			sourceTree = "<group>";
 		};
-		3324963A25F7BFCC0027FA39 /* NetworkModularizationUIiOSTests */ = {
+		332496A025F7C2B00027FA39 /* NetworkModularizationUITests */ = {
 			isa = PBXGroup;
 			children = (
-				3324963D25F7BFCC0027FA39 /* Info.plist */,
+				332496CB25F7C5C00027FA39 /* NetworkModularizationUITests-Bridging-Header.h */,
+				332496A325F7C2B00027FA39 /* Info.plist */,
+				332496BA25F7C2DE0027FA39 /* FeedViewControllerTests.swift */,
 			);
-			path = NetworkModularizationUIiOSTests;
+			path = NetworkModularizationUITests;
 			sourceTree = "<group>";
 		};
 		332E6CDE25971C7100770701 = {
@@ -271,8 +276,8 @@
 				332E6D0025971C7500770701 /* NetworkModularizationTests */,
 				33BBB53025A97D3200AA0A7D /* NetworkModularizationEndToEndTests */,
 				33E833D825F10566008189C4 /* NetworkModularizationCacheIntegrationTests */,
-				3324962D25F7BFCC0027FA39 /* NetworkModularizationUIiOS */,
-				3324963A25F7BFCC0027FA39 /* NetworkModularizationUIiOSTests */,
+				3324969325F7C2B00027FA39 /* NetworkModularizationUI */,
+				332496A025F7C2B00027FA39 /* NetworkModularizationUITests */,
 				332E6CE825971C7100770701 /* Products */,
 				33E8337025F0F9A5008189C4 /* Frameworks */,
 			);
@@ -285,8 +290,8 @@
 				332E6CFD25971C7500770701 /* NetworkModularizationTests.xctest */,
 				33BBB52F25A97D3200AA0A7D /* NetworkModularizationEndToEndTests.xctest */,
 				33E833D725F10566008189C4 /* NetworkModularizationCacheIntegrationTests.xctest */,
-				3324962C25F7BFCC0027FA39 /* NetworkModularizationUIiOS.framework */,
-				3324963425F7BFCC0027FA39 /* NetworkModularizationUIiOSTests.xctest */,
+				3324969225F7C2B00027FA39 /* NetworkModularizationUI.framework */,
+				3324969A25F7C2B00027FA39 /* NetworkModularizationUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -419,7 +424,7 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		3324962725F7BFCC0027FA39 /* Headers */ = {
+		3324968D25F7C2B00027FA39 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -429,41 +434,41 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		3324962B25F7BFCC0027FA39 /* NetworkModularizationUIiOS */ = {
+		3324969125F7C2B00027FA39 /* NetworkModularizationUI */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3324964325F7BFCC0027FA39 /* Build configuration list for PBXNativeTarget "NetworkModularizationUIiOS" */;
+			buildConfigurationList = 332496A925F7C2B00027FA39 /* Build configuration list for PBXNativeTarget "NetworkModularizationUI" */;
 			buildPhases = (
-				3324962725F7BFCC0027FA39 /* Headers */,
-				3324962825F7BFCC0027FA39 /* Sources */,
-				3324962925F7BFCC0027FA39 /* Frameworks */,
-				3324962A25F7BFCC0027FA39 /* Resources */,
+				3324968D25F7C2B00027FA39 /* Headers */,
+				3324968E25F7C2B00027FA39 /* Sources */,
+				3324968F25F7C2B00027FA39 /* Frameworks */,
+				3324969025F7C2B00027FA39 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = NetworkModularizationUIiOS;
-			productName = NetworkModularizationUIiOS;
-			productReference = 3324962C25F7BFCC0027FA39 /* NetworkModularizationUIiOS.framework */;
+			name = NetworkModularizationUI;
+			productName = NetworkModularizationUI;
+			productReference = 3324969225F7C2B00027FA39 /* NetworkModularizationUI.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		3324963325F7BFCC0027FA39 /* NetworkModularizationUIiOSTests */ = {
+		3324969925F7C2B00027FA39 /* NetworkModularizationUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3324964625F7BFCC0027FA39 /* Build configuration list for PBXNativeTarget "NetworkModularizationUIiOSTests" */;
+			buildConfigurationList = 332496AC25F7C2B00027FA39 /* Build configuration list for PBXNativeTarget "NetworkModularizationUITests" */;
 			buildPhases = (
-				3324963025F7BFCC0027FA39 /* Sources */,
-				3324963125F7BFCC0027FA39 /* Frameworks */,
-				3324963225F7BFCC0027FA39 /* Resources */,
+				3324969625F7C2B00027FA39 /* Sources */,
+				3324969725F7C2B00027FA39 /* Frameworks */,
+				3324969825F7C2B00027FA39 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				3324963725F7BFCC0027FA39 /* PBXTargetDependency */,
-				3324963925F7BFCC0027FA39 /* PBXTargetDependency */,
+				3324969D25F7C2B00027FA39 /* PBXTargetDependency */,
+				3324969F25F7C2B00027FA39 /* PBXTargetDependency */,
 			);
-			name = NetworkModularizationUIiOSTests;
-			productName = NetworkModularizationUIiOSTests;
-			productReference = 3324963425F7BFCC0027FA39 /* NetworkModularizationUIiOSTests.xctest */;
+			name = NetworkModularizationUITests;
+			productName = NetworkModularizationUITests;
+			productReference = 3324969A25F7C2B00027FA39 /* NetworkModularizationUITests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		332E6CE625971C7100770701 /* NetworkModularization */ = {
@@ -478,7 +483,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				3324964025F7BFCC0027FA39 /* PBXTargetDependency */,
+				332496A625F7C2B00027FA39 /* PBXTargetDependency */,
 			);
 			name = NetworkModularization;
 			productName = NetworkModularization;
@@ -548,11 +553,12 @@
 				LastSwiftUpdateCheck = 1230;
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
-					3324962B25F7BFCC0027FA39 = {
+					3324969125F7C2B00027FA39 = {
 						CreatedOnToolsVersion = 12.3;
 					};
-					3324963325F7BFCC0027FA39 = {
+					3324969925F7C2B00027FA39 = {
 						CreatedOnToolsVersion = 12.3;
+						LastSwiftMigration = 1230;
 						TestTargetID = 332E6CE625971C7100770701;
 					};
 					332E6CE625971C7100770701 = {
@@ -590,21 +596,21 @@
 				332E6CFC25971C7500770701 /* NetworkModularizationTests */,
 				33BBB52E25A97D3200AA0A7D /* NetworkModularizationEndToEndTests */,
 				33E833D625F10566008189C4 /* NetworkModularizationCacheIntegrationTests */,
-				3324962B25F7BFCC0027FA39 /* NetworkModularizationUIiOS */,
-				3324963325F7BFCC0027FA39 /* NetworkModularizationUIiOSTests */,
+				3324969125F7C2B00027FA39 /* NetworkModularizationUI */,
+				3324969925F7C2B00027FA39 /* NetworkModularizationUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		3324962A25F7BFCC0027FA39 /* Resources */ = {
+		3324969025F7C2B00027FA39 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3324963225F7BFCC0027FA39 /* Resources */ = {
+		3324969825F7C2B00027FA39 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -645,17 +651,18 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		3324962825F7BFCC0027FA39 /* Sources */ = {
+		3324968E25F7C2B00027FA39 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3324963025F7BFCC0027FA39 /* Sources */ = {
+		3324969625F7C2B00027FA39 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				332496BB25F7C2DE0027FA39 /* FeedViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -735,20 +742,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3324963725F7BFCC0027FA39 /* PBXTargetDependency */ = {
+		3324969D25F7C2B00027FA39 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3324962B25F7BFCC0027FA39 /* NetworkModularizationUIiOS */;
-			targetProxy = 3324963625F7BFCC0027FA39 /* PBXContainerItemProxy */;
+			target = 3324969125F7C2B00027FA39 /* NetworkModularizationUI */;
+			targetProxy = 3324969C25F7C2B00027FA39 /* PBXContainerItemProxy */;
 		};
-		3324963925F7BFCC0027FA39 /* PBXTargetDependency */ = {
+		3324969F25F7C2B00027FA39 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 332E6CE625971C7100770701 /* NetworkModularization */;
-			targetProxy = 3324963825F7BFCC0027FA39 /* PBXContainerItemProxy */;
+			targetProxy = 3324969E25F7C2B00027FA39 /* PBXContainerItemProxy */;
 		};
-		3324964025F7BFCC0027FA39 /* PBXTargetDependency */ = {
+		332496A625F7C2B00027FA39 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3324962B25F7BFCC0027FA39 /* NetworkModularizationUIiOS */;
-			targetProxy = 3324963F25F7BFCC0027FA39 /* PBXContainerItemProxy */;
+			target = 3324969125F7C2B00027FA39 /* NetworkModularizationUI */;
+			targetProxy = 332496A525F7C2B00027FA39 /* PBXContainerItemProxy */;
 		};
 		332E6CFF25971C7500770701 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -787,7 +794,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		3324964425F7BFCC0027FA39 /* Debug */ = {
+		332496AA25F7C2B00027FA39 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -797,7 +804,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = NetworkModularizationUIiOS/Info.plist;
+				INFOPLIST_FILE = NetworkModularizationUI/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -805,7 +812,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.samsclub.addressModule.NetworkModularizationUIiOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.samsclub.addressModule.NetworkModularizationUI;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -815,7 +822,7 @@
 			};
 			name = Debug;
 		};
-		3324964525F7BFCC0027FA39 /* Release */ = {
+		332496AB25F7C2B00027FA39 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -825,7 +832,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = NetworkModularizationUIiOS/Info.plist;
+				INFOPLIST_FILE = NetworkModularizationUI/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -833,7 +840,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.samsclub.addressModule.NetworkModularizationUIiOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.samsclub.addressModule.NetworkModularizationUI;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -843,42 +850,47 @@
 			};
 			name = Release;
 		};
-		3324964725F7BFCC0027FA39 /* Debug */ = {
+		332496AD25F7C2B00027FA39 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VXC5SDDAKJ;
-				INFOPLIST_FILE = NetworkModularizationUIiOSTests/Info.plist;
+				INFOPLIST_FILE = NetworkModularizationUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.samsclub.addressModule.NetworkModularizationUIiOSTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.samsclub.addressModule.NetworkModularizationUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "NetworkModularizationUITests/NetworkModularizationUITests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NetworkModularization.app/NetworkModularization";
 			};
 			name = Debug;
 		};
-		3324964825F7BFCC0027FA39 /* Release */ = {
+		332496AE25F7C2B00027FA39 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VXC5SDDAKJ;
-				INFOPLIST_FILE = NetworkModularizationUIiOSTests/Info.plist;
+				INFOPLIST_FILE = NetworkModularizationUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.samsclub.addressModule.NetworkModularizationUIiOSTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.samsclub.addressModule.NetworkModularizationUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "NetworkModularizationUITests/NetworkModularizationUITests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NetworkModularization.app/NetworkModularization";
@@ -1012,6 +1024,7 @@
 		332E6D1225971C7500770701 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -1032,6 +1045,7 @@
 		332E6D1325971C7500770701 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -1197,20 +1211,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3324964325F7BFCC0027FA39 /* Build configuration list for PBXNativeTarget "NetworkModularizationUIiOS" */ = {
+		332496A925F7C2B00027FA39 /* Build configuration list for PBXNativeTarget "NetworkModularizationUI" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3324964425F7BFCC0027FA39 /* Debug */,
-				3324964525F7BFCC0027FA39 /* Release */,
+				332496AA25F7C2B00027FA39 /* Debug */,
+				332496AB25F7C2B00027FA39 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		3324964625F7BFCC0027FA39 /* Build configuration list for PBXNativeTarget "NetworkModularizationUIiOSTests" */ = {
+		332496AC25F7C2B00027FA39 /* Build configuration list for PBXNativeTarget "NetworkModularizationUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3324964725F7BFCC0027FA39 /* Debug */,
-				3324964825F7BFCC0027FA39 /* Release */,
+				332496AD25F7C2B00027FA39 /* Debug */,
+				332496AE25F7C2B00027FA39 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
