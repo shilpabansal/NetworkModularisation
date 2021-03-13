@@ -40,23 +40,41 @@ class FeedViewControllerTests: XCTestCase {
     }
     
     func test_loadingFeedImages() {
-        let feedImage = uniqueFeed()
+        let image0 = makeImage("Location 0", "Description 0")
+        let image1 = makeImage("Location 1", "Description 1")
+        let image2 = makeImage("Location 2", "Description 2")
+        let image3 = makeImage("Location 3", "Description 3")
+        
         let (loader, sut) = makeSUT()
         sut.loadViewIfNeeded()
         
         XCTAssertEqual(sut.numberOfRenderedImageView, 0)
-        loader.completeFeedLoading(with: [feedImage])
+        loader.completeFeedLoading(with: [image0])
         XCTAssertEqual(sut.numberOfRenderedImageView, 1)
         
-        let view = sut.feedImageView(at: 0) as? FeedImageCell
-        XCTAssertNotNil(view)
+        assertThat(sut: sut, hasViewConfiguredFor: image0, at: 0)
         
-        XCTAssertEqual(view?.isShowingLocation, true)
-        XCTAssertEqual(view?.locationText, feedImage.location)
-        XCTAssertEqual(view?.descriptionText, feedImage.description)
+        
+        sut.simulateUserInitiatedFreeLoad()
+        loader.completeFeedLoading(with: [image0, image1, image2, image3])
+        XCTAssertEqual(sut.numberOfRenderedImageView, 4)
+        
+        
+        assertThat(sut: sut, hasViewConfiguredFor: image0, at: 0)
+        assertThat(sut: sut, hasViewConfiguredFor: image1, at: 1)
+        assertThat(sut: sut, hasViewConfiguredFor: image2, at: 2)
+        assertThat(sut: sut, hasViewConfiguredFor: image3, at: 3)
     }
     
     //MARK: - Helpers
+    private func assertThat(sut: FeedViewController,hasViewConfiguredFor image: FeedImage,at index: Int = 0) {
+        let view = sut.feedImageView(at: index) as? FeedImageCell
+        XCTAssertNotNil(view)
+        XCTAssertEqual(view?.isShowingLocation, true)
+        XCTAssertEqual(view?.locationText, image.location)
+        XCTAssertEqual(view?.descriptionText, image.description)
+    }
+    
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (loader: LoaderSpy, sut: FeedViewController) {
         let loader = LoaderSpy()
         let sut = FeedViewController(loader: loader)
@@ -67,8 +85,8 @@ class FeedViewControllerTests: XCTestCase {
         return (loader: loader, sut: sut)
     }
     
-    private func uniqueFeed() -> FeedImage {
-        return FeedImage(id: UUID(), description: "Description", location: "Location", url: URL(string: "https://a-url.com")!)
+    private func makeImage(_ location: String,_ description: String) -> FeedImage {
+        return FeedImage(id: UUID(), description: description, location: location, url: URL(string: "https://a-url.com")!)
     }
     
     class LoaderSpy: FeedLoader {
