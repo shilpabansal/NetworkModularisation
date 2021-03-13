@@ -8,29 +8,6 @@
 import XCTest
 import UIKit
 import NetworkModularization
- 
-final class FeedViewController: UITableViewController {
-    var loader: FeedLoader? = nil
-    convenience init(loader: FeedLoader) {
-        self.init()
-        
-        self.loader = loader
-    }
-    
-    override func viewDidLoad() {
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-        
-        load()
-    }
-    
-    @objc func load() {
-        refreshControl?.beginRefreshing()
-        loader?.load(completion: {[weak self] _ in
-            self?.refreshControl?.endRefreshing()
-        })
-    }
-}
 
 class FeedViewControllerTests: XCTestCase {
     func test_loadFeedActions_requestFeedFromLoader() {
@@ -48,7 +25,7 @@ class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 3, "Expected load count to 3 when user initiate the load again")
     }
     
-    func test_load_loadIndicator() {
+    func test_loadingFeedIndicator_isVisibleWhileLoading() {
         let (loader, sut) = makeSUT()
         
         sut.loadViewIfNeeded()

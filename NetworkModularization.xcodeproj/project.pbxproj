@@ -56,6 +56,7 @@
 		33E8345E25F10941008189C4 /* FeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 336762B125E366730048C9A3 /* FeedStoreSpecs.swift */; };
 		33E8347A25F11203008189C4 /* NetworkModularizationCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E833D925F10566008189C4 /* NetworkModularizationCacheIntegrationTests.swift */; };
 		33EC96A625FC7FCA006810B8 /* FeedViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EC96A525FC7FCA006810B8 /* FeedViewControllerTests.swift */; };
+		33EC96AE25FC999B006810B8 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EC96AD25FC999B006810B8 /* FeedViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,6 +146,7 @@
 		33E833D925F10566008189C4 /* NetworkModularizationCacheIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkModularizationCacheIntegrationTests.swift; sourceTree = "<group>"; };
 		33E833DB25F10566008189C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		33EC96A525FC7FCA006810B8 /* FeedViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewControllerTests.swift; sourceTree = "<group>"; };
+		33EC96AD25FC999B006810B8 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -358,6 +360,7 @@
 		33EC96A325FC7FA5006810B8 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				33EC96AD25FC999B006810B8 /* FeedViewController.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -550,6 +553,7 @@
 				3324504525B45451004D2ACE /* LocalFeedLoader.swift in Sources */,
 				33A725052598B5DC004D6AAB /* FeedLoader.swift in Sources */,
 				33A1A45C25A76057008D3C2C /* URLSessionHTTPClient.swift in Sources */,
+				33EC96AE25FC999B006810B8 /* FeedViewController.swift in Sources */,
 				33DCDAA125A8B6C000AD1495 /* SceneDelegate.swift in Sources */,
 				33BFFB7325B47E0E00704A5D /* LocalFeedImage.swift in Sources */,
 				33E833A225F0FBCF008189C4 /* ManagedFeed+CoreDataClass.swift in Sources */,
