@@ -21,11 +21,14 @@ final class FeedViewController: UITableViewController {
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
         
+        refreshControl?.beginRefreshing()
         load()
     }
     
     @objc func load() {
-        loader?.load(completion: { _ in })
+        loader?.load(completion: {[weak self] _ in
+            self?.refreshControl?.endRefreshing()
+        })
     }
 }
 
@@ -37,20 +40,36 @@ class FeedViewControllerTests: XCTestCase {
     }
     
     func test_load_loadFeed() {
-        let (loader, _) = makeSUT()
+        let (loader, sut) = makeSUT()
         
-        loader.load(completion: {_ in})
+        sut.loadViewIfNeeded()
         XCTAssertEqual(loader.loadCallCount, 1)
     }
     
     func test_pullToRefresh_loadFeed() {
         let (loader, sut) = makeSUT()
         
+        sut.loadViewIfNeeded()
         sut.refreshControl?.simulatePullToRefresh()
         XCTAssertEqual(loader.loadCallCount, 2)
         
         sut.refreshControl?.simulatePullToRefresh()
         XCTAssertEqual(loader.loadCallCount, 3)
+    }
+    
+    func test_viewDidLoad_showLoadingIndicator() {
+        let (_, sut) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        XCTAssert(sut.refreshControl?.isRefreshing == true)
+    }
+    
+    func test_viewDidLoad_hideLoadingIndicatorOnCompletion() {
+        let (loader, sut) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        loader.loadCompleted()
+        XCTAssert(sut.refreshControl?.isRefreshing == false)
     }
     
     //MARK: - Helpers
@@ -65,8 +84,15 @@ class FeedViewControllerTests: XCTestCase {
     }
     
     class LoaderSpy: FeedLoader {
+        var completions = [((FeedLoader.Result) -> Void)]()
         func load(completion: @escaping ((FeedLoader.Result) -> Void)) {
             loadCallCount += 1
+            
+            completions.append(completion)
+        }
+        
+        func loadCompleted(index: Int = 0) {
+            completions[0](.success([]))
         }
         
         private(set) var loadCallCount = 0
