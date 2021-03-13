@@ -36,30 +36,30 @@ class FeedViewControllerTests: XCTestCase {
     func test_loadFeedActions_requestFeedFromLoader() {
         let (loader, sut) = makeSUT()
         
-        XCTAssertEqual(loader.loadCallCount, 0)
+        XCTAssertEqual(loader.loadCallCount, 0, "Expected no load count initially as API is not called")
         
         sut.loadViewIfNeeded()
-        XCTAssertEqual(loader.loadCallCount, 1)
+        XCTAssertEqual(loader.loadCallCount, 1, "Expected load count as 1 on view loaded")
         
         sut.simulateUserInitiatedFreeLoad()
-        XCTAssertEqual(loader.loadCallCount, 2)
+        XCTAssertEqual(loader.loadCallCount, 2, "Expected load count to 2 when user initiate the load")
         
         sut.simulateUserInitiatedFreeLoad()
-        XCTAssertEqual(loader.loadCallCount, 3)
+        XCTAssertEqual(loader.loadCallCount, 3, "Expected load count to 3 when user initiate the load again")
     }
     
     func test_load_loadIndicator() {
         let (loader, sut) = makeSUT()
         
         sut.loadViewIfNeeded()
-        XCTAssertTrue(sut.isShowingLoadingIndicator)
+        XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator to be shown when view is loading")
         loader.loadCompleted(at: 0)
-        XCTAssertFalse(sut.isShowingLoadingIndicator)
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected loading indicator to be hidden when load completes")
         
         sut.simulateUserInitiatedFreeLoad()
-        XCTAssertTrue(sut.isShowingLoadingIndicator)
+        XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator to be shown when user initiates the loading")
         loader.loadCompleted(at: 1)
-        XCTAssertFalse(sut.isShowingLoadingIndicator)
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected loading indicator to be hidden when load completes")
     }
     
     //MARK: - Helpers
