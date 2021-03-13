@@ -7,13 +7,20 @@
 
 import UIKit
 
+public protocol ImageLoader {
+    func loadImageData(from url: URL)
+}
+
 public final class FeedViewController: UITableViewController {
-    var loader: FeedLoader? = nil
+    var imageLoader: ImageLoader? = nil
+    var feedLoader: FeedLoader? = nil
     var tableModel = [FeedImage]()
-    public convenience init(loader: FeedLoader) {
+    
+    public convenience init(feedLoader: FeedLoader, imageLoader: ImageLoader) {
         self.init()
         
-        self.loader = loader
+        self.imageLoader = imageLoader
+        self.feedLoader = feedLoader
     }
     
     public override func viewDidLoad() {
@@ -25,13 +32,10 @@ public final class FeedViewController: UITableViewController {
     
     @objc func load() {
         refreshControl?.beginRefreshing()
-        loader?.load(completion: {[weak self] result in
-           switch result {
-            case .success(_):
-                self?.tableModel = (try? result.get()) ?? []
+        feedLoader?.load(completion: {[weak self] result in
+            if let feeds = try? result.get() {
+                self?.tableModel = feeds
                 self?.tableView.reloadData()
-            case .failure:
-                break
             }
             self?.refreshControl?.endRefreshing()
         })
@@ -48,6 +52,8 @@ public final class FeedViewController: UITableViewController {
         cell.locationLabel.text = cellModel.location
         cell.descriptionLabel.text = cellModel.description
         cell.locationContainer.isHidden = cellModel.location == nil
+        
+        imageLoader?.loadImageData(from: cellModel.url)
         return cell
     }
 }
