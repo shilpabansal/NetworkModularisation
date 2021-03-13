@@ -33,51 +33,33 @@ final class FeedViewController: UITableViewController {
 }
 
 class FeedViewControllerTests: XCTestCase {
-    func test_load_doesNotFeed() {
-        let (loader, _) = makeSUT()
+    func test_loadFeedActions_requestFeedFromLoader() {
+        let (loader, sut) = makeSUT()
         
         XCTAssertEqual(loader.loadCallCount, 0)
-    }
-    
-    func test_load_loadFeed() {
-        let (loader, sut) = makeSUT()
         
         sut.loadViewIfNeeded()
         XCTAssertEqual(loader.loadCallCount, 1)
-    }
-    
-    func test_userInitiatedFeedLoad_loadFeed() {
-        let (loader, sut) = makeSUT()
         
-        sut.loadViewIfNeeded()
-        sut.userInitiatedFeedLoad()
+        sut.simulateUserInitiatedFreeLoad()
         XCTAssertEqual(loader.loadCallCount, 2)
         
-        sut.userInitiatedFeedLoad()
+        sut.simulateUserInitiatedFreeLoad()
         XCTAssertEqual(loader.loadCallCount, 3)
     }
     
-    func test_viewDidLoad_showLoadingIndicator() {
-        let (_, sut) = makeSUT()
-        
-        sut.loadViewIfNeeded()
-        XCTAssert(sut.isShowingLoadingIndicator == true)
-    }
-    
-    func test_viewDidLoad_hideLoadingIndicatorOnCompletion() {
+    func test_load_loadIndicator() {
         let (loader, sut) = makeSUT()
         
         sut.loadViewIfNeeded()
+        XCTAssertTrue(sut.isShowingLoadingIndicator)
         loader.loadCompleted()
-        XCTAssert(sut.isShowingLoadingIndicator == false)
-    }
-    
-    func test_userInitiatedFeedLoad_hideLoadingIndicatorOnCompletion() {
-        let (loader, sut) = makeSUT()
+        XCTAssertFalse(sut.isShowingLoadingIndicator)
         
-        sut.userInitiatedFeedLoad()
+        sut.simulateUserInitiatedFreeLoad()
+        XCTAssertTrue(sut.isShowingLoadingIndicator)
         loader.loadCompleted()
-        XCTAssert(sut.isShowingLoadingIndicator == false)
+        XCTAssertFalse(sut.isShowingLoadingIndicator)
     }
     
     //MARK: - Helpers
@@ -118,7 +100,8 @@ private extension UIRefreshControl {
 }
 
 private extension FeedViewController {
-    func userInitiatedFeedLoad() {
+    func simulateUserInitiatedFreeLoad() {
+        refreshControl?.beginRefreshing()
         refreshControl?.simulatePullToRefresh()
     }
     
