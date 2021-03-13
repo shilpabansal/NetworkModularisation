@@ -30,13 +30,23 @@ class FeedViewControllerTests: XCTestCase {
         
         sut.loadViewIfNeeded()
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator to be shown when view is loading")
-        loader.loadCompleted(at: 0)
+        loader.completeFeedLoading(with:[], at: 0)
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected loading indicator to be hidden when load completes")
         
         sut.simulateUserInitiatedFreeLoad()
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator to be shown when user initiates the loading")
-        loader.loadCompleted(at: 1)
+        loader.completeFeedLoading(with:[], at: 1)
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected loading indicator to be hidden when load completes")
+    }
+    
+    func test_loadingFeedImages() {
+        let feedImage = uniqueFeed()
+        let (loader, sut) = makeSUT()
+        sut.loadViewIfNeeded()
+        
+        XCTAssertEqual(sut.numberOfRenderedImageView, 0)
+        loader.completeFeedLoading(with: [feedImage])
+        XCTAssertEqual(sut.numberOfRenderedImageView, 1)
     }
     
     //MARK: - Helpers
@@ -50,6 +60,10 @@ class FeedViewControllerTests: XCTestCase {
         return (loader: loader, sut: sut)
     }
     
+    private func uniqueFeed() -> FeedImage {
+        return FeedImage(id: UUID(), description: nil, location: nil, url: URL(string: "https://a-url.com")!)
+    }
+    
     class LoaderSpy: FeedLoader {
         var completions = [((FeedLoader.Result) -> Void)]()
         func load(completion: @escaping ((FeedLoader.Result) -> Void)) {
@@ -58,8 +72,8 @@ class FeedViewControllerTests: XCTestCase {
             completions.append(completion)
         }
         
-        func loadCompleted(at index: Int = 0) {
-            completions[index](.success([]))
+        func completeFeedLoading(with feeds:[FeedImage], at index: Int = 0) {
+            completions[index](.success(feeds))
         }
         
         private(set) var loadCallCount = 0
@@ -83,5 +97,13 @@ private extension FeedViewController {
     
     var isShowingLoadingIndicator: Bool {
         return refreshControl?.isRefreshing ?? false
+    }
+    
+    var numberOfRenderedImageView: Int {
+        return tableView.numberOfRows(inSection: feedImageSection)
+    }
+    
+    var feedImageSection: Int {
+        return 0
     }
 }
