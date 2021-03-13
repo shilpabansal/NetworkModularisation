@@ -30,13 +30,13 @@ class FeedViewControllerTests: XCTestCase {
         
         sut.loadViewIfNeeded()
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator to be shown when view is loading")
-        loader.completeFeedLoading(with:[], at: 0)
+        loader.completeFeedLoading(at: 0)
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected loading indicator to be hidden when load completes")
         
         sut.simulateUserInitiatedFreeLoad()
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator to be shown when user initiates the loading")
-        loader.completeFeedLoading(with:[], at: 1)
-        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected loading indicator to be hidden when load completes")
+        loader.completeFeedLoadingWithError(at: 1)
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected loading indicator to be hidden when load error occurs")
     }
     
     func test_loadFeedCompletion_rendersSuccessfullyLoadedFeed() {
@@ -120,7 +120,7 @@ class FeedViewControllerTests: XCTestCase {
             completions.append(completion)
         }
         
-        func completeFeedLoading(with feeds:[FeedImage], at index: Int = 0) {
+        func completeFeedLoading(with feeds:[FeedImage] = [], at index: Int = 0) {
             completions[index](.success(feeds))
         }
         

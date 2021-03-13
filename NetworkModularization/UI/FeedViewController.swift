@@ -30,10 +30,10 @@ public final class FeedViewController: UITableViewController {
             case .success(_):
                 self?.tableModel = (try? result.get()) ?? []
                 self?.tableView.reloadData()
-                self?.refreshControl?.endRefreshing()
             case .failure:
                 break
             }
+            self?.refreshControl?.endRefreshing()
         })
     }
     
