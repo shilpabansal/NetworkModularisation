@@ -7,16 +7,17 @@
 
 import UIKit
 
-public protocol ImageLoader {
+public protocol FeedImageDataLoader {
     func loadImageData(from url: URL)
+    func cancelImageLoader(from url: URL)
 }
 
 public final class FeedViewController: UITableViewController {
-    var imageLoader: ImageLoader? = nil
+    var imageLoader: FeedImageDataLoader? = nil
     var feedLoader: FeedLoader? = nil
     var tableModel = [FeedImage]()
     
-    public convenience init(feedLoader: FeedLoader, imageLoader: ImageLoader) {
+    public convenience init(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) {
         self.init()
         
         self.imageLoader = imageLoader
@@ -55,5 +56,11 @@ public final class FeedViewController: UITableViewController {
         
         imageLoader?.loadImageData(from: cellModel.url)
         return cell
+    }
+    
+    public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let cellModel = tableModel[indexPath.row]
+        
+        imageLoader?.cancelImageLoader(from: cellModel.url)
     }
 }
