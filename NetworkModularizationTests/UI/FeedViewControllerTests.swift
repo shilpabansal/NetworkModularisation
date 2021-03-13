@@ -39,40 +39,63 @@ class FeedViewControllerTests: XCTestCase {
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected loading indicator to be hidden when load completes")
     }
     
-    func test_loadingFeedImages() {
+    func test_loadFeedCompletion_rendersSuccessfullyLoadedFeed() {
         let image0 = makeImage("Location 0", "Description 0")
-        let image1 = makeImage("Location 1", "Description 1")
-        let image2 = makeImage("Location 2", "Description 2")
-        let image3 = makeImage("Location 3", "Description 3")
+        let image1 = makeImage(nil, "Description 1")
+        let image2 = makeImage("Location 2", nil)
+        let image3 = makeImage(nil, nil)
         
         let (loader, sut) = makeSUT()
         sut.loadViewIfNeeded()
         
         XCTAssertEqual(sut.numberOfRenderedImageView, 0)
         loader.completeFeedLoading(with: [image0])
-        XCTAssertEqual(sut.numberOfRenderedImageView, 1)
-        
-        assertThat(sut: sut, hasViewConfiguredFor: image0, at: 0)
+        assertThat(sut: sut, isRendering: [image0])
         
         
         sut.simulateUserInitiatedFreeLoad()
-        loader.completeFeedLoading(with: [image0, image1, image2, image3])
-        XCTAssertEqual(sut.numberOfRenderedImageView, 4)
+        let feedImageArray = [image0, image1, image2, image3]
+        loader.completeFeedLoading(with: feedImageArray)
         
+        assertThat(sut: sut, isRendering: feedImageArray)
+    }
+    
+    func test_loadFeedCompletion_doesNotAlterCurrentRenderingStateOnError() {
+        let image0 = makeImage("Location 0", "Description 0")
         
-        assertThat(sut: sut, hasViewConfiguredFor: image0, at: 0)
-        assertThat(sut: sut, hasViewConfiguredFor: image1, at: 1)
-        assertThat(sut: sut, hasViewConfiguredFor: image2, at: 2)
-        assertThat(sut: sut, hasViewConfiguredFor: image3, at: 3)
+        let (loader, sut) = makeSUT()
+        sut.loadViewIfNeeded()
+        
+        loader.completeFeedLoading(with: [image0], at: 0)
+        assertThat(sut: sut, isRendering: [image0])
+        
+        sut.simulateUserInitiatedFreeLoad()
+        loader.completeFeedLoadingWithError(at: 1)
+        assertThat(sut: sut, isRendering: [image0])
     }
     
     //MARK: - Helpers
-    private func assertThat(sut: FeedViewController,hasViewConfiguredFor image: FeedImage,at index: Int = 0) {
+    private func assertThat(sut: FeedViewController, isRendering feedImages: [FeedImage]) {
+        guard sut.numberOfRenderedImageView == feedImages.count else {
+            return XCTFail("Expected \(feedImages.count), fount \(sut.numberOfRenderedImageView)")
+        }
+        
+        feedImages.enumerated().forEach {
+            assertThat(sut: sut, hasViewConfiguredFor: $1, at: $0)
+        }
+    }
+    
+    private func assertThat(sut: FeedViewController, hasViewConfiguredFor image: FeedImage, at index: Int = 0, file: StaticString = #file, line: UInt = #line) {
         let view = sut.feedImageView(at: index) as? FeedImageCell
-        XCTAssertNotNil(view)
-        XCTAssertEqual(view?.isShowingLocation, true)
-        XCTAssertEqual(view?.locationText, image.location)
-        XCTAssertEqual(view?.descriptionText, image.description)
+        guard let cell = view else {
+            return XCTFail("Expected \(FeedImageCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+        }
+        
+        let atLocationBeVisibile = image.location != nil
+        XCTAssertEqual(cell.isShowingLocation, atLocationBeVisibile, "Expected location's visibility to \(atLocationBeVisibile), found \(cell.isShowingLocation)")
+        
+        XCTAssertEqual(cell.locationText, image.location, "Expected image location \(String(describing: image.location)) at index \(index)")
+        XCTAssertEqual(cell.descriptionText, image.description, "Expected image location \(String(describing: image.description)) at index \(index)")
     }
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (loader: LoaderSpy, sut: FeedViewController) {
@@ -85,7 +108,7 @@ class FeedViewControllerTests: XCTestCase {
         return (loader: loader, sut: sut)
     }
     
-    private func makeImage(_ location: String,_ description: String) -> FeedImage {
+    private func makeImage(_ location: String?, _ description: String?) -> FeedImage {
         return FeedImage(id: UUID(), description: description, location: location, url: URL(string: "https://a-url.com")!)
     }
     
@@ -99,6 +122,11 @@ class FeedViewControllerTests: XCTestCase {
         
         func completeFeedLoading(with feeds:[FeedImage], at index: Int = 0) {
             completions[index](.success(feeds))
+        }
+        
+        func completeFeedLoadingWithError(at index: Int = 0) {
+            let error = NSError(domain: "Error", code: 0)
+            completions[index](.failure(error))
         }
         
         private(set) var loadCallCount = 0
@@ -144,11 +172,11 @@ private extension FeedImageCell {
         return !locationContainer.isHidden
     }
     
-    var locationText: String {
-        return locationLabel.text ?? ""
+    var locationText: String? {
+        return locationLabel.text
     }
     
-    var descriptionText: String {
-        return descriptionLabel.text ?? ""
+    var descriptionText: String? {
+        return descriptionLabel.text
     }
 }
