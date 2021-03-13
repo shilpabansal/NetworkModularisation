@@ -63,7 +63,7 @@ class NetworkModularizationEndToEndTests: XCTestCase {
         
         var receivedResult: FeedLoader.Result?
         let exp = expectation(description: "Wait for API")
-        feedLoader.getFeeds() { result in
+        feedLoader.load() { result in
             receivedResult = result
             exp.fulfill()
         }

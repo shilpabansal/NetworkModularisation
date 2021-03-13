@@ -21,7 +21,7 @@ class RemoteFeedLoaderTests: XCTestCase {
     func test_load_requestURL() {
         let url = URL(string: "abc")!
         let (client, feedLoader) = makeSUT(url: url)
-        feedLoader.getFeeds(completion: {_ in })
+        feedLoader.load(completion: {_ in })
         
         XCTAssertEqual(client.requestedURLs, [url])
     }
@@ -30,8 +30,8 @@ class RemoteFeedLoaderTests: XCTestCase {
         let url = URL(string: "abc")!
         let (client, feedLoader) = makeSUT(url: url)
         
-        feedLoader.getFeeds(completion: {_ in })
-        feedLoader.getFeeds(completion: {_ in })
+        feedLoader.load(completion: {_ in })
+        feedLoader.load(completion: {_ in })
         
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
@@ -107,7 +107,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         var feedLoader: RemoteFeedLoader? = RemoteFeedLoader(url: url, client: client)
         
         var capturedResult = [RemoteFeedLoader.Result]()
-        feedLoader?.getFeeds(completion: { capturedResult.append($0) })
+        feedLoader?.load(completion: { capturedResult.append($0) })
         
         feedLoader = nil
         let clientData = Data("{\"items\": []}".utf8)
@@ -156,7 +156,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         _ = [RemoteFeedLoader.Result]()
         
         let expect = expectation(description: "wait for feed completion")
-        sut.getFeeds(completion: {receivedResult in
+        sut.load(completion: {receivedResult in
             switch(receivedResult, expectedResult) {
             case let (.success(receivedItems), .success(expectedItems)):
                 XCTAssertEqual(receivedItems, expectedItems)

@@ -24,7 +24,7 @@ public final class RemoteFeedLoader : FeedLoader {
         case invalidData
     }
     
-    public func getFeeds(completion: @escaping ((Result) -> Void)) {
+    public func load(completion: @escaping ((Result) -> Void)) {
         /**
             Network library is unaware of common errors and responses, the viewmodel receives the respoonse and convert it into the expected enum responses which can be handled by the views
          */

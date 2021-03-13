@@ -107,16 +107,6 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "33E833BF25F10513008189C4"
-               BuildableName = "NetworkModularizationIntegrationTests.xctest"
-               BlueprintName = "NetworkModularizationIntegrationTests"
-               ReferencedContainer = "container:NetworkModularization.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "33E833D625F10566008189C4"
                BuildableName = "NetworkModularizationCacheIntegrationTests.xctest"
                BlueprintName = "NetworkModularizationCacheIntegrationTests"
@@ -127,39 +117,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3324960F25F7BFA10027FA39"
-               BuildableName = "NetworkModularizationiOSTests.xctest"
-               BlueprintName = "NetworkModularizationiOSTests"
-               ReferencedContainer = "container:NetworkModularization.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "332495AE25F7BF160027FA39"
-               BuildableName = "NetworkModularizationiOSTestsTests.xctest"
-               BlueprintName = "NetworkModularizationiOSTestsTests"
-               ReferencedContainer = "container:NetworkModularization.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3324963325F7BFCC0027FA39"
-               BuildableName = "NetworkModularizationUIiOSTests.xctest"
-               BlueprintName = "NetworkModularizationUIiOSTests"
-               ReferencedContainer = "container:NetworkModularization.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3324969925F7C2B00027FA39"
-               BuildableName = "NetworkModularizationUITests.xctest"
-               BlueprintName = "NetworkModularizationUITests"
+               BlueprintIdentifier = "3344AE3225FA659C00285A1B"
+               BuildableName = "NwModularizationUIiOSTests.xctest"
+               BlueprintName = "NwModularizationUIiOSTests"
                ReferencedContainer = "container:NetworkModularization.xcodeproj">
             </BuildableReference>
          </TestableReference>
