@@ -47,6 +47,13 @@ class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(sut.numberOfRenderedImageView, 0)
         loader.completeFeedLoading(with: [feedImage])
         XCTAssertEqual(sut.numberOfRenderedImageView, 1)
+        
+        let view = sut.feedImageView(at: 0) as? FeedImageCell
+        XCTAssertNotNil(view)
+        
+        XCTAssertEqual(view?.isShowingLocation, true)
+        XCTAssertEqual(view?.locationText, feedImage.location)
+        XCTAssertEqual(view?.descriptionText, feedImage.description)
     }
     
     //MARK: - Helpers
@@ -61,7 +68,7 @@ class FeedViewControllerTests: XCTestCase {
     }
     
     private func uniqueFeed() -> FeedImage {
-        return FeedImage(id: UUID(), description: nil, location: nil, url: URL(string: "https://a-url.com")!)
+        return FeedImage(id: UUID(), description: "Description", location: "Location", url: URL(string: "https://a-url.com")!)
     }
     
     class LoaderSpy: FeedLoader {
@@ -105,5 +112,25 @@ private extension FeedViewController {
     
     var feedImageSection: Int {
         return 0
+    }
+    
+    func feedImageView(at row: Int) -> UITableViewCell? {
+        let dataSource = tableView.dataSource
+        let row = IndexPath(row: row, section: feedImageSection)
+        return dataSource?.tableView(tableView, cellForRowAt: row)
+    }
+}
+
+private extension FeedImageCell {
+    var isShowingLocation: Bool {
+        return !locationContainer.isHidden
+    }
+    
+    var locationText: String {
+        return locationLabel.text ?? ""
+    }
+    
+    var descriptionText: String {
+        return descriptionLabel.text ?? ""
     }
 }

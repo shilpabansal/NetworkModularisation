@@ -57,6 +57,7 @@
 		33E8347A25F11203008189C4 /* NetworkModularizationCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E833D925F10566008189C4 /* NetworkModularizationCacheIntegrationTests.swift */; };
 		33EC96A625FC7FCA006810B8 /* FeedViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EC96A525FC7FCA006810B8 /* FeedViewControllerTests.swift */; };
 		33EC96AE25FC999B006810B8 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EC96AD25FC999B006810B8 /* FeedViewController.swift */; };
+		33EC96B625FC9EEC006810B8 /* FeedImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EC96B525FC9EEC006810B8 /* FeedImageCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -147,6 +148,7 @@
 		33E833DB25F10566008189C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		33EC96A525FC7FCA006810B8 /* FeedViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewControllerTests.swift; sourceTree = "<group>"; };
 		33EC96AD25FC999B006810B8 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		33EC96B525FC9EEC006810B8 /* FeedImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -361,6 +363,7 @@
 			isa = PBXGroup;
 			children = (
 				33EC96AD25FC999B006810B8 /* FeedViewController.swift */,
+				33EC96B525FC9EEC006810B8 /* FeedImageCell.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -548,6 +551,7 @@
 				336762B825E366B00048C9A3 /* CodableFeedStore.swift in Sources */,
 				33DCDAAD25A8B6EA00AD1495 /* AppDelegate.swift in Sources */,
 				3389B5E525988314000C8953 /* FeedImage.swift in Sources */,
+				33EC96B625FC9EEC006810B8 /* FeedImageCell.swift in Sources */,
 				3324503B25B4543D004D2ACE /* FeedStore.swift in Sources */,
 				33A724FE2598AA65004D6AAB /* FeedItemMapper.swift in Sources */,
 				3324504525B45451004D2ACE /* LocalFeedLoader.swift in Sources */,
