@@ -9,7 +9,7 @@ import XCTest
 import UIKit
 import NetworkModularization
  
-final class FeedViewController: UIViewController {
+final class FeedViewController: UITableViewController {
     var loader: FeedLoader? = nil
     convenience init(loader: FeedLoader) {
         self.init()
@@ -17,6 +17,16 @@ final class FeedViewController: UIViewController {
         self.loader = loader
     }
     
+    override func viewDidLoad() {
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
+        
+        load()
+    }
+    
+    @objc func load() {
+        loader?.load(completion: { _ in })
+    }
 }
 
 class FeedViewControllerTests: XCTestCase {
@@ -33,15 +43,25 @@ class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 1)
     }
     
+    func test_pullToRefresh_loadFeed() {
+        let (loader, sut) = makeSUT()
+        
+        sut.refreshControl?.simulatePullToRefresh()
+        XCTAssertEqual(loader.loadCallCount, 2)
+        
+        sut.refreshControl?.simulatePullToRefresh()
+        XCTAssertEqual(loader.loadCallCount, 3)
+    }
+    
     //MARK: - Helpers
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (loader: LoaderSpy, feedVC: FeedViewController){
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (loader: LoaderSpy, sut: FeedViewController) {
         let loader = LoaderSpy()
-        let feedVC = FeedViewController(loader: loader)
+        let sut = FeedViewController(loader: loader)
         
         trackMemoryLeak(loader, file: file, line: line)
-        trackMemoryLeak(feedVC, file: file, line: line)
+        trackMemoryLeak(sut, file: file, line: line)
         
-        return (loader: loader, feedVC: feedVC)
+        return (loader: loader, sut: sut)
     }
     
     class LoaderSpy: FeedLoader {
@@ -50,5 +70,15 @@ class FeedViewControllerTests: XCTestCase {
         }
         
         private(set) var loadCallCount = 0
+    }
+}
+
+private extension UIRefreshControl {
+    func simulatePullToRefresh() {
+        allTargets.forEach({target in
+            actions(forTarget: target, forControlEvent: .valueChanged)?.forEach({
+                (target as NSObject).perform(Selector($0))
+            })
+        })
     }
 }
