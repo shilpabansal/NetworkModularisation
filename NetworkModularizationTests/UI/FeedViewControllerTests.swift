@@ -189,6 +189,31 @@ class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(view?.isShowingRetryAction, true, "Expected retry action once image loading completes with invalid image data")
     }
     
+    func test_feedImageViewRetryAction_retriesImageLoad() {
+        let image0 = makeImage(url: URL(string: "http://url-0.com")!)
+        let image1 = makeImage(url: URL(string: "http://url-1.com")!)
+        
+        let (loader, sut) = makeSUT()
+
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [image0, image1])
+
+        let view0 = sut.simulateFeedImageViewVisible(at: 0)
+        let view1 = sut.simulateFeedImageViewVisible(at: 1)
+        XCTAssertEqual(loader.loadedImageURL, [image0.url, image1.url], "Expected no retry action state change for first view once second image loading completes with error")
+        
+        loader.completeImageLoadingWithError(at: 0)
+        loader.completeImageLoadingWithError(at: 1)
+        
+        XCTAssertEqual(loader.loadedImageURL, [image0.url, image1.url], "Expected no retry action state change for first view once second image loading completes with error")
+        
+        view0?.simulateRetryAction()
+        XCTAssertEqual(loader.loadedImageURL, [image0.url, image1.url, image0.url], "Expected no retry action state change for first view once second image loading completes with error")
+        
+        view1?.simulateRetryAction()
+        XCTAssertEqual(loader.loadedImageURL, [image0.url, image1.url, image0.url, image1.url], "Expected no retry action state change for first view once second image loading completes with error")
+    }
+    
     //MARK: - Helpers
     private func assertThat(sut: FeedViewController, isRendering feedImages: [FeedImage]) {
         guard sut.numberOfRenderedImageView == feedImages.count else {
@@ -308,6 +333,10 @@ private extension FeedImageCell {
     
     var descriptionText: String? {
         return descriptionLabel.text
+    }
+    
+    func simulateRetryAction() {
+        feedImageRetryButton.simulateTap()
     }
 }
 
