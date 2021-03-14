@@ -58,6 +58,7 @@
 		33EC96A625FC7FCA006810B8 /* FeedViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EC96A525FC7FCA006810B8 /* FeedViewControllerTests.swift */; };
 		33EC96AE25FC999B006810B8 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EC96AD25FC999B006810B8 /* FeedViewController.swift */; };
 		33EC96B625FC9EEC006810B8 /* FeedImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EC96B525FC9EEC006810B8 /* FeedImageCell.swift */; };
+		33EC96BB25FE51AE006810B8 /* UIView+Shimmering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EC96BA25FE51AE006810B8 /* UIView+Shimmering.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -149,6 +150,7 @@
 		33EC96A525FC7FCA006810B8 /* FeedViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewControllerTests.swift; sourceTree = "<group>"; };
 		33EC96AD25FC999B006810B8 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		33EC96B525FC9EEC006810B8 /* FeedImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCell.swift; sourceTree = "<group>"; };
+		33EC96BA25FE51AE006810B8 /* UIView+Shimmering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Shimmering.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -364,6 +366,7 @@
 			children = (
 				33EC96AD25FC999B006810B8 /* FeedViewController.swift */,
 				33EC96B525FC9EEC006810B8 /* FeedImageCell.swift */,
+				33EC96BA25FE51AE006810B8 /* UIView+Shimmering.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -547,6 +550,7 @@
 				33E833A825F0FED0008189C4 /* CoreDataFeedStore.swift in Sources */,
 				3324504F25B476D1004D2ACE /* RemoteFeedItem.swift in Sources */,
 				33E833A125F0FBCF008189C4 /* ManagedCache+CoreDataProperties.swift in Sources */,
+				33EC96BB25FE51AE006810B8 /* UIView+Shimmering.swift in Sources */,
 				33A724F92598AA46004D6AAB /* HTTPClient.swift in Sources */,
 				336762B825E366B00048C9A3 /* CodableFeedStore.swift in Sources */,
 				33DCDAAD25A8B6EA00AD1495 /* AppDelegate.swift in Sources */,

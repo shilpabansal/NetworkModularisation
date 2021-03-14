@@ -12,7 +12,7 @@ public protocol FeedImageDataLoaderTask {
 }
 
 public protocol FeedImageDataLoader {
-    func loadImageData(from url: URL) -> FeedImageDataLoaderTask
+    func loadImageData(from url: URL, completion: @escaping ((FeedImage) -> Void)) -> FeedImageDataLoaderTask
 }
 
 public final class FeedViewController: UITableViewController {
@@ -58,7 +58,10 @@ public final class FeedViewController: UITableViewController {
         cell.descriptionLabel.text = cellModel.description
         cell.locationContainer.isHidden = cellModel.location == nil
         
-        tasks[indexPath] = imageLoader?.loadImageData(from: cellModel.url)
+        cell.feedImageContainer.startShimmering()
+        tasks[indexPath] = imageLoader?.loadImageData(from: cellModel.url, completion: {[weak cell] _ in
+            cell?.feedImageContainer.stopShimmering()
+        })
         return cell
     }
     
