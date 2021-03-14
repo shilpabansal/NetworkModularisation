@@ -83,13 +83,13 @@ class FeedViewControllerTests: XCTestCase {
         
         loader.completeFeedLoading(with: [image0, image1], at: 0)
         
-        XCTAssertEqual(loader.loadedImageURL, [], "Expected no image URL requests until view becomes visible")
+        XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until view becomes visible")
         
         sut.simulateFeedImageViewVisible(at: 0)
-        XCTAssertEqual(loader.loadedImageURL, [image0.url], "Expected first image URL request once first view becomes visible")
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url], "Expected first image URL request once first view becomes visible")
         
         sut.simulateFeedImageViewVisible(at: 1)
-        XCTAssertEqual(loader.loadedImageURL, [image0.url, image1.url], "Expected second image URL request once second view also becomes visible")
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected second image URL request once second view also becomes visible")
     }
     
     func test_feedImageView_cancelsImageLoadingWhenNotVisibleAnymore() {
@@ -200,18 +200,50 @@ class FeedViewControllerTests: XCTestCase {
 
         let view0 = sut.simulateFeedImageViewVisible(at: 0)
         let view1 = sut.simulateFeedImageViewVisible(at: 1)
-        XCTAssertEqual(loader.loadedImageURL, [image0.url, image1.url], "Expected no retry action state change for first view once second image loading completes with error")
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected no retry action state change for first view once second image loading completes with error")
         
         loader.completeImageLoadingWithError(at: 0)
         loader.completeImageLoadingWithError(at: 1)
         
-        XCTAssertEqual(loader.loadedImageURL, [image0.url, image1.url], "Expected no retry action state change for first view once second image loading completes with error")
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected no retry action state change for first view once second image loading completes with error")
         
         view0?.simulateRetryAction()
-        XCTAssertEqual(loader.loadedImageURL, [image0.url, image1.url, image0.url], "Expected no retry action state change for first view once second image loading completes with error")
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url, image0.url], "Expected no retry action state change for first view once second image loading completes with error")
         
         view1?.simulateRetryAction()
-        XCTAssertEqual(loader.loadedImageURL, [image0.url, image1.url, image0.url, image1.url], "Expected no retry action state change for first view once second image loading completes with error")
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url, image0.url, image1.url], "Expected no retry action state change for first view once second image loading completes with error")
+    }
+    
+    func test_feedImageView_preloadsImageURLWhenNearVisible() {
+        let image0 = makeImage(url: URL(string: "http://url-0.com")!)
+        let image1 = makeImage(url: URL(string: "http://url-1.com")!)
+        let (loader, sut) = makeSUT()
+
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [image0, image1])
+        XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until image is near visible")
+
+        sut.simulateFeedImageViewNearVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url], "Expected first image URL request once first image is near visible")
+
+        sut.simulateFeedImageViewNearVisible(at: 1)
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected second image URL request once second image is near visible")
+    }
+    
+    func test_feedImageView_cancelsImageURLPreloadingWhenNotNearVisibleAnymore() {
+        let image0 = makeImage(url: URL(string: "http://url-0.com")!)
+        let image1 = makeImage(url: URL(string: "http://url-1.com")!)
+        let (loader, sut) = makeSUT()
+
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [image0, image1])
+        XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL requests until image is not near visible")
+
+        sut.simulateFeedImageViewNotNearVisible(at: 0)
+        XCTAssertEqual(loader.cancelledImageURLs, [image0.url], "Expected first cancelled image URL request once first image is not near visible anymore")
+
+        sut.simulateFeedImageViewNotNearVisible(at: 1)
+        XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected second cancelled image URL request once second image is not near visible anymore")
     }
     
     //MARK: - Helpers
@@ -283,10 +315,10 @@ private extension FeedViewController {
     }
     
     var numberOfRenderedImageView: Int {
-        return tableView.numberOfRows(inSection: feedImageSection)
+        return tableView.numberOfRows(inSection: feedImagesSection)
     }
     
-    var feedImageSection: Int {
+    var feedImagesSection: Int {
         return 0
     }
     
@@ -299,14 +331,28 @@ private extension FeedViewController {
         let view = simulateFeedImageViewVisible(at: row)
         
         let delegate = tableView.delegate
-        let indexPath = IndexPath(row: row, section: feedImageSection)
+        let indexPath = IndexPath(row: row, section: feedImagesSection)
         delegate?.tableView?(tableView, didEndDisplaying: view!, forRowAt: indexPath)
     }
     
     func feedImageView(at row: Int) -> UITableViewCell? {
         let dataSource = tableView.dataSource
-        let row = IndexPath(row: row, section: feedImageSection)
+        let row = IndexPath(row: row, section: feedImagesSection)
         return dataSource?.tableView(tableView, cellForRowAt: row)
+    }
+    
+    func simulateFeedImageViewNearVisible(at row: Int) {
+        let ds = tableView.prefetchDataSource
+        let index = IndexPath(row: row, section: feedImagesSection)
+        ds?.tableView(tableView, prefetchRowsAt: [index])
+    }
+
+    func simulateFeedImageViewNotNearVisible(at row: Int) {
+        simulateFeedImageViewNearVisible(at: row)
+
+        let ds = tableView.prefetchDataSource
+        let index = IndexPath(row: row, section: feedImagesSection)
+        ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [index])
     }
 }
 
@@ -341,11 +387,13 @@ private extension FeedImageCell {
 }
 
 class LoaderSpy: FeedLoader, FeedImageDataLoader {
-    private(set) var loadFeedCallCount = 0
     var feedRequests = [((FeedLoader.Result) -> Void)]()
+    
+    var loadFeedCallCount: Int {
+        return feedRequests.count
+    }
+    
     func load(completion: @escaping ((FeedLoader.Result) -> Void)) {
-        loadFeedCallCount += 1
-        
         feedRequests.append(completion)
     }
     
@@ -370,7 +418,7 @@ class LoaderSpy: FeedLoader, FeedImageDataLoader {
         }
     }
     
-    var loadedImageURL: [URL] {
+    var loadedImageURLs: [URL] {
         return imageRequests.map { $0.url }
     }
     
