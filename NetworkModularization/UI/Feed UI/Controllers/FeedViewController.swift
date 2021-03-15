@@ -15,23 +15,17 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
         }
     }
     
-    public convenience init(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) {
+    convenience init(refreshController: FeedRefreshViewController) {
         self.init()
-        refreshController = FeedRefreshViewController(feedLoader: feedLoader)
         
-        refreshController?.onRefresh = {[weak self] feeds in
-            guard let self = self else { return }
-            self.tableModel = feeds.map({
-                FeedImageCellController(model: $0, imageLoader: imageLoader)
-            })
-        }
+        self.refreshController = refreshController
     }
     
     public override func viewDidLoad() {
-        tableView.prefetchDataSource = self
         refreshControl = refreshController?.view
-        
         refreshController?.refresh()
+        
+        tableView.prefetchDataSource = self
     }
     
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
