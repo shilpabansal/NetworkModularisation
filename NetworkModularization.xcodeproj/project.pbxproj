@@ -270,6 +270,41 @@
 			path = NetworkModularizationTests;
 			sourceTree = "<group>";
 		};
+		3362588225FF3135006E0A51 /* Feed Image Loader */ = {
+			isa = PBXGroup;
+			children = (
+				3362587D25FF3078006E0A51 /* FeedImageDataLoader.swift */,
+			);
+			path = "Feed Image Loader";
+			sourceTree = "<group>";
+		};
+		3362588325FF3146006E0A51 /* Feed UI */ = {
+			isa = PBXGroup;
+			children = (
+				3362588525FF3158006E0A51 /* View */,
+				3362588425FF314B006E0A51 /* Controllers */,
+			);
+			path = "Feed UI";
+			sourceTree = "<group>";
+		};
+		3362588425FF314B006E0A51 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				33EC96AD25FC999B006810B8 /* FeedViewController.swift */,
+				3362587825FF3061006E0A51 /* FeedRefreshViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		3362588525FF3158006E0A51 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				33EC96B525FC9EEC006810B8 /* FeedImageCell.swift */,
+				33EC96BA25FE51AE006810B8 /* UIView+Shimmering.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		33A725022598B5B0004D6AAB /* Feed API */ = {
 			isa = PBXGroup;
 			children = (
@@ -368,11 +403,8 @@
 		33EC96A325FC7FA5006810B8 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				33EC96AD25FC999B006810B8 /* FeedViewController.swift */,
-				33EC96B525FC9EEC006810B8 /* FeedImageCell.swift */,
-				33EC96BA25FE51AE006810B8 /* UIView+Shimmering.swift */,
-				3362587825FF3061006E0A51 /* FeedRefreshViewController.swift */,
-				3362587D25FF3078006E0A51 /* FeedImageDataLoader.swift */,
+				3362588325FF3146006E0A51 /* Feed UI */,
+				3362588225FF3135006E0A51 /* Feed Image Loader */,
 			);
 			path = UI;
 			sourceTree = "<group>";
