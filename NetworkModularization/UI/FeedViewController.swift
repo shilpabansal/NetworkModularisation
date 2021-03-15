@@ -7,46 +7,30 @@
 
 import UIKit
 
-public protocol FeedImageDataLoaderTask {
-    func cancel()
-}
-
-public protocol FeedImageDataLoader {
-    typealias Result = Swift.Result<Data, Error>
-    func loadImageData(from url: URL, completion: @escaping ((Result) -> Void)) -> FeedImageDataLoaderTask
-}
-
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    
     var imageLoader: FeedImageDataLoader? = nil
-    var feedLoader: FeedLoader? = nil
-    var tableModel = [FeedImage]()
+    public var refreshController: FeedRefreshViewController? = nil
+    var tableModel = [FeedImage]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     var tasks: [IndexPath : FeedImageDataLoaderTask] = [:]
     
     public convenience init(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) {
         self.init()
         
         self.imageLoader = imageLoader
-        self.feedLoader = feedLoader
+        refreshController = FeedRefreshViewController(feedLoader: feedLoader)
     }
     
     public override func viewDidLoad() {
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-        
-        load()
         tableView.prefetchDataSource = self
-    }
-    
-    @objc func load() {
-        refreshControl?.beginRefreshing()
-        feedLoader?.load(completion: {[weak self] result in
-            if let feeds = try? result.get() {
-                self?.tableModel = feeds
-                self?.tableView.reloadData()
-            }
-            self?.refreshControl?.endRefreshing()
-        })
+        refreshControl = refreshController?.view
+        refreshController?.onRefresh = {[weak self] feeds in
+            self?.tableModel = feeds
+        }
+        refreshController?.refresh()
     }
     
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
