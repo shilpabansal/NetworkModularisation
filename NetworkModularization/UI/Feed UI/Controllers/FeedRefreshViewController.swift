@@ -8,25 +8,20 @@ import UIKit
 
 final public class FeedRefreshViewController: NSObject {
     var viewModel: FeedViewModel?
-    var onRefresh: (([FeedImage]) -> Void)?
     
-    convenience init(feedLoader: FeedLoader) {
+    convenience init(viewModel: FeedViewModel) {
         self.init()
         
-        self.viewModel = FeedViewModel(feedLoader: feedLoader)
-        bind(view)
+        self.viewModel = viewModel
     }
 
-    public lazy var view: UIRefreshControl = {
-        let refreshControl = UIRefreshControl()
-        return refreshControl
-    }()
+    public lazy var view: UIRefreshControl = binded(UIRefreshControl())
     
     @objc func refresh() {
         viewModel?.loadFeed()
     }
     
-    private func bind(_ view: UIRefreshControl) {
+    private func binded(_ view: UIRefreshControl) -> UIRefreshControl {
         viewModel?.onChange = {[weak self] viewModel in
             if viewModel.isLoading {
                 self?.view.beginRefreshing()
@@ -34,11 +29,8 @@ final public class FeedRefreshViewController: NSObject {
             else {
                 self?.view.endRefreshing()
             }
-            
-            if let feeds = viewModel.feeds {
-                self?.onRefresh?(feeds)
-            }
         }
         view.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        return view
     }
 }
