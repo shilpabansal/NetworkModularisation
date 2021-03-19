@@ -7,8 +7,9 @@
 
 import Foundation
 final class FeedViewModel {
-    var onChange: ((FeedViewModel) -> Void)?
-    var onFeedLoad: (([FeedImage]) -> Void)?
+    typealias Observer<T> = ((T) -> Void)
+    var isLoadingStateChange: Observer<Bool>?
+    var onFeedLoad: Observer<[FeedImage]>?
     
     let feedLoader: FeedLoader
     init(feedLoader: FeedLoader) {
@@ -16,18 +17,12 @@ final class FeedViewModel {
     }
     
     func loadFeed() {
-        isLoading = true
+        isLoadingStateChange?(true)
         feedLoader.load(completion: {[weak self] result in
             if let feeds = try? result.get() {
                 self?.onFeedLoad?(feeds)
             }
-            self?.isLoading = false
+            self?.isLoadingStateChange?(false)
         })
-    }
-    
-    private(set) var isLoading: Bool = false {
-        didSet {
-            onChange?(self)
-        }
     }
 }
