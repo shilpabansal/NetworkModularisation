@@ -4,28 +4,42 @@
 //
 //  Created by Shilpa Bansal on 20/03/21.
 //
+import Foundation
 import UIKit
 
-final class FeedImageViewModel {
+final class FeedImageViewModel<Image> {
     var task: FeedImageDataLoaderTask? = nil
+    var onImageLoadingStateChange: ((Bool) -> Void)?
+    var onImageLoad: ((Image) -> Void)?
+    var showRetryButton: ((Bool) -> Void)?
     
     private let model: FeedImage
-    private let imageLoader: FeedImageDataLoader?
-    init(model: FeedImage, imageLoader: FeedImageDataLoader?) {
+    private let imageLoader: FeedImageDataLoader
+    private let imageTransformer: ((Data) -> Image?)
+    init(model: FeedImage, imageLoader: FeedImageDataLoader, imageTransformer: @escaping ((Data) -> Image?)) {
         self.model = model
         self.imageLoader = imageLoader
+        self.imageTransformer = imageTransformer
     }
 
-    func loadImage(completion: @escaping ((UIImage?) -> Void)) {
-        self.task = self.imageLoader?.loadImageData(from: self.model.url) { result in
-            let data = try? result.get()
-            let image = data.map(UIImage.init) ?? nil
-            completion(image)
+    func loadImage() {
+        onImageLoadingStateChange?(true)
+        self.task = self.imageLoader.loadImageData(from: self.model.url) {[weak self] result in
+            guard let self = self else { return }
+            if let image = (try? result.get()).flatMap(self.imageTransformer) {
+                self.onImageLoad?(image)
+                self.showRetryButton?(false)
+            }
+            else {
+                self.showRetryButton?(true)
+            }
+    
+            self.onImageLoadingStateChange?(false)
         }
     }
     
     func preload() {
-        task = self.imageLoader?.loadImageData(from: self.model.url) { _ in }
+        task = self.imageLoader.loadImageData(from: self.model.url) { _ in }
     }
     
     func cancelLoad() {

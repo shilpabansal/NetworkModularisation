@@ -8,8 +8,8 @@
 import UIKit
 
 final class FeedImageCellController {
-    let viewModel: FeedImageViewModel
-    init(viewModel: FeedImageViewModel) {
+    let viewModel: FeedImageViewModel<UIImage>
+    init(viewModel: FeedImageViewModel<UIImage>) {
         self.viewModel = viewModel
     }
     
@@ -21,20 +21,22 @@ final class FeedImageCellController {
         cell.descriptionLabel.text = viewModel.description
         cell.feedImageView.image = nil
         cell.feedImageRetryButton.isHidden = true
-        cell.feedImageContainer.startShimmering()
+        
 
-        let loadImage = { [weak self, weak cell] in
-            guard let self = self else { return }
-
-            self.viewModel.loadImage(completion: {[weak cell] (image) in
-                cell?.feedImageView.image = image
-                cell?.feedImageRetryButton.isHidden = (image != nil)
-                cell?.feedImageContainer.stopShimmering()
-            })
+        viewModel.onImageLoadingStateChange = {[weak cell] isLoading in
+            cell?.feedImageContainer.isShimmering = isLoading
+        }
+        
+        viewModel.onImageLoad = {[weak cell] image in
+            cell?.feedImageView.image = image
+        }
+        
+        viewModel.showRetryButton = {[weak cell] isRetryButton in
+            cell?.feedImageRetryButton.isHidden = !isRetryButton
         }
 
-        cell.onRetry = loadImage
-        loadImage()
+        cell.onRetry = viewModel.loadImage
+        viewModel.loadImage()
         
         return cell
     }

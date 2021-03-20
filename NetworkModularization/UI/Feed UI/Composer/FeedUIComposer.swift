@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import UIKit
+
 public final class FeedUIComposer {
     private init() { }
     public static func composeWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
@@ -22,7 +24,7 @@ public final class FeedUIComposer {
     //[FeedImage] -> Adapt -> [FeedImageCellController]
     static func adaptFeedImageToFeedImageCellController(feeds: [FeedImage], imageLoader: FeedImageDataLoader) -> [FeedImageCellController] {
        return feeds.map({
-            let imageViewModel = FeedImageViewModel(model: $0, imageLoader: imageLoader)
+        let imageViewModel = FeedImageViewModel(model: $0, imageLoader: imageLoader, imageTransformer: UIImage.init)
             return FeedImageCellController(viewModel: imageViewModel)
         })
     }
