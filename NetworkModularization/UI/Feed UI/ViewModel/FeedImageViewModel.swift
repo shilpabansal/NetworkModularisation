@@ -5,7 +5,6 @@
 //  Created by Shilpa Bansal on 20/03/21.
 //
 import Foundation
-import UIKit
 
 final class FeedImageViewModel<Image> {
     var task: FeedImageDataLoaderTask? = nil
