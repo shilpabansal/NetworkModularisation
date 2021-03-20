@@ -46,7 +46,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     
     public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { indexPath in
-            cellController(forRowAt: indexPath).preload()
+            cellController(forRowAt: indexPath).viewModel.preload()
         }
     }
 
@@ -55,6 +55,6 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     }
     
     func removeCellController(indexPath: IndexPath) {
-        cellController(forRowAt: indexPath).cancelLoad()
+        cellController(forRowAt: indexPath).viewModel.cancelLoad()
     }
 }
