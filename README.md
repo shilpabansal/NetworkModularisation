@@ -426,3 +426,6 @@ In MVVM, the view model have data states and control the states. where as in MVP
 ![MVP](https://github.com/shilpabansal/NetworkModularisation/blob/main/MVP.png)
 
 
+Presenter implemetation protocol belongs to presenatation model, so it doesnt depend on the specific of UI frameworks or platforms
+
+There cab be many variations of MVP based on the needs. Its possible for view to decouple from presenatation layer.
