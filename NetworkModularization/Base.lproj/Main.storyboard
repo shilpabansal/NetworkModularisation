@@ -75,6 +75,9 @@ Location</string>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FrU-Oz-JS1" userLabel="RetryButton">
                                                             <rect key="frame" x="0.0" y="0.0" width="374" height="374"/>
                                                             <state key="normal" image="arrow.clockwise" catalog="system"/>
+                                                            <connections>
+                                                                <action selector="retryButtonTapped" destination="XuO-Le-I6Y" eventType="touchUpInside" id="CGW-s7-QWr"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.89019607840000003" green="0.89019607840000003" blue="0.89019607840000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -122,6 +125,14 @@ Description</string>
                                         <constraint firstItem="u3A-Mg-adw" firstAttribute="top" secondItem="D2o-kg-WZc" secondAttribute="topMargin" priority="999" constant="6" id="zyH-QE-0e1"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="descriptionLabel" destination="Ckc-Zs-wXG" id="Sj7-pY-bBf"/>
+                                    <outlet property="feedImageContainer" destination="84k-7j-K8C" id="f1h-pR-zzk"/>
+                                    <outlet property="feedImageRetryButton" destination="FrU-Oz-JS1" id="Jlt-hV-Umb"/>
+                                    <outlet property="feedImageView" destination="grm-x3-tdl" id="OaP-hR-6w7"/>
+                                    <outlet property="locationContainer" destination="rLX-uQ-DwJ" id="gtj-su-Y0B"/>
+                                    <outlet property="locationLabel" destination="YdV-6H-SaN" id="omq-DV-ehH"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>

@@ -165,7 +165,7 @@ class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(view0?.isShowingRetryAction, false, "Expected no retry action for first view while loading first image")
         XCTAssertEqual(view1?.isShowingRetryAction, false, "Expected no retry action for second view while loading second image")
 
-        let imageData = UIImage.make(withColor: .red).pngData()!
+        let imageData = anyImageData()
         loader.completeImageLoading(with: imageData, at: 0)
         XCTAssertEqual(view0?.isShowingRetryAction, false, "Expected no retry action for first view once first image loading completes successfully")
         XCTAssertEqual(view1?.isShowingRetryAction, false, "Expected no retry action state change for second view once first image loading completes successfully")
@@ -187,6 +187,18 @@ class FeedViewControllerTests: XCTestCase {
         let invalidImageData = Data("invalid image data".utf8)
         loader.completeImageLoading(with: invalidImageData, at: 0)
         XCTAssertEqual(view?.isShowingRetryAction, true, "Expected retry action once image loading completes with invalid image data")
+    }
+    
+    func test_feedImageView_doesNotRenderLoadedImageWhenNotVisibleAnymore() {
+        let (loader, sut) = makeSUT()
+       
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [makeImage()])
+        
+        let view = sut.simulateFeedImageNotVisible(at: 0)
+        loader.completeImageLoading(with: anyImageData(), at: 0)
+        
+        XCTAssertNil(view?.renderedImage, "Expected no rendered image when an image load fincihed after the view is not visible anymore")
     }
     
     func test_feedImageViewRetryAction_retriesImageLoad() {
@@ -283,6 +295,10 @@ class FeedViewControllerTests: XCTestCase {
     private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-url.com")!) -> FeedImage {
         return FeedImage(id: UUID(), description: description, location: location, url: url)
     }
+    
+    private func anyImageData() -> Data {
+        return UIImage.make(withColor: .red).pngData()!
+    }
 }
 
 private extension UIRefreshControl {
@@ -327,12 +343,15 @@ private extension FeedViewController {
         return feedImageView(at: row) as? FeedImageCell
     }
     
-    func simulateFeedImageNotVisible(at row: Int = 0) {
+    @discardableResult
+    func simulateFeedImageNotVisible(at row: Int = 0) -> FeedImageCell? {
         let view = simulateFeedImageViewVisible(at: row)
         
         let delegate = tableView.delegate
         let indexPath = IndexPath(row: row, section: feedImagesSection)
         delegate?.tableView?(tableView, didEndDisplaying: view!, forRowAt: indexPath)
+        
+        return view
     }
     
     func feedImageView(at row: Int) -> UITableViewCell? {
