@@ -7,6 +7,15 @@
 import UIKit
 
 final public class FeedRefreshViewController: NSObject, FeedLoadingView {
+    func display(_ loadingViewModel: FeedLoadingViewModel) {
+        if loadingViewModel.isLoading {
+            view.beginRefreshing()
+        }
+        else {
+            view.endRefreshing()
+        }
+    }
+    
     var presenter: FeedPresenter?
     
     convenience init(presenter: FeedPresenter) {
@@ -19,15 +28,6 @@ final public class FeedRefreshViewController: NSObject, FeedLoadingView {
     
     @objc func refresh() {
         presenter?.loadFeed()
-    }
-    
-    func display(isLoading: Bool) {
-        if isLoading {
-            view.beginRefreshing()
-        }
-        else {
-            view.endRefreshing()
-        }
     }
     
     private func loadView() -> UIRefreshControl {

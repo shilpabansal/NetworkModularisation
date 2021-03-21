@@ -6,12 +6,20 @@
 //
 import UIKit
 
+struct FeedLoadingViewModel {
+    var isLoading: Bool
+}
+
 protocol FeedLoadingView {
-    func display(isLoading: Bool)
+    func display(_ loadingViewModel: FeedLoadingViewModel)
+}
+
+struct FeedViewModel {
+    var feeds: [FeedImage]
 }
 
 protocol FeedView {
-    func display(feeds: [FeedImage])
+    func display(_ viewModel: FeedViewModel)
 }
 
 final class FeedPresenter {
@@ -25,12 +33,12 @@ final class FeedPresenter {
     }
     
     func loadFeed() {
-        loadingView?.display(isLoading: true)
+        loadingView?.display(FeedLoadingViewModel(isLoading: true))
         feedLoader.load(completion: {[weak self] result in
             if let feeds = try? result.get() {
-                self?.view?.display(feeds: feeds)
+                self?.view?.display(FeedViewModel(feeds: feeds))
             }
-            self?.loadingView?.display(isLoading: false)
+            self?.loadingView?.display(FeedLoadingViewModel(isLoading: false))
         })
     }
 }
