@@ -28,6 +28,8 @@
 		337B39C326078A3C00DCC874 /* UITableView+Dequeuing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B39C226078A3C00DCC874 /* UITableView+Dequeuing.swift */; };
 		337B39C926078A9C00DCC874 /* FeedImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B39C826078A9C00DCC874 /* FeedImageViewModel.swift */; };
 		337B39D126078C6B00DCC874 /* UIImageView+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B39D026078C6B00DCC874 /* UIImageView+Animation.swift */; };
+		337B39D626078F3300DCC874 /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B39D526078F3300DCC874 /* FeedViewModel.swift */; };
+		337B39DB26078F4900DCC874 /* FeedLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B39DA26078F4900DCC874 /* FeedLoadingViewModel.swift */; };
 		3389B5E525988314000C8953 /* FeedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3389B5E425988314000C8953 /* FeedImage.swift */; };
 		33A1A45725A74C8F008D3C2C /* XCTestCaseHelperTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A1A45625A74C8F008D3C2C /* XCTestCaseHelperTracking.swift */; };
 		33A1A45C25A76057008D3C2C /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A1A45B25A76057008D3C2C /* URLSessionHTTPClient.swift */; };
@@ -133,6 +135,8 @@
 		337B39C226078A3C00DCC874 /* UITableView+Dequeuing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Dequeuing.swift"; sourceTree = "<group>"; };
 		337B39C826078A9C00DCC874 /* FeedImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageViewModel.swift; sourceTree = "<group>"; };
 		337B39D026078C6B00DCC874 /* UIImageView+Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Animation.swift"; sourceTree = "<group>"; };
+		337B39D526078F3300DCC874 /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
+		337B39DA26078F4900DCC874 /* FeedLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoadingViewModel.swift; sourceTree = "<group>"; };
 		3389B5E425988314000C8953 /* FeedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImage.swift; sourceTree = "<group>"; };
 		33A1A45625A74C8F008D3C2C /* XCTestCaseHelperTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestCaseHelperTracking.swift; sourceTree = "<group>"; };
 		33A1A45B25A76057008D3C2C /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
@@ -346,6 +350,8 @@
 			isa = PBXGroup;
 			children = (
 				337B39C826078A9C00DCC874 /* FeedImageViewModel.swift */,
+				337B39D526078F3300DCC874 /* FeedViewModel.swift */,
+				337B39DA26078F4900DCC874 /* FeedLoadingViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -630,6 +636,7 @@
 				332E6CEF25971C7100770701 /* ViewController.swift in Sources */,
 				33DE128025C0483E00B381DA /* FeedCachePolicy.swift in Sources */,
 				33E4E06E2607647000D90794 /* FeedImagePresenter.swift in Sources */,
+				337B39D626078F3300DCC874 /* FeedViewModel.swift in Sources */,
 				33E833A025F0FBCF008189C4 /* ManagedFeed+CoreDataProperties.swift in Sources */,
 				33E8339F25F0FBCF008189C4 /* ManagedCache+CoreDataClass.swift in Sources */,
 				33E8335F25F0F887008189C4 /* FeedStoreDataModel.xcdatamodeld in Sources */,
@@ -651,6 +658,7 @@
 				33A724FE2598AA65004D6AAB /* FeedItemMapper.swift in Sources */,
 				3324504525B45451004D2ACE /* LocalFeedLoader.swift in Sources */,
 				33A725052598B5DC004D6AAB /* FeedLoader.swift in Sources */,
+				337B39DB26078F4900DCC874 /* FeedLoadingViewModel.swift in Sources */,
 				33A1A45C25A76057008D3C2C /* URLSessionHTTPClient.swift in Sources */,
 				33EC96AE25FC999B006810B8 /* FeedViewController.swift in Sources */,
 				33DCDAA125A8B6C000AD1495 /* SceneDelegate.swift in Sources */,
