@@ -4,20 +4,7 @@
 //
 //  Created by Shilpa Bansal on 21/03/21.
 //
-
 import Foundation
-
-struct FeedImageViewModel<Image> {
-    var location: String?
-    var description: String?
-    var image: Image?
-    var showRetry: Bool
-    var isLoading: Bool
-    
-    var hasLocation: Bool {
-        return location != nil
-    }
-}
 
 protocol FeedImageView {
     associatedtype Image

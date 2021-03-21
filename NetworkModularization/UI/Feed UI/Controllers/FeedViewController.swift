@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol FeedRefreshViewControllerDelegate {
+    func didRequestFeedRefresh()
+}
+
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching, FeedLoadingView {
     var delegate: FeedRefreshViewControllerDelegate?
     
@@ -62,8 +66,4 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     @IBAction func refresh() {
         delegate?.didRequestFeedRefresh()
     }
-}
-
-protocol FeedRefreshViewControllerDelegate {
-    func didRequestFeedRefresh()
 }
