@@ -7,8 +7,9 @@
 
 import UIKit
 
-public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    @IBOutlet var refreshController: FeedRefreshViewController!
+public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching, FeedLoadingView {
+    var delegate: FeedRefreshViewControllerDelegate?
+    
     var tableModel = [FeedImageCellController]() {
         didSet {
             tableView.reloadData()
@@ -16,7 +17,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     }
     
     public override func viewDidLoad() {
-        refreshController?.refresh()
+        refresh()
         
         tableView.prefetchDataSource = self
     }
@@ -50,4 +51,21 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     func removeCellController(indexPath: IndexPath) {
         cellController(forRowAt: indexPath).cancelLoad()
     }
+    
+    func display(_ loadingViewModel: FeedLoadingViewModel) {
+        if loadingViewModel.isLoading {
+            refreshControl?.beginRefreshing()
+        }
+        else {
+            refreshControl?.endRefreshing()
+        }
+    }
+    
+    @IBAction func refresh() {
+        delegate?.didRequestFeedRefresh()
+    }
+}
+
+protocol FeedRefreshViewControllerDelegate {
+    func didRequestFeedRefresh()
 }
