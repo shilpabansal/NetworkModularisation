@@ -7,6 +7,25 @@
 import UIKit
 
 final public class FeedRefreshViewController: NSObject, FeedLoadingView {
+    var loadFeed: (() -> Void)?
+    convenience init(loadFeed: (() -> Void)?) {
+        self.init()
+        
+        self.loadFeed = loadFeed
+    }
+
+    public lazy var view = loadView()
+    
+    @objc func refresh() {
+        loadFeed?()
+    }
+    
+    private func loadView() -> UIRefreshControl {
+        let view = UIRefreshControl()
+        view.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        return view
+    }
+    
     func display(_ loadingViewModel: FeedLoadingViewModel) {
         if loadingViewModel.isLoading {
             view.beginRefreshing()
@@ -14,25 +33,5 @@ final public class FeedRefreshViewController: NSObject, FeedLoadingView {
         else {
             view.endRefreshing()
         }
-    }
-    
-    var presenter: FeedPresenter?
-    
-    convenience init(presenter: FeedPresenter) {
-        self.init()
-        
-        self.presenter = presenter
-    }
-
-    public lazy var view = loadView()
-    
-    @objc func refresh() {
-        presenter?.loadFeed()
-    }
-    
-    private func loadView() -> UIRefreshControl {
-        let view = UIRefreshControl()
-        view.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        return view
     }
 }
