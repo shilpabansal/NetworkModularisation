@@ -4,8 +4,9 @@
 //
 //  Created by Shilpa Bansal on 21/03/21.
 //
+import UIKit
 
-protocol FeedLoadingView: class {
+protocol FeedLoadingView {
     func display(isLoading: Bool)
 }
 
@@ -17,7 +18,7 @@ final class FeedPresenter {
     typealias Observer<T> = ((T) -> Void)
    
     var view: FeedView?
-    weak var loadingView: FeedLoadingView?
+    weak var loadingView: (NSObject & FeedLoadingView)?
     let feedLoader: FeedLoader
     init(feedLoader: FeedLoader) {
         self.feedLoader = feedLoader
