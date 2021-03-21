@@ -5,6 +5,16 @@ NetworkModularisation
 [![Build Status](https://travis-ci.com/shilpabansal/NetworkModularisation.svg?branch=main)](https://travis-ci.com/shilpabansal/NetworkModularisation)
 
 ________________________________________________________________________________________
+
+The localizedString works similar to dictionary with key value pair, if it can not find the key in the file, it returns the key itself as value
+________________________________________________________________________________________
+
+
+
+
+
+
+________________________________________________________________________________________
 Modularising the network project with TDD
 
  Instead of creating success and error object, its always better to create an enum to have less maintenance for diff kinds of result, as at a time it will be only one kind of result

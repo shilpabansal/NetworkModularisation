@@ -4,7 +4,7 @@
 //
 //  Created by Shilpa Bansal on 21/03/21.
 //
-
+import Foundation
 protocol FeedLoadingView {
     func display(_ loadingViewModel: FeedLoadingViewModel)
 }
@@ -36,6 +36,9 @@ final class FeedPresenter {
     }
     
     static var title: String {
-        return "My Feed"
+        return NSLocalizedString("Feed_VIEW_TITLE",
+                                 tableName: "Feed",
+                                 bundle: Bundle(for: self),
+                                 comment: "Title for feed view")
     }
 }
