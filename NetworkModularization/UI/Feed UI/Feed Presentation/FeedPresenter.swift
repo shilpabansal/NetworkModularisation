@@ -5,7 +5,7 @@
 //  Created by Shilpa Bansal on 21/03/21.
 //
 
-protocol FeedLoadingView {
+protocol FeedLoadingView: class {
     func display(isLoading: Bool)
 }
 
@@ -17,7 +17,7 @@ final class FeedPresenter {
     typealias Observer<T> = ((T) -> Void)
    
     var view: FeedView?
-    var loadingView: FeedLoadingView?
+    weak var loadingView: FeedLoadingView?
     let feedLoader: FeedLoader
     init(feedLoader: FeedLoader) {
         self.feedLoader = feedLoader
