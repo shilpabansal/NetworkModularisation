@@ -11,12 +11,15 @@ import UIKit
 public final class FeedUIComposer {
     private init() { }
     public static func composeWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
-        let presenter = FeedPresenter()
-        let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader, presenter: presenter)
+        
+        let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
         let refreshController = FeedRefreshViewController(delegate: presentationAdapter)
-        presenter.loadingView = WeakRefVirtualProxy(object: refreshController)
         let feedController = FeedViewController(refreshController: refreshController)
-        presenter.view = FeedViewAdapter(feedController: feedController, imageLoader: imageLoader)
+        
+        let presenter = FeedPresenter(view: FeedViewAdapter(feedController: feedController, imageLoader: imageLoader),
+                                      loadingView: WeakRefVirtualProxy(object: refreshController))
+        
+        presentationAdapter.presenter = presenter
         return feedController
     }
     
@@ -61,22 +64,21 @@ private final class FeedViewAdapter: FeedView {
 
 private final class FeedLoaderPresentationAdapter: FeedRefreshViewControllerDelegate {
     let feedLoader: FeedLoader
-    let presenter: FeedPresenter
+    var presenter: FeedPresenter?
     
-    init(feedLoader: FeedLoader, presenter: FeedPresenter) {
+    init(feedLoader: FeedLoader) {
         self.feedLoader = feedLoader
-        self.presenter = presenter
     }
     
     func didRequestFeedRefresh() {
-        presenter.didStartLoadingFeed()
+        presenter?.didStartLoadingFeed()
         
         feedLoader.load {[weak self] (result) in
             switch result {
             case .success(let feeds):
-                self?.presenter.didFinishLoadingFeeds(with: feeds)
+                self?.presenter?.didFinishLoadingFeeds(with: feeds)
             case .failure(let error):
-                self?.presenter.didFinishLoadingWithError(with: error)
+                self?.presenter?.didFinishLoadingWithError(with: error)
             }
         }
     }
