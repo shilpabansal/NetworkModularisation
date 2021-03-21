@@ -383,3 +383,46 @@ ________________________________________________________________________________
 
 prepareForReuse
 If a UITableViewCell object is reusable—that is, it has a reuse identifier—this method is invoked just before the object is returned from the UITableView method dequeueReusableCell(withIdentifier:). For performance reasons, you should only reset attributes of the cell that are not related to content, for example, alpha, editing, and selection state. The table view's delegate in tableView(_:cellForRowAt:) should always reset all content when reusing a cell. If the cell object does not have an associated reuse identifier, this method is not called. If you override this method, you must be sure to invoke the superclass implementation.
+________________________________________________________________________________________
+
+
+
+
+
+
+
+________________________________________________________________________________________
+![DesignPatterns](https://github.com/shilpabansal/NetworkModularisation/blob/main/DesignPatterns.png)
+MVC:  Model view controller
+Model and view are dummy entities, controller control logic, n/w calls, notification, actions etc
+
+
+
+MVVM: Model view viewModel
+Model and View are dummy
+ViewController: takes the action and pass it to viewModel
+ViewModel: handles n/w calls, parsing, logic etc and returns it to viewcontroller via blocks or closures.
+
+ViewModel can be stateful/stateless based on the requirements
+if there are very limited data to maintain -> it can call the closures of VC
+If there are a lot of data passing, states can be created and VC can have listeners to those state changes
+
+If the project is built for multiple platforms like watchKit, iOS, Mac etc. ViewModel can be shared amond them but VC has to be created for each platform.
+![MVVM](https://github.com/shilpabansal/NetworkModularisation/blob/main/MVVM.png)
+
+
+
+MVP: Model view Presenter
+Controller is similar to presenter
+
+
+In MVC, controller holds the reference to concrete type view, In MVP Presenter holds the reference to abstract view type in the form of protocol
+
+ViewProtocol belongs to Presenter, 
+
+IN MVP, View doesnt know about the controller, in MVP View directly communicates with Presenter. Its 2 way communication. Presenter directly talks with domain model and services, formats the model view before passing it to view. But the more risk of memory leak is involved.
+
+
+
+
+
