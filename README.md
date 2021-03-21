@@ -422,7 +422,7 @@ ViewProtocol belongs to Presenter,
 
 IN MVP, View doesnt know about the controller, in MVP View directly communicates with Presenter. Its 2 way communication. Presenter directly talks with domain model and services, formats the model view before passing it to view. But the more risk of memory leak is involved.
 
-
-
+In MVVM, the view model have data states and control the states. where as in MVP, VM only keeps the data states, doesnt control them
+![MVP](https://github.com/shilpabansal/NetworkModularisation/blob/main/MVP.png)
 
 
