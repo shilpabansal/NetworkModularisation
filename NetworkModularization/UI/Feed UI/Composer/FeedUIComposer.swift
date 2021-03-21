@@ -14,14 +14,9 @@ public final class FeedUIComposer {
         
         let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
         
-        let bundle = Bundle(for: FeedViewController.self)
-        let storyBoard = UIStoryboard(name: "Main", bundle: bundle)
-        let feedController = storyBoard.instantiateViewController(identifier: "FeedViewController") as! FeedViewController
-        feedController.delegate = presentationAdapter
-        feedController.title = FeedPresenter.title
+        let feedController = FeedViewController.makeWith(delegate: presentationAdapter)
         let presenter = FeedPresenter(view: FeedViewAdapter(feedController: feedController, imageLoader: imageLoader),
                                       loadingView: WeakRefVirtualProxy(object: feedController))
-        
         presentationAdapter.presenter = presenter
         return feedController
     }
@@ -36,6 +31,18 @@ public final class FeedUIComposer {
                                                     view: WeakRefVirtualProxy(object: view))
         return view
         })
+    }
+}
+
+private extension FeedViewController {
+    static func makeWith(delegate: FeedLoaderPresentationAdapter) -> FeedViewController {
+        let bundle = Bundle(for: FeedViewController.self)
+        let storyBoard = UIStoryboard(name: "Main", bundle: bundle)
+        let feedController = storyBoard.instantiateViewController(identifier: "FeedViewController") as! FeedViewController
+        feedController.delegate = delegate
+        feedController.title = FeedPresenter.title
+        
+        return feedController
     }
 }
 

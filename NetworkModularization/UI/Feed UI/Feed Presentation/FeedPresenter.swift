@@ -5,16 +5,8 @@
 //  Created by Shilpa Bansal on 21/03/21.
 //
 
-struct FeedLoadingViewModel {
-    var isLoading: Bool
-}
-
 protocol FeedLoadingView {
     func display(_ loadingViewModel: FeedLoadingViewModel)
-}
-
-struct FeedViewModel {
-    var feeds: [FeedImage]
 }
 
 protocol FeedView {
