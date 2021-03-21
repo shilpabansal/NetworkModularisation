@@ -4,7 +4,6 @@
 //
 //  Created by Shilpa Bansal on 21/03/21.
 //
-import UIKit
 
 struct FeedLoadingViewModel {
     var isLoading: Bool
