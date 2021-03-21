@@ -36,9 +36,6 @@ final class FeedPresenter {
     }
     
     static var title: String {
-        return NSLocalizedString("Feed_VIEW_TITLE",
-                                 tableName: "Feed",
-                                 bundle: Bundle(for: self),
-                                 comment: "Title for feed view")
+        return Bundle(for: FeedPresenter.self).localizedString(forKey: "FEED_VIEW_TITLE", value: nil, table: "Feed")
     }
 }

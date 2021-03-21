@@ -6,7 +6,8 @@ NetworkModularisation
 
 ________________________________________________________________________________________
 
-The localizedString works similar to dictionary with key value pair, if it can not find the key in the file, it returns the key itself as value
+The localizedString works similar to dictionary with key value pair, if it can not find the key in the file, it returns the key itself as value.
+The table is the file name
 ________________________________________________________________________________________
 
 
