@@ -18,7 +18,7 @@ final class FeedPresenter {
     typealias Observer<T> = ((T) -> Void)
    
     var view: FeedView?
-    weak var loadingView: (NSObject & FeedLoadingView)?
+    var loadingView: FeedLoadingView?
     let feedLoader: FeedLoader
     init(feedLoader: FeedLoader) {
         self.feedLoader = feedLoader
