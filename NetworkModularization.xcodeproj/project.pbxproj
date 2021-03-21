@@ -30,8 +30,8 @@
 		337B39D126078C6B00DCC874 /* UIImageView+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B39D026078C6B00DCC874 /* UIImageView+Animation.swift */; };
 		337B39D626078F3300DCC874 /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B39D526078F3300DCC874 /* FeedViewModel.swift */; };
 		337B39DB26078F4900DCC874 /* FeedLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B39DA26078F4900DCC874 /* FeedLoadingViewModel.swift */; };
-		337B39E0260791D300DCC874 /* Feed.strings in Resources */ = {isa = PBXBuildFile; fileRef = 337B39DF260791D300DCC874 /* Feed.strings */; };
 		337B39E5260793EB00DCC874 /* FeedUIIntegrationTests+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B39E4260793EB00DCC874 /* FeedUIIntegrationTests+Localization.swift */; };
+		337B39EF2607973800DCC874 /* Feed.strings in Resources */ = {isa = PBXBuildFile; fileRef = 337B39F12607973800DCC874 /* Feed.strings */; };
 		3389B5E525988314000C8953 /* FeedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3389B5E425988314000C8953 /* FeedImage.swift */; };
 		33A1A45725A74C8F008D3C2C /* XCTestCaseHelperTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A1A45625A74C8F008D3C2C /* XCTestCaseHelperTracking.swift */; };
 		33A1A45C25A76057008D3C2C /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A1A45B25A76057008D3C2C /* URLSessionHTTPClient.swift */; };
@@ -139,8 +139,8 @@
 		337B39D026078C6B00DCC874 /* UIImageView+Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Animation.swift"; sourceTree = "<group>"; };
 		337B39D526078F3300DCC874 /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
 		337B39DA26078F4900DCC874 /* FeedLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoadingViewModel.swift; sourceTree = "<group>"; };
-		337B39DF260791D300DCC874 /* Feed.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Feed.strings; sourceTree = "<group>"; };
 		337B39E4260793EB00DCC874 /* FeedUIIntegrationTests+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedUIIntegrationTests+Localization.swift"; sourceTree = "<group>"; };
+		337B39F02607973800DCC874 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Feed.strings; sourceTree = "<group>"; };
 		3389B5E425988314000C8953 /* FeedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImage.swift; sourceTree = "<group>"; };
 		33A1A45625A74C8F008D3C2C /* XCTestCaseHelperTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestCaseHelperTracking.swift; sourceTree = "<group>"; };
 		33A1A45B25A76057008D3C2C /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
@@ -298,7 +298,7 @@
 			children = (
 				33E4E06526071F8800D90794 /* FeedPresenter.swift */,
 				33E4E06D2607647000D90794 /* FeedImagePresenter.swift */,
-				337B39DF260791D300DCC874 /* Feed.strings */,
+				337B39F12607973800DCC874 /* Feed.strings */,
 			);
 			path = "Feed Presentation";
 			sourceTree = "<group>";
@@ -602,7 +602,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				337B39E0260791D300DCC874 /* Feed.strings in Resources */,
+				337B39EF2607973800DCC874 /* Feed.strings in Resources */,
 				332E6CF725971C7400770701 /* LaunchScreen.storyboard in Resources */,
 				332E6CF425971C7400770701 /* Assets.xcassets in Resources */,
 				33E4E07726077A0300D90794 /* Feed.xcassets in Resources */,
@@ -757,6 +757,14 @@
 				332E6CF625971C7400770701 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		337B39F12607973800DCC874 /* Feed.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				337B39F02607973800DCC874 /* en */,
+			);
+			name = Feed.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
