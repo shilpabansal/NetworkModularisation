@@ -1,5 +1,5 @@
 //
-//  FeedViewControllerTests.swift
+//  FeedUIIntegrationTests.swift
 //  NetworkModularizationTests
 //
 //  Created by Shilpa Bansal on 13/03/21.
