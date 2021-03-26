@@ -41,14 +41,11 @@ private class MainQueueDispatchDecorater<T> {
     }
     
     func dispatch(completion: @escaping () -> Void) {
-        if Thread.isMainThread {
-            completion()
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async(execute: completion)
+            return
         }
-        else {
-            DispatchQueue.main.async {
-                completion()
-            }
-        }
+        completion()
     }
 }
 
