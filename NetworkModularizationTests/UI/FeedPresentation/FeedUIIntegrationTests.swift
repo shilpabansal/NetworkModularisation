@@ -277,6 +277,23 @@ class FeedUIIntegrationTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_loadImageCompletion_dispatchesFromBackgroundToMainThread() {
+        let image0 = makeImage(url: URL(string: "http://url-0.com")!)
+        
+        let (loader, sut) = makeSUT()
+        sut.loadViewIfNeeded()
+        
+        loader.completeFeedLoading(with: [image0], at: 0)
+        sut.simulateFeedImageViewVisible(at: 0)
+        
+        let exp = expectation(description: "Wait for API")
+        DispatchQueue.global().async {
+            loader.completeImageLoading()
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     //MARK: - Helpers
     private func assertThat(sut: FeedViewController, isRendering feedImages: [FeedImage]) {
         guard sut.numberOfRenderedImageView == feedImages.count else {
