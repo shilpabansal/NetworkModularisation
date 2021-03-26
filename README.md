@@ -440,3 +440,19 @@ In MVVM, the view model have data states and control the states. where as in MVP
 Presenter implemetation protocol belongs to presenatation model, so it doesnt depend on the specific of UI frameworks or platforms
 
 There cab be many variations of MVP based on the needs. Its possible for view to decouple from presenatation layer.
+________________________________________________________________________________________
+
+
+
+
+
+
+
+________________________________________________________________________________________
+1. As UIKit is not thread safe, all the UI updation needs to be handled in main thread
+2. Though the logic can be directly handled in DispatchQueue.main, there are chances that we are already in main thread, to check it below code can be added.
+if Thread.isMainThread {}
+else { DipatchQueue.main.async{}}
+
+3. If Threading logic is added in UIViewController, there will be a lot of duplicacy, to avoid it, it can be moved to one layer up. Like presenter. But As presenter layer is unaware of UI logic, its better to move it to composer layer.
+4. A decoorator can be added, which moved the code from background to main thread and it can be created with generic implementation to avoid duplicate decorators
