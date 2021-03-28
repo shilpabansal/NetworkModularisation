@@ -5,6 +5,6 @@
 //  Created by Shilpa Bansal on 21/03/21.
 //
 
-struct FeedViewModel {
-    var feeds: [FeedImage]
+public struct FeedViewModel {
+    public var feeds: [FeedImage]
 }

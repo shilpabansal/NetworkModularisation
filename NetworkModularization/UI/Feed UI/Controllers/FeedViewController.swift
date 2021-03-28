@@ -55,7 +55,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
         cellController(forRowAt: indexPath).cancelLoad()
     }
     
-    func display(_ loadingViewModel: FeedLoadingViewModel) {
+    public func display(_ loadingViewModel: FeedLoadingViewModel) {
         refreshControl?.update(isRefreshing: loadingViewModel.isLoading)
     }
     
@@ -63,7 +63,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
         delegate?.didRequestFeedRefresh()
     }
     
-    func display(_ viewModel: FeedErrorViewModel) {
+    public func display(_ viewModel: FeedErrorViewModel) {
         errorView?.message = viewModel.message
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import NetworkModularization
 
 class FeedLoadingViewTests: XCTestCase {
     func test_init_doesNotSendMessagesToView() {
@@ -22,68 +23,62 @@ class FeedLoadingViewTests: XCTestCase {
                                        .display(isLoading: true)])
     }
     
-    func makeSUT(file: StaticString = #file, line: UInt = #line) -> (ViewSpy, FeedPresenter) {
+    func test_init_displayLoadingFeedsOnSuccessfulLoad() {
+        let (view, sut) = makeSUT()
+        let feeds = uniqueImageFeeds().model
+        
+        sut.didFinishLoadingFeeds(with: feeds)
+        XCTAssertEqual(view.messages, [.display(feeds: feeds),
+                                       .display(isLoading: false)])
+    }
+    
+    func test_init_displayErrorOnLoadFailed() {
+        let (view, sut) = makeSUT()
+        
+        sut.didFinishLoadingWithError(with: anyNSError())
+        XCTAssertEqual(view.messages, [.display(errorMessage: localized("FEED_VIEW_CONNECTION_ERROR")),
+                                       .display(isLoading: false)])
+    }
+    
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (ViewSpy, FeedPresenter) {
         let view = ViewSpy()
-        let sut = FeedPresenter(errorView: view, loadingView: view)
+        let sut = FeedPresenter(view: view,
+                                loadingView: view,
+                                errorView: view)
         trackMemoryLeak(view, file:file, line: line)
         trackMemoryLeak(sut, file:file, line: line)
         return (view, sut)
     }
-}
-
-class FeedPresenter {
-    private let errorView: FeedErrorView
-    let loadingView: FeedLoadingView
     
-    init(errorView: FeedErrorView,
-         loadingView: FeedLoadingView) {
-        self.errorView = errorView
-        self.loadingView = loadingView
-    }
-    
-    func didStartLoadingFeed() {
-        errorView.display(.noError)
-        loadingView.display(FeedLoadingViewModel(isLoading: true))
+    private func localized(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
+        let table = "Feed"
+        let bundle = Bundle(for: FeedViewController.self)
+        let value = bundle.localizedString(forKey: key, value: nil, table: table)
+        if value == key {
+            XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+        }
+        return value
     }
 }
 
-class ViewSpy: FeedErrorView, FeedLoadingView {
-    enum Message: Hashable {
+class ViewSpy: FeedErrorView, FeedLoadingView, FeedView {
+    enum Message: Equatable {
         case display(errorMessage: String?)
         case display(isLoading: Bool)
+        case display(feeds: [FeedImage])
     }
     
-    private(set) var messages = Set<Message>()
+    private(set) var messages = [Message]()
     
     func display(_ viewModel: FeedErrorViewModel) {
-        messages.insert(.display(errorMessage: nil))
+        messages.append(.display(errorMessage: viewModel.message))
     }
     
     func display(_ loadingViewModel: FeedLoadingViewModel) {
-        messages.insert(.display(isLoading: loadingViewModel.isLoading))
+        messages.append(.display(isLoading: loadingViewModel.isLoading))
     }
-}
-
-protocol FeedLoadingView {
-    func display(_ loadingViewModel: FeedLoadingViewModel)
-}
-
-protocol FeedErrorView {
-    func display(_ viewModel: FeedErrorViewModel)
-}
-
-struct FeedErrorViewModel {
-    let message: String?
-
-    static var noError: FeedErrorViewModel {
-        return FeedErrorViewModel(message: nil)
+    
+    func display(_ viewModel: FeedViewModel) {
+        messages.append(.display(feeds: viewModel.feeds))
     }
-
-    static func error(message: String) -> FeedErrorViewModel {
-        return FeedErrorViewModel(message: message)
-    }
-}
-
-struct FeedLoadingViewModel {
-    var isLoading: Bool
 }
