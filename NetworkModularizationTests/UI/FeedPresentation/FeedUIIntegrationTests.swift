@@ -25,10 +25,10 @@ class FeedUIIntegrationTests: XCTestCase {
         sut.loadViewIfNeeded()
         XCTAssertEqual(loader.loadFeedCallCount, 1, "Expected load count as 1 on view loaded")
         
-        sut.simulateUserInitiatedFreeLoad()
+        sut.simulateUserInitiatedFeedLoad()
         XCTAssertEqual(loader.loadFeedCallCount, 2, "Expected load count to 2 when user initiate the load")
         
-        sut.simulateUserInitiatedFreeLoad()
+        sut.simulateUserInitiatedFeedLoad()
         XCTAssertEqual(loader.loadFeedCallCount, 3, "Expected load count to 3 when user initiate the load again")
     }
     
@@ -40,7 +40,7 @@ class FeedUIIntegrationTests: XCTestCase {
         loader.completeFeedLoading(at: 0)
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected loading indicator to be hidden when load completes")
         
-        sut.simulateUserInitiatedFreeLoad()
+        sut.simulateUserInitiatedFeedLoad()
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator to be shown when user initiates the loading")
         loader.completeFeedLoadingWithError(at: 1)
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected loading indicator to be hidden when load error occurs")
@@ -60,7 +60,7 @@ class FeedUIIntegrationTests: XCTestCase {
         assertThat(sut: sut, isRendering: [image0])
         
         
-        sut.simulateUserInitiatedFreeLoad()
+        sut.simulateUserInitiatedFeedLoad()
         let feedImageArray = [image0, image1, image2, image3]
         loader.completeFeedLoading(with: feedImageArray)
         
@@ -76,7 +76,7 @@ class FeedUIIntegrationTests: XCTestCase {
         loader.completeFeedLoading(with: [image0], at: 0)
         assertThat(sut: sut, isRendering: [image0])
         
-        sut.simulateUserInitiatedFreeLoad()
+        sut.simulateUserInitiatedFeedLoad()
         loader.completeFeedLoadingWithError(at: 1)
         assertThat(sut: sut, isRendering: [image0])
     }
@@ -294,6 +294,19 @@ class FeedUIIntegrationTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+        let (loader, sut) = makeSUT()
+
+        sut.loadViewIfNeeded()
+        XCTAssertEqual(sut.errorMessage, nil)
+
+        loader.completeFeedLoadingWithError(at: 0)
+        XCTAssertEqual(sut.errorMessage, localized("FEED_VIEW_CONNECTION_ERROR"))
+
+        sut.simulateUserInitiatedFeedLoad()
+        XCTAssertEqual(sut.errorMessage, nil)
+    }
+    
     //MARK: - Helpers
     private func assertThat(sut: FeedViewController, isRendering feedImages: [FeedImage]) {
         guard sut.numberOfRenderedImageView == feedImages.count else {
@@ -358,12 +371,16 @@ private extension UIButton {
 }
 
 private extension FeedViewController {
-    func simulateUserInitiatedFreeLoad() {
+    func simulateUserInitiatedFeedLoad() {
         refreshControl?.simulatePullToRefresh()
     }
     
     var isShowingLoadingIndicator: Bool {
         return refreshControl?.isRefreshing ?? false
+    }
+    
+    var errorMessage: String? {
+        return errorView?.message
     }
     
     var numberOfRenderedImageView: Int {
