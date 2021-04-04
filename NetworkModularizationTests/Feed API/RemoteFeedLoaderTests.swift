@@ -44,7 +44,7 @@ class RemoteFeedLoaderTests: XCTestCase {
             Instead of mocking the error, we are calling the completion block of network library and checking if viewModel's completion block is called as expected error or not
              */
             let clientError = NSError(domain: "Test", code: 0, userInfo: nil)
-            client.complete(with: clientError, index: 0)
+            client.complete(with: clientError, at: 0)
         }
     }
     
@@ -58,7 +58,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         errorCodes.enumerated().forEach({(index, item) in
             expect(sut: feedLoader, expectedResult: failure(.invalidData)) {
                 let jsonData = makeData(items: [])
-                client.complete(with: item, data: jsonData, index: index)
+                client.complete(withStatusCode: item, data: jsonData, at: index)
             }
         })
     }
@@ -68,7 +68,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         
         expect(sut: feedLoader, expectedResult: failure(.invalidData)) {
             let clientData = Data("invalid data".utf8)
-            client.complete(with: 200, data: clientData)
+            client.complete(withStatusCode: 200, data: clientData)
         }
     }
     
@@ -77,7 +77,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         
         expect(sut: feedLoader, expectedResult: .success([])) {
             let clientData = Data("{\"items\": []}".utf8)
-            client.complete(with: 200, data: clientData)
+            client.complete(withStatusCode: 200, data: clientData)
         }
     }
     
@@ -97,13 +97,13 @@ class RemoteFeedLoaderTests: XCTestCase {
     
         expect(sut: feedLoader, expectedResult: .success([feedImage1, feedImage2])) {
             let clientData = makeData(items: jsonArray)
-            client.complete(with: 200, data: clientData)
+            client.complete(withStatusCode: 200, data: clientData)
         }
     }
     
     func test_doesNotDeliverResultAfterFeedInstanceHasBeenDeallocated() {
         let url = URL(string: "abc")!
-        let client = HttpClientSpy()
+        let client = HTTPClientSpy()
         var feedLoader: RemoteFeedLoader? = RemoteFeedLoader(url: url, client: client)
         
         var capturedResult = [RemoteFeedLoader.Result]()
@@ -111,7 +111,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         
         feedLoader = nil
         let clientData = Data("{\"items\": []}".utf8)
-        client.complete(with: 200, data: clientData)
+        client.complete(withStatusCode: 200, data: clientData)
         
         /**
         As the getFeeds method of RemoteFeedLoader is checking for self != nil, capturedResult returns empty
@@ -139,9 +139,9 @@ class RemoteFeedLoaderTests: XCTestCase {
     //SUT: System under test
     private func makeSUT(url: URL = URL(string: "abc")!,
                          file: StaticString = #file,
-                         line: UInt = #line) -> (HttpClientSpy, RemoteFeedLoader) {
+                         line: UInt = #line) -> (HTTPClientSpy, RemoteFeedLoader) {
         let url = URL(string: "abc")!
-        let client = HttpClientSpy()
+        let client = HTTPClientSpy()
         let feedLoader = RemoteFeedLoader(url: url, client: client)
         
         trackMemoryLeak(feedLoader, file: file, line: line)
@@ -171,40 +171,6 @@ class RemoteFeedLoaderTests: XCTestCase {
         action()
         
         wait(for: [expect], timeout: 1.0)
-    }
-    /**
-        private class since its only needed for testcases, wont be part of production code
-     */
-    private class HttpClientSpy : HTTPClient {
-        private var error: Error?
-        /**
-            An array is taken in order to track how many reqquests are made and in what order they are made
-         */
-        var messages = [(url: URL, completion: ((HTTPClient.Result) -> Void))]()
-        var requestedURLs: [URL] {
-            return messages.map({$0.url})
-        }
-        
-        func loadFeeds(url: URL, completion: @escaping ((HTTPClient.Result) -> Void)) {
-            messages.append((url, completion))
-        }
-        
-        /**
-            When test case calls loadFeeds the url and completion block is saved in messageArray,
-            Testcase calls ccomplete with error or statuscode to call the completion block
-         */
-        func complete(with error: Error, index: Int = 0) {
-            messages[index].completion(.failure(error))
-        }
-        
-        func complete(with statusCode: Int, data: Data, index: Int = 0) {
-            if let response = HTTPURLResponse(url: messages[index].url,
-                                           statusCode: statusCode,
-                                           httpVersion: nil,
-                                           headerFields: nil) {
-                messages[index].completion(.success((data, response)))
-            }
-        }
     }
     
     private func failure(_ error: RemoteFeedLoader.Error) -> RemoteFeedLoader.Result {

@@ -28,7 +28,7 @@ public final class RemoteFeedLoader : FeedLoader {
         /**
             Network library is unaware of common errors and responses, the viewmodel receives the respoonse and convert it into the expected enum responses which can be handled by the views
          */
-        client.loadFeeds(url: url) {[weak self] (result) in
+        client.loadFeeds(from: url) {[weak self] (result) in
         guard self != nil else { return }
         
         switch result {

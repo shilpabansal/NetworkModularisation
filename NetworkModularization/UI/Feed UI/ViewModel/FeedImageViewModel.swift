@@ -5,14 +5,14 @@
 //  Created by Shilpa Bansal on 21/03/21.
 //
 
-struct FeedImageViewModel<Image> {
-    var location: String?
-    var description: String?
-    var image: Image?
-    var showRetry: Bool
-    var isLoading: Bool
+public struct FeedImageViewModel<Image> {
+    public var location: String?
+    public var description: String?
+    public var image: Image?
+    public var showRetry: Bool
+    public var isLoading: Bool
     
-    var hasLocation: Bool {
+    public var hasLocation: Bool {
         return location != nil
     }
 }

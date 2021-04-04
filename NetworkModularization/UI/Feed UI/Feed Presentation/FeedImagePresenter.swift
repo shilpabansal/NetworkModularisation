@@ -6,23 +6,23 @@
 //
 import Foundation
 
-protocol FeedImageView {
+public protocol FeedImageView {
     associatedtype Image
     func display(_ viewModel: FeedImageViewModel<Image>)
 }
 
-final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
-    private let imageTransformer: ((Data) -> Image?)
+public final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
+    let imageTransformer: ((Data) -> Image?)
     private let view: View
     
-    init(imageTransformer: @escaping ((Data) -> Image?), view: View) {
+    public init(imageTransformer: @escaping ((Data) -> Image?), view: View) {
         self.imageTransformer = imageTransformer
         self.view = view
     }
 
     private struct InvalidImageDataError: Error {}
     
-    func didStartLoadingImageData(for model: FeedImage) {
+    public func didStartLoadingImageData(for model: FeedImage) {
         view.display(FeedImageViewModel(location: model.location,
                                         description: model.description,
                                         image: nil,
@@ -30,7 +30,7 @@ final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == I
                                         isLoading: true))
     }
     
-    func didFinishLoadingImageData(with data: Data,for model: FeedImage) {
+    public func didFinishLoadingImageData(with data: Data,for model: FeedImage) {
         guard let image = imageTransformer(data) else {
             didFinishLoadingImageData(with: InvalidImageDataError(), for: model)
             return
@@ -43,7 +43,7 @@ final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == I
                                         isLoading: false))
     }
     
-    func didFinishLoadingImageData(with error: Error,for model: FeedImage) {
+    public func didFinishLoadingImageData(with error: Error,for model: FeedImage) {
        view.display(FeedImageViewModel(location: model.location,
                                         description: model.description,
                                         image: nil,

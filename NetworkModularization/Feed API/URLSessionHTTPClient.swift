@@ -11,16 +11,9 @@ import Foundation
  The class which implements HTTPClient protocol,
  as currently we are using URLSession to get the feeds from network, its named accordingly
  */
-public class URLSessionHTTPClient: HTTPClient {
-    var session: URLSession
-    public init(session: URLSession = .shared) {
-        self.session = session
-    }
-    
-    private struct UnexpectedValueRepresentation: Error {}
-    
-    public func loadFeeds(url: URL, completion: @escaping ((HTTPClient.Result) -> Void)) {
-        session.dataTask(with: url) { (data, response, error) in
+public final class URLSessionHTTPClient: HTTPClient {
+    public func loadFeeds(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
+        let task = session.dataTask(with: url) { (data, response, error) in
             completion(Result {
                 if let error = error {
                     throw error
@@ -32,6 +25,23 @@ public class URLSessionHTTPClient: HTTPClient {
                     throw UnexpectedValueRepresentation()
                 }
             })
-        }.resume()
+        }
+        task.resume()
+        return URLSessionTaskWrapper(wrapped: task)
+    }
+    
+    var session: URLSession
+    public init(session: URLSession) {
+        self.session = session
+    }
+    
+    private struct UnexpectedValueRepresentation: Error {}
+    
+    private struct URLSessionTaskWrapper: HTTPClientTask {
+        let wrapped: URLSessionTask
+
+        func cancel() {
+            wrapped.cancel()
+        }
     }
 }

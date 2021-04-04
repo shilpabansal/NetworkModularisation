@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol  FeedImageCellControllerDelegate {
+protocol FeedImageCellControllerDelegate {
     func didRequestImage()
     func didCancelImageRequest()
 }
